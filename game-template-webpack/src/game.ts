@@ -1,3 +1,6 @@
+import { GameObject } from "./types/gameObject";
+import { Vector2 } from "./types/vector2";
+
 class Game {
     canvas: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
@@ -64,10 +67,10 @@ class Game {
     }
 
     checkCollision(obj1: GameObject, obj2: GameObject): boolean {
-        return obj1.x < obj2.x + obj2.width &&
-            obj1.x + obj1.width > obj2.x &&
-            obj1.y < obj2.y + obj2.height &&
-            obj1.y + obj1.height > obj2.y;
+        return obj1.Position.x < obj2.Position.x + obj2.Size.x &&
+            obj1.Position.x + obj1.Size.x > obj2.Position.x &&
+            obj1.Position.y < obj2.Position.y + obj2.Size.y &&
+            obj1.Position.y + obj1.Size.y > obj2.Position.y;
     }
 }
 
@@ -76,22 +79,22 @@ class Player extends GameObject {
     speed: number;
 
     constructor(x: number, y: number, width: number, height: number) {
-        super(x, y, width, height);
+        super(new Vector2(x, y), new Vector2(width, height));
         this.speed = 200; // Adjust player speed as needed
     }
 
     update(deltaTime: number) {
         if (Key.isDown(Key.LEFT_ARROW)) {
-            this.x -= this.speed * deltaTime;
+            this.Position.x -= this.speed * deltaTime;
         }
         if (Key.isDown(Key.RIGHT_ARROW)) {
-            this.x += this.speed * deltaTime;
+            this.Position.x += this.speed * deltaTime;
         }
     }
 
     draw(context: CanvasRenderingContext2D) {
         context.fillStyle = 'blue';
-        context.fillRect(this.x, this.y, this.width, this.height);
+        context.fillRect(this.Position.x, this.Position.y, this.Size.x, this.Size.y);
     }
 }
 
@@ -99,17 +102,17 @@ class Obstacle extends GameObject {
     speed: number;
 
     constructor(x: number, y: number, width: number, height: number) {
-        super(x, y, width, height);
+        super(new Vector2(x, y), new Vector2(width, height));
         this.speed = 100; // Adjust obstacle speed as needed
     }
 
     update(deltaTime: number) {
-        this.y += this.speed * deltaTime;
+        this.Position.y += this.speed * deltaTime;
     }
 
     draw(context: CanvasRenderingContext2D) {
         context.fillStyle = 'red';
-        context.fillRect(this.x, this.y, this.width, this.height);
+        context.fillRect(this.Position.x, this.Position.y, this.Size.x, this.Size.y);
     }
 }
 

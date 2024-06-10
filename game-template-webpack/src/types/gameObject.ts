@@ -1,4 +1,5 @@
-class GameObject {
+import { Vector2 } from "./vector2";
+export class GameObject {
     constructor(public Position: Vector2, public Size: Vector2) { }
 
     isOutsideCanvas(canvas: HTMLCanvasElement): boolean {
