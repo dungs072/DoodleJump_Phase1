@@ -9,6 +9,13 @@ class KeyCode {
     public static isDown(keyCode: number): boolean {
         return this.keys[keyCode];
     }
+    public static isDownButNotHold(keyCode: number): boolean {
+        if (this.keys[keyCode]) {
+            this.keys[keyCode] = false;
+            return true;
+        }
+        return false;
+    }
 }
 
 window.addEventListener('keydown', (event) => {

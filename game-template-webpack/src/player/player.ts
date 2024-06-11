@@ -11,7 +11,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     constructor(position: Vector2, scale: Vector2) {
         super();
         this.movementSpeed = 200;
-        this.jumpForce = 50;
+        this.jumpForce = 275;
         let transform = this.getComponent(Transform);
         transform?.setPosition(position);
         transform?.setScale(scale);
@@ -20,6 +20,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     public start(): void {
         let rigidbody = new RigidBody();
         rigidbody.setUseGravity(true);
+        rigidbody.setMass(100);
         this.addComponent(rigidbody);
         //throw new Error("Method not implemented.");
     }
@@ -32,9 +33,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             let direction = Vector2.right();
             this.move(deltaTime, direction);
         }
-        if (KeyCode.isDown(KeyCode.UP_ARROW)) {
-            // let direction = Vector2.up();
-            // this.move(deltaTime, direction);
+        if (KeyCode.isDownButNotHold(KeyCode.UP_ARROW)) {
             let rigidbody = this.getComponent(RigidBody);
             if (rigidbody == null) {
                 return;

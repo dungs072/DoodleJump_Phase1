@@ -19,6 +19,7 @@ class Game {
         this.context = this.canvas.getContext('2d')!;
         this.canvas.width = 800;
         this.canvas.height = 600;
+
         document.body.appendChild(this.canvas);
         let playerPosition = new Vector2(this.canvas.width / 2, this.canvas.height - 50);
         let playerScale = new Vector2(50, 50);
@@ -45,8 +46,8 @@ class Game {
         this.player.update(deltaTime);
         this.player.draw(this.context);
 
-        this.createObstacles();
-        this.updateObstacles(deltaTime);
+        //this.createObstacles();
+        //this.updateObstacles(deltaTime);
 
         requestAnimationFrame(() => this.update());
 
@@ -62,16 +63,17 @@ class Game {
             if (rigidbody == null) {
                 return;
             }
-            if (rigidbody?.IsUseGravity()) {
-                let distance = PhysicData.G * this.fixedDeltaTime;
-                let dropPosition = Vector2.multiply(Vector2.down(), distance);
-
-                let newPosition = Vector2.add(transform.getPosition(), dropPosition);
-                transform.setPosition(newPosition);
-            }
             if (!rigidbody?.getVelocity().isZero()) {
                 let jumpPosition = Vector2.multiply(rigidbody.getVelocity(), this.fixedDeltaTime);
                 let newPosition = Vector2.add(transform.getPosition(), jumpPosition);
+                transform.setPosition(newPosition);
+                rigidbody.decreaseToZeroVelocity(this.fixedDeltaTime * 50);
+            }
+            if (rigidbody?.canUseGravity()) {
+                let distance = rigidbody.getMass() * this.fixedDeltaTime;
+                let dropPosition = Vector2.multiply(Vector2.down(), distance);
+
+                let newPosition = Vector2.add(transform.getPosition(), dropPosition);
                 transform.setPosition(newPosition);
             }
             let collider = this.physicObjs[i].getComponent(Collider);

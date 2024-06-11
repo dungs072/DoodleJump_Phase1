@@ -39,6 +39,9 @@ class Vector2 {
     public static zero(): Vector2 {
         return new Vector2(0, 0);
     }
+    public static one(): Vector2 {
+        return new Vector2(1, 1);
+    }
 
 }
 export default Vector2
