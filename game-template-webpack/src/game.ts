@@ -13,6 +13,8 @@ class Game {
     obstacles: Obstacle[];
     physicObjs: GameObject[];
     lastRenderTime: number;
+    playerCollider: Collider;
+    playerRigidbody: RigidBody;
 
     constructor() {
         this.canvas = document.createElement('canvas') as HTMLCanvasElement;
@@ -33,6 +35,8 @@ class Game {
     }
 
     private start(): void {
+        this.playerCollider = this.player.getComponent(Collider)!;
+        this.playerRigidbody = this.player.getComponent(RigidBody)!;
         this.update();
         setInterval(() => this.fixedUpdate(), this.fixedDeltaTime);
     }
@@ -46,8 +50,8 @@ class Game {
         this.player.update(deltaTime);
         this.player.draw(this.context);
 
-        //this.createObstacles();
-        //this.updateObstacles(deltaTime);
+        this.createObstacles();
+        this.updateObstacles(deltaTime);
 
         requestAnimationFrame(() => this.update());
 
@@ -63,7 +67,7 @@ class Game {
             if (rigidbody == null) {
                 return;
             }
-            if (!rigidbody?.getVelocity().isZero()) {
+            if (!rigidbody.getVelocity().isZero()) {
                 let jumpPosition = Vector2.multiply(rigidbody.getVelocity(), this.fixedDeltaTime);
                 let newPosition = Vector2.add(transform.getPosition(), jumpPosition);
                 transform.setPosition(newPosition);
@@ -80,7 +84,12 @@ class Game {
             if (collider == null) {
                 return;
             }
-            collider?.setBounds(transform.getPosition(), transform.getScale());
+            collider.setBounds(transform.getPosition(), transform.getScale());
+            if (!(this.physicObjs[i] instanceof Player)) {
+                if (collider.hasCollision(this.playerCollider)) {
+                    //console.log("collision detection");
+                }
+            }
 
         }
     }
@@ -91,7 +100,8 @@ class Game {
 
     private createObstacles() {
         if (Math.random() < 0.01) { // Adjust this value to control obstacle spawn rate
-            const obstacle = new Obstacle(Math.random() * this.canvas.width, 0, 30, 30);
+            const obstacle = new Obstacle(Math.random() * this.canvas.width,
+                Math.random() * this.canvas.width, 30, 30);
             this.obstacles.push(obstacle);
             this.physicObjs.push(obstacle);
         }
@@ -101,27 +111,9 @@ class Game {
         this.obstacles.forEach(obstacle => {
             //obstacle.update(deltaTime);
             obstacle.draw(this.context);
-
-            if (this.checkCollision(this.player, obstacle)) {
-                // Collision happened, handle it accordingly
-                console.log('Game Over!');
-            }
         });
 
         this.obstacles = this.obstacles.filter(obstacle => !obstacle.isOutsideCanvas(this.canvas));
-    }
-
-    private checkCollision(obj1: GameObject, obj2: GameObject): boolean {
-        let transform1 = obj1.getComponent(Transform);
-        let transform2 = obj2.getComponent(Transform);
-        if (transform1 == null || transform2 == null) {
-            return false;
-        }
-        return true;
-        // return transform1.Position().x < transform2.Position().x + obj2.Size.x &&
-        //     obj1.Position.x + obj1.Size.x > obj2.Position.x &&
-        //     obj1.Position.y < obj2.Position.y + obj2.Size.y &&
-        //     obj1.Position.y + obj1.Size.y > obj2.Position.y;
     }
 }
 

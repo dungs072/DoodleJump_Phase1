@@ -7,29 +7,38 @@ class Collider {
     constructor() {
         this.isTrigger = false;
     }
-    public setTopLeftBound(topLeft: Vector2) {
+    public setTopLeftBound(topLeft: Vector2): void {
         this.topLeftBound = topLeft;
     }
-    public setDownRightBound(downRight: Vector2) {
+    public setDownRightBound(downRight: Vector2): void {
         this.downRightBound = downRight;
     }
-    public setBounds(topLeft: Vector2, downRight: Vector2) {
+    public setBounds(topLeft: Vector2, downRight: Vector2): void {
         this.topLeftBound = topLeft;
         this.downRightBound = downRight;
     }
-    public getTopLeftBound() {
+    public getTopLeftBound(): Vector2 {
         return this.topLeftBound;
     }
-    public getDownRightBound() {
+    public getDownRightBound(): Vector2 {
         return this.downRightBound;
     }
-    public IsTrigger() {
+    public setIsTrigger(state: boolean): void {
+        this.isTrigger = state;
+    }
+    public getIsTrigger(): boolean {
         return this.isTrigger;
     }
 
-    // public CheckCollision(collider1: Collider, collider2: Collider):boolean{
 
-    // }
+    public hasCollision(other: Collider): boolean {
+        let overlapX = this.topLeftBound.x < other.topLeftBound.x + other.downRightBound.x
+            && this.topLeftBound.x + this.downRightBound.x > other.topLeftBound.x
+
+        let overlapY = this.topLeftBound.y < other.topLeftBound.y + other.downRightBound.y
+            && this.topLeftBound.y + this.downRightBound.y > other.topLeftBound.y
+        return overlapX && overlapY;
+    }
 
 }
 export default Collider;

@@ -5,6 +5,7 @@ import SystemInterface from "../types/system";
 import KeyCode from "../input/keyCode";
 import RenderInterface from "../types/render";
 import RigidBody from "../base-types/components/rigidbody";
+import Collider from "../base-types/components/collider";
 class Player extends GameObject implements SystemInterface, RenderInterface {
     private movementSpeed: number;
     private jumpForce: number;
@@ -22,7 +23,14 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         rigidbody.setUseGravity(true);
         rigidbody.setMass(100);
         this.addComponent(rigidbody);
-        //throw new Error("Method not implemented.");
+
+        let transform = this.getComponent(Transform);
+        if (transform == null) {
+            return;
+        }
+        let collider = new Collider();
+        collider.setBounds(transform.getPosition(), transform.getScale());
+        this.addComponent(collider);
     }
     public update(deltaTime: number): void {
         if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {

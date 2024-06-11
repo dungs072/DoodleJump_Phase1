@@ -24,6 +24,7 @@ class RigidBody implements ComponentInterface {
         this.useGravity = state;
     }
     public getVelocity(): Vector2 {
+
         return this.velocity;
     }
     public setMass(mass: number) {
