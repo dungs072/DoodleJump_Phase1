@@ -7,17 +7,17 @@ import PhysicData from "./base-types/physics/physicData";
 import Collider from "./base-types/components/collider";
 import Platform from "./platforms/platform";
 import PhysicsInterface from "./types/physicSystem";
+import PlatformManager from './platforms/platformManager';
 class Game {
     private readonly fixedDeltaTime = 0.02;
     canvas: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
+
     player: Player;
-    platforms: Platform[];
     physicObjs: GameObject[];
     notStaticPhysicObjs: GameObject[];
     lastRenderTime: number;
-    playerCollider: Collider;
-    playerRigidbody: RigidBody;
+    platformManager: PlatformManager;
 
     constructor() {
         this.canvas = document.createElement('canvas') as HTMLCanvasElement;
@@ -26,22 +26,28 @@ class Game {
         this.canvas.height = 600;
 
         document.body.appendChild(this.canvas);
-        let playerPosition = new Vector2(this.canvas.width / 2, this.canvas.height - 50);
-        let playerScale = new Vector2(50, 50);
+        let playerPosition = new Vector2(this.canvas.width / 2, this.canvas.height - 100);
+        let playerScale = new Vector2(30, 30);
         this.player = new Player(playerPosition, playerScale);
-        this.platforms = [];
+        this.platformManager = new PlatformManager();
+        this.player.SetPlatFormManager(this.platformManager);
         this.physicObjs = [];
         this.notStaticPhysicObjs = [];
         this.lastRenderTime = 0;
 
         this.notStaticPhysicObjs.push(this.player);
-        console.log(this.notStaticPhysicObjs[0]);
+
+        let platformPosition = new Vector2(playerPosition.x-50, playerPosition.y+playerScale.y);
+        let scale = new Vector2(100, 30);
+        let platform = new Platform(platformPosition, scale);
+        this.platformManager.getPublisher().subcribe(platform);
+        this.platformManager.addPlatform(platform);
+        this.platformManager.setPhysicObjs(this.physicObjs);
+        this.physicObjs.push(platform);
         this.start();
     }
 
     private start(): void {
-        this.playerCollider = this.player.getComponent(Collider)!;
-        this.playerRigidbody = this.player.getComponent(RigidBody)!;
         this.update();
         setInterval(() => this.fixedUpdate(), this.fixedDeltaTime);
     }
@@ -53,8 +59,8 @@ class Game {
         this.clearCanvas();
 
         // write code here
-        this.createPlatforms();
-        this.updatePlatforms(deltaTime);
+        this.platformManager.createPlatforms(this.canvas.width);
+        this.platformManager.updatePlatforms(deltaTime, this.context);
 
         this.player.update(deltaTime);
         this.player.draw(this.context);
@@ -84,18 +90,20 @@ class Game {
             if (collider == null) {
                 return;
             }
-            let downRight = collider.getDownRightBound()
+            var downRight = collider.getDownRightBound()
             collider.setBounds(transform.getPosition(), downRight);
             for (let j = 0; j < this.physicObjs.length; j++) {
                 if(this.notStaticPhysicObjs[i]==this.physicObjs[j]){
                     continue;
                 }
                 let otherCollider = this.physicObjs[j].getComponent(Collider);
+                
                 if (otherCollider == null) {
                     continue;
                 }
+
                 if (!collider.getIsTrigger()&&collider.hasCollision(otherCollider)) {
-                    this.notStaticPhysicObjs[i].OnCollisionEnter(otherCollider);
+                    this.notStaticPhysicObjs[i].onCollisionEnter(otherCollider);
                 }
                 
             }
@@ -117,29 +125,25 @@ class Game {
                 transform.setPosition(newPosition);
             }
         }
+        for(let i =0;i< this.physicObjs.length;i++){
+            let collider = this.physicObjs[i].getComponent(Collider);
+            if (collider == null) {
+                return;
+            }
+            let transform = this.physicObjs[i].getComponent(Transform);
+            if (transform == null) {
+                return;
+            }
+            let downRight = collider.getDownRightBound()
+            collider.setBounds(transform.getPosition(), downRight);
+        }
     }
 
     private clearCanvas() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    private createPlatforms() {
-        if (Math.random() < 0.01) {
-            let position = new Vector2(Math.random() * this.canvas.width, Math.random() * this.canvas.height);
-            let scale = new Vector2(150, 30);
-            let platform = new Platform(position, scale);
-            this.platforms.push(platform);
-            this.physicObjs.push(platform);
-        }
-    }
-
-    private updatePlatforms(deltaTime: number) {
-        this.platforms.forEach(obstacle => {
-            //obstacle.update(deltaTime);
-            obstacle.draw(this.context);
-        });
-        this.platforms = this.platforms.filter(obstacle => !obstacle.isOutsideCanvas(this.canvas));
-    }
+   
 }
 // Start the game
 const game = new Game();

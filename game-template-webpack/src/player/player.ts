@@ -6,19 +6,25 @@ import KeyCode from "../input/keyCode";
 import RenderInterface from "../types/render";
 import RigidBody from '../base-types/components/rigidbody';
 import Collider from "../base-types/components/collider";
+import Movement from "../general/movement";
+import PlatformManager from "../platforms/platformManager";
 class Player extends GameObject implements SystemInterface, RenderInterface {
     private movementSpeed: number;
     private jumpForce: number;
+
     private rb: RigidBody;
     private collider: Collider;
     private transform: Transform;
+    private movement: Movement;
+
+    private platFormManager: PlatformManager ;
 
     private previousHeight: number;
 
     constructor(position: Vector2, scale: Vector2) {
         super();
-        this.movementSpeed = 200;
-        this.jumpForce = 275;
+        this.movementSpeed = 250;
+        this.jumpForce = 250;
         this.transform = this.getComponent(Transform)!;
         this.transform?.setPosition(position);
         this.transform?.setScale(scale);
@@ -29,16 +35,14 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.rb = new RigidBody();
         this.rb.setMass(100);
         this.rb.setUseGravity(true);
-        
         this.addComponent(this.rb);
 
-        let transform = this.getComponent(Transform);
-        if (transform == null) {
-            return;
-        }
+        this.movement = new Movement();
+        this.addComponent(this.movement);
+        
         this.collider = new Collider();
-        let downRight = new Vector2(transform.getScale().x, transform.getScale().y);
-        this.collider.setBounds(transform.getPosition(), downRight);
+        let downRight = new Vector2(this.transform.getScale().x, this.transform.getScale().y);
+        this.collider.setBounds(this.transform.getPosition(), downRight);
         this.collider.setIsStatic(false);
         this.addComponent(this.collider);
     }
@@ -50,11 +54,11 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     public handleInput(deltaTime: number){
         if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {
             let direction = Vector2.left();
-            this.move(deltaTime, direction);
+            this.movement.move(deltaTime, direction, this.movementSpeed, this.transform);
         }
         if (KeyCode.isDown(KeyCode.RIGHT_ARROW)) {
             let direction = Vector2.right();
-            this.move(deltaTime, direction);
+            this.movement.move(deltaTime, direction, this.movementSpeed, this.transform);
         }
         if (KeyCode.isDownButNotHold(KeyCode.UP_ARROW)) {
             let rigidbody = this.getComponent(RigidBody);
@@ -64,20 +68,17 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             rigidbody.addForce(Vector2.up(), this.jumpForce)
         }
     }
-    public OnCollisionEnter(other: Collider): void {
+    public onCollisionEnter(other: Collider): void {
         this.rb.addForce(Vector2.up(), this.jumpForce);
+        if(this.transform.getPosition().y>=400){
+            return;
+        }
+        this.platFormManager.getPublisher().setData(300);
+        this.platFormManager.getPublisher().notify();
+
         
     }
 
-    private move(deltaTime: number, direction: Vector2): void {
-        let transform = this.getComponent(Transform);
-        if (transform == null) {
-            return;
-        }
-        let distance = Vector2.multiply(direction, deltaTime * this.movementSpeed);
-        let newPosition = Vector2.add(transform?.getPosition(), distance);
-        transform.setPosition(newPosition);
-    }
     public draw(context: CanvasRenderingContext2D): void {
         if(this.collider.getIsTrigger()){
             context.fillStyle = 'blue';
@@ -95,7 +96,9 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.collider.draw(context);
     }
 
-
+    public SetPlatFormManager(platformManager: PlatformManager): void{
+        this.platFormManager = platformManager;
+    }
 
 }
 export default Player

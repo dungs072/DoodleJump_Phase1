@@ -27,7 +27,7 @@ class GameObject implements PhysicsInterface {
         return transform.getPosition().x < 0 || transform.getPosition().x > canvas.width ||
             transform.getPosition().y < 0 || transform.getPosition().y > canvas.height;
     }
-    public OnCollisionEnter(other: Collider): void {
+    public onCollisionEnter(other: Collider): void {
         // implement collision here
     }
 }
