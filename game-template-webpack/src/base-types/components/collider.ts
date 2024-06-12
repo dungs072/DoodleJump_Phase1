@@ -1,12 +1,15 @@
+import RenderInterface from "../../types/render";
 import Vector2 from "../vector2";
 
-class Collider {
+class Collider implements RenderInterface {
     private topLeftBound: Vector2;
     private downRightBound: Vector2;
     private isTrigger: boolean;
+    private isStatic: boolean;
     constructor() {
         this.isTrigger = false;
     }
+    
     public setTopLeftBound(topLeft: Vector2): void {
         this.topLeftBound = topLeft;
     }
@@ -29,6 +32,12 @@ class Collider {
     public getIsTrigger(): boolean {
         return this.isTrigger;
     }
+    public setIsStatic(state: boolean): void {
+        this.isStatic = state
+    }
+    public getIsStatic(): boolean {
+        return this.isStatic;
+    }
 
 
     public hasCollision(other: Collider): boolean {
@@ -39,6 +48,15 @@ class Collider {
             && this.topLeftBound.y + this.downRightBound.y > other.topLeftBound.y
         return overlapX && overlapY;
     }
+
+    draw(context: CanvasRenderingContext2D): void {
+        context.strokeStyle = '#008000';
+        context.strokeRect(this.topLeftBound.x,
+                        this.topLeftBound.y,
+                        this.downRightBound.x,
+                        this.downRightBound.y)
+    }
+
 
 }
 export default Collider;

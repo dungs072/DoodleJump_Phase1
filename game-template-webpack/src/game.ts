@@ -5,13 +5,16 @@ import Player from "./player/player";
 import RigidBody from "./base-types/components/rigidbody";
 import PhysicData from "./base-types/physics/physicData";
 import Collider from "./base-types/components/collider";
+import Platform from "./platforms/platform";
+import PhysicsInterface from "./types/physicSystem";
 class Game {
     private readonly fixedDeltaTime = 0.02;
     canvas: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
     player: Player;
-    obstacles: Obstacle[];
+    platforms: Platform[];
     physicObjs: GameObject[];
+    notStaticPhysicObjs: GameObject[];
     lastRenderTime: number;
     playerCollider: Collider;
     playerRigidbody: RigidBody;
@@ -26,11 +29,13 @@ class Game {
         let playerPosition = new Vector2(this.canvas.width / 2, this.canvas.height - 50);
         let playerScale = new Vector2(50, 50);
         this.player = new Player(playerPosition, playerScale);
-        this.obstacles = [];
+        this.platforms = [];
         this.physicObjs = [];
+        this.notStaticPhysicObjs = [];
         this.lastRenderTime = 0;
 
-        this.physicObjs.push(this.player);
+        this.notStaticPhysicObjs.push(this.player);
+        console.log(this.notStaticPhysicObjs[0]);
         this.start();
     }
 
@@ -47,23 +52,54 @@ class Game {
         this.lastRenderTime = currentTime;
         this.clearCanvas();
 
+        // write code here
+        this.createPlatforms();
+        this.updatePlatforms(deltaTime);
+
         this.player.update(deltaTime);
         this.player.draw(this.context);
 
-        this.createObstacles();
-        this.updateObstacles(deltaTime);
 
+        // write code here
         requestAnimationFrame(() => this.update());
 
     }
 
     private fixedUpdate(): void {
-        for (let i = 0; i < this.physicObjs.length; i++) {
-            let rigidbody = this.physicObjs[i].getComponent(RigidBody);
-            let transform = this.physicObjs[i].getComponent(Transform);
+        // write code relate to physics here
+
+
+        // write code here
+        this.handleCorePhysic();
+    }
+    private handleCorePhysic(): void {
+        for (let i = 0; i < this.notStaticPhysicObjs.length; i++) {
+            
+            let rigidbody = this.notStaticPhysicObjs[i].getComponent(RigidBody);
+            let transform = this.notStaticPhysicObjs[i].getComponent(Transform);
             if (transform == null) {
                 return;
             }
+            let collider = this.notStaticPhysicObjs[i].getComponent(Collider);
+            if (collider == null) {
+                return;
+            }
+            let downRight = collider.getDownRightBound()
+            collider.setBounds(transform.getPosition(), downRight);
+            for (let j = 0; j < this.physicObjs.length; j++) {
+                if(this.notStaticPhysicObjs[i]==this.physicObjs[j]){
+                    continue;
+                }
+                let otherCollider = this.physicObjs[j].getComponent(Collider);
+                if (otherCollider == null) {
+                    continue;
+                }
+                if (!collider.getIsTrigger()&&collider.hasCollision(otherCollider)) {
+                    this.notStaticPhysicObjs[i].OnCollisionEnter(otherCollider);
+                }
+                
+            }
+
             if (rigidbody == null) {
                 return;
             }
@@ -71,7 +107,7 @@ class Game {
                 let jumpPosition = Vector2.multiply(rigidbody.getVelocity(), this.fixedDeltaTime);
                 let newPosition = Vector2.add(transform.getPosition(), jumpPosition);
                 transform.setPosition(newPosition);
-                rigidbody.decreaseToZeroVelocity(this.fixedDeltaTime * 50);
+                rigidbody.clampToZeroVelocity(this.fixedDeltaTime * 50);
             }
             if (rigidbody?.canUseGravity()) {
                 let distance = rigidbody.getMass() * this.fixedDeltaTime;
@@ -80,17 +116,6 @@ class Game {
                 let newPosition = Vector2.add(transform.getPosition(), dropPosition);
                 transform.setPosition(newPosition);
             }
-            let collider = this.physicObjs[i].getComponent(Collider);
-            if (collider == null) {
-                return;
-            }
-            collider.setBounds(transform.getPosition(), transform.getScale());
-            if (!(this.physicObjs[i] instanceof Player)) {
-                if (collider.hasCollision(this.playerCollider)) {
-                    //console.log("collision detection");
-                }
-            }
-
         }
     }
 
@@ -98,67 +123,24 @@ class Game {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    private createObstacles() {
-        if (Math.random() < 0.01) { // Adjust this value to control obstacle spawn rate
-            const obstacle = new Obstacle(Math.random() * this.canvas.width,
-                Math.random() * this.canvas.width, 30, 30);
-            this.obstacles.push(obstacle);
-            this.physicObjs.push(obstacle);
+    private createPlatforms() {
+        if (Math.random() < 0.01) {
+            let position = new Vector2(Math.random() * this.canvas.width, Math.random() * this.canvas.height);
+            let scale = new Vector2(150, 30);
+            let platform = new Platform(position, scale);
+            this.platforms.push(platform);
+            this.physicObjs.push(platform);
         }
     }
 
-    private updateObstacles(deltaTime: number) {
-        this.obstacles.forEach(obstacle => {
+    private updatePlatforms(deltaTime: number) {
+        this.platforms.forEach(obstacle => {
             //obstacle.update(deltaTime);
             obstacle.draw(this.context);
         });
-
-        this.obstacles = this.obstacles.filter(obstacle => !obstacle.isOutsideCanvas(this.canvas));
+        this.platforms = this.platforms.filter(obstacle => !obstacle.isOutsideCanvas(this.canvas));
     }
 }
-
-
-class Obstacle extends GameObject {
-
-    constructor(x: number, y: number, width: number, height: number) {
-        super();
-        let transform = this.getComponent(Transform);
-        transform?.setPosition(new Vector2(x, y));
-        transform?.setScale(new Vector2(width, height));
-        if (transform == null) {
-            return;
-        }
-        let rigidbody = new RigidBody();
-        rigidbody.setUseGravity(true);
-        let collider = new Collider();
-        collider.setBounds(transform?.getPosition(), transform.getScale());
-        this.addComponent(collider);
-        this.addComponent(rigidbody);
-    }
-
-    // update(deltaTime: number) {
-    //     let transform = this.GetComponent(Transform);
-    //     if (transform == null) {
-    //         return;
-    //     }
-    //     let downDistance = new Vector2(0, this.speed * deltaTime);
-    //     let newPosition = Vector2.Add(transform.Position(), downDistance);
-    //     transform.SetPosition(newPosition);
-    // }
-
-    draw(context: CanvasRenderingContext2D) {
-        context.fillStyle = 'red';
-        let transform = this.getComponent(Transform);
-        if (transform == null) {
-            return null;
-        }
-        context.fillRect(transform.getPosition().x, transform.getPosition().y,
-            transform.getScale().x, transform.getScale().y);
-    }
-}
-
-
-
 // Start the game
 const game = new Game();
 
