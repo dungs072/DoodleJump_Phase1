@@ -1,20 +1,14 @@
-import Transform from "./base-types/components/transform";
-import GameObject from "./base-types/gameObject";
 import Vector2 from "./base-types/vector2";
 import Player from "./player/player";
-import RigidBody from "./base-types/components/rigidbody";
-import Collider from "./base-types/components/collider";
-import Platform from "./platforms/platform";
 import PlatformManager from './platforms/platformManager';
-import StablePlatform from "./platforms/stable-platform/stablePlatform";
+import PhysicManager from "./physic/physicManager";
 class Game {
-    private readonly fixedDeltaTime = 0.02;
+
     canvas: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
 
     player: Player;
-    physicObjs: GameObject[];
-    notStaticPhysicObjs: GameObject[];
+   
     lastRenderTime: number;
     platformManager: PlatformManager;
 
@@ -30,12 +24,9 @@ class Game {
         this.player = new Player(playerPosition, playerScale);
         this.platformManager = new PlatformManager();
         this.player.SetPlatFormManager(this.platformManager);
-        this.physicObjs = [];
-        this.notStaticPhysicObjs = [];
         this.lastRenderTime = 0;
 
-        this.notStaticPhysicObjs.push(this.player);
-        this.platformManager.setPhysicObjs(this.physicObjs);
+        PhysicManager.getInstance().addNotStaticPhysicObj(this.player);
         let platformPosition = new Vector2(playerPosition.x-50, playerPosition.y+playerScale.y);
         let scale = new Vector2(100, 30);
         this.platformManager.createStablePlatform(platformPosition, scale);
@@ -44,7 +35,7 @@ class Game {
 
     private start(): void {
         this.update();
-        setInterval(() => this.fixedUpdate(), this.fixedDeltaTime);
+        setInterval(() => this.fixedUpdate(), PhysicManager.getInstance().getFixedDeltaTime());
     }
 
     private update(): void {
@@ -83,70 +74,9 @@ class Game {
 
 
         // write code here
-        this.handleCorePhysic();
+        PhysicManager.getInstance().handleCorePhysic();
     }
-    private handleCorePhysic(): void {
-        for (let i = 0; i < this.notStaticPhysicObjs.length; i++) {
-            
-            let rigidbody = this.notStaticPhysicObjs[i].getComponent(RigidBody);
-            let transform = this.notStaticPhysicObjs[i].getComponent(Transform);
-            if (transform == null) {
-                return;
-            }
-            let collider = this.notStaticPhysicObjs[i].getComponent(Collider);
-            if (collider == null) {
-                return;
-            }
-            var topLeft = new Vector2(transform.getPosition().x, transform.getPosition().y + 25);
-            var downRight = new Vector2(transform.getScale().x, transform.getScale().y-25);
 
-            collider.setBounds(topLeft, downRight);
-            for (let j = 0; j < this.physicObjs.length; j++) {
-                if(this.notStaticPhysicObjs[i]==this.physicObjs[j]){
-                    continue;
-                }
-                let otherCollider = this.physicObjs[j].getComponent(Collider);
-                
-                if (otherCollider == null) {
-                    continue;
-                }
-
-                if (!collider.getIsTrigger()&&collider.hasCollision(otherCollider)) {
-                    this.notStaticPhysicObjs[i].onCollisionEnter(this.physicObjs[j]);
-                }
-                
-            }
-
-            if (rigidbody == null) {
-                return;
-            }
-            if (!rigidbody.getVelocity().isZero()) {
-                let jumpPosition = Vector2.multiply(rigidbody.getVelocity(), this.fixedDeltaTime);
-                let newPosition = Vector2.add(transform.getPosition(), jumpPosition);
-                transform.setPosition(newPosition);
-                rigidbody.clampToZeroVelocity(this.fixedDeltaTime * 50);
-            }
-            if (rigidbody?.canUseGravity()) {
-                let distance = rigidbody.getMass() * this.fixedDeltaTime;
-                let dropPosition = Vector2.multiply(Vector2.down(), distance);
-
-                let newPosition = Vector2.add(transform.getPosition(), dropPosition);
-                transform.setPosition(newPosition);
-            }
-        }
-        for(let i =0;i< this.physicObjs.length;i++){
-            let collider = this.physicObjs[i].getComponent(Collider);
-            if (collider == null) {
-                return;
-            }
-            let transform = this.physicObjs[i].getComponent(Transform);
-            if (transform == null) {
-                return;
-            }
-            let downRight = collider.getDownRightBound()
-            collider.setBounds(transform.getPosition(), downRight);
-        }
-    }
 
     private clearCanvas() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);

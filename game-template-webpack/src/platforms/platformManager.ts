@@ -2,6 +2,7 @@ import GameObject from "../base-types/gameObject";
 import Vector2 from "../base-types/vector2";
 import Creator from "../patterns/factory/creator";
 import Publisher from "../patterns/observer/publisher";
+import PhysicManager from "../physic/physicManager";
 import MovablePlatform from "./movable-platform/movablePlatform";
 import MovablePlatformCreator from "./movable-platform/movablePlatformCreator";
 import Platform from "./platform";
@@ -13,7 +14,7 @@ import UnstablePlatformCreator from './unstable-platform/unstablePlatformCreator
 class PlatformManager {
     private publisher: Publisher<number>;
     private platforms: Platform[];
-    private physicObjs: GameObject[];
+    //private physicObjs: GameObject[];
     private previousYPosition: number;
     private maxHeightToSpawn: number;
     private maxSpawnTime: number;
@@ -58,7 +59,7 @@ class PlatformManager {
                 let platform = gameObj as Platform;
                 this.platforms.push(platform);
                 this.publisher.subcribe(platform);
-                this.physicObjs.push(platform);
+                PhysicManager.getInstance().addphysicObjs(platform);
             }
             
             if(lastPlatform!=null){
@@ -77,7 +78,7 @@ class PlatformManager {
             this.platforms.push(platform);
             this.publisher.subcribe(platform);
         }
-        this.physicObjs.push(gameObj);
+        PhysicManager.getInstance().addphysicObjs(gameObj);
     }
     private getTheLastPlatform(): Platform|null{
         if(this.platforms.length==0){
@@ -90,8 +91,7 @@ class PlatformManager {
         for(let i = this.platforms.length-1;i>=0;i--){
             if(this.platforms[i].getCanDestroy()){
                 this.platforms.splice(i, 1);
-                let indexPhysic = this.physicObjs.indexOf(this.platforms[i]);
-                this.physicObjs.slice(indexPhysic, 1);
+                PhysicManager.getInstance().removePhysicObjs(this.platforms[i]);
             }
             this.platforms[i].update(deltaTime);
             this.platforms[i].draw(context);
@@ -103,9 +103,6 @@ class PlatformManager {
     }
     public getPlatforms(): Platform[]{
         return this.platforms;
-    }
-    public setPhysicObjs(physicObjs: GameObject[]): void{
-        this.physicObjs = physicObjs;
     }
 }
 export default PlatformManager;
