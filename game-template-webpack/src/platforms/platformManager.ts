@@ -50,7 +50,7 @@ class PlatformManager {
         
         if (this.currentSpawnTime>this.maxSpawnTime&&isMaxPlatform) {
             let position = new Vector2(Math.random() * canvasWidth, this.previousYPosition-100);
-            let scale = new Vector2(100, 30);
+            let scale = new Vector2(120, 30);
             let platformCreatorIndex = Math.floor(Math.random() * this.platformCreators.length);
             let platformCreator = this.platformCreators[platformCreatorIndex];
             let product = platformCreator.createProduct(position, scale);

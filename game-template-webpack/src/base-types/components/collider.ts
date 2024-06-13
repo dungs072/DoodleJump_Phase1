@@ -4,6 +4,7 @@ import Vector2 from "../vector2";
 class Collider implements RenderInterface {
     private topLeftBound: Vector2;
     private downRightBound: Vector2;
+    private offset: number;
     private isTrigger: boolean;
     private isStatic: boolean;
     constructor() {
@@ -55,6 +56,12 @@ class Collider implements RenderInterface {
                         this.topLeftBound.y,
                         this.downRightBound.x,
                         this.downRightBound.y)
+    }
+    public setOffset(offset: number): void{
+        this.offset = offset;
+    }
+    public getOffset(): number{
+        return this.offset;
     }
 
 

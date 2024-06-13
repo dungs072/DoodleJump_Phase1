@@ -7,11 +7,14 @@ import ProductInterface from "../types/factory/product";
 import SubcriberInterface from "../types/observer/subcriber";
 import RenderInterface from "../types/render";
 import SystemInterface from "../types/system";
+import Sprite from '../base-types/sprite';
+import PathResources from "../pathResources";
 
 abstract class Platform extends GameObject implements SystemInterface, RenderInterface, SubcriberInterface<number>, ProductInterface {
     private collider: Collider;
     protected transform: Transform;
     protected movement: Movement;
+    protected sprite: Sprite;
 
     private movementSpeed: number;
     private maxDistanceToDestroy: number;
@@ -44,6 +47,7 @@ abstract class Platform extends GameObject implements SystemInterface, RenderInt
         this.addComponent(this.movement);
     }
     public update(deltaTime: number): void {
+        this.sprite.setPosition(this.transform.getPosition());
         if(this.transform.getPosition().y>=this.maxDistanceToDestroy){
             this.canDestroy = true;
         }
@@ -58,16 +62,11 @@ abstract class Platform extends GameObject implements SystemInterface, RenderInt
         if(!this.getCanDraw()){
             return;
         }
-        this.drawModel(context, this.color);
+        this.drawModel(context);
+        
     }
-    private drawModel(context: CanvasRenderingContext2D, style: string){
-        context.fillStyle = style;
-        let transform = this.getComponent(Transform);
-        if (transform == null) {
-            return;
-        }
-        context.fillRect(transform.getPosition().x, transform.getPosition().y,
-            transform.getScale().x, transform.getScale().y);
+    private drawModel(context: CanvasRenderingContext2D){
+        this.sprite.draw(context);
         this.collider.draw(context);
     }
     public receive(data: number): void {
@@ -76,7 +75,7 @@ abstract class Platform extends GameObject implements SystemInterface, RenderInt
         }
         
     }
-    public  operation(): void {
+    public operation(): void {
         console.log("nothing");
         // this is the base platform
     }

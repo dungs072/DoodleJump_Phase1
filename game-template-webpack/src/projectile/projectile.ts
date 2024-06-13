@@ -35,6 +35,7 @@ class Projectile extends GameObject implements SystemInterface, RenderInterface{
     public start(): void {
         this.collider = new Collider();
         this.collider.setBounds(this.transform.getPosition(), this.transform.getScale());
+        this.collider.setOffset(27);
         this.addComponent(this.collider);
 
         this.rb = new RigidBody();

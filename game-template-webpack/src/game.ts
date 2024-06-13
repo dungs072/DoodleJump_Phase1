@@ -3,28 +3,32 @@ import Player from "./player/player";
 import PlatformManager from './platforms/platformManager';
 import PhysicManager from "./physic/physicManager";
 import ProjectileManager from "./projectile/projectileManager";
+import Sprite from "./base-types/sprite";
+import PathResources from "./pathResources";
 class Game {
 
-    canvas: HTMLCanvasElement;
-    context: CanvasRenderingContext2D;
+    private canvas: HTMLCanvasElement;
+    private context: CanvasRenderingContext2D;
 
-    player: Player;
-    platformManager: PlatformManager;
-    projectileManger: ProjectileManager;
+    private player: Player;
+    private platformManager: PlatformManager;
+    private projectileManger: ProjectileManager;
    
-    lastRenderTime: number;
+    private lastRenderTime: number;
+
+    private backgroundSprite: Sprite;
     
 
 
     constructor() {
         this.canvas = document.createElement('canvas') as HTMLCanvasElement;
         this.context = this.canvas.getContext('2d')!;
-        this.canvas.width = 800;
+        this.canvas.width = 640;
         this.canvas.height = 600;
 
         document.body.appendChild(this.canvas);
         let playerPosition = new Vector2(this.canvas.width / 2, this.canvas.height - 100);
-        let playerScale = new Vector2(30, 30);
+        let playerScale = new Vector2(60, 120);
         this.player = new Player(playerPosition, playerScale);
         this.platformManager = new PlatformManager();
         this.player.setPlatformManager(this.platformManager);
@@ -39,9 +43,10 @@ class Game {
     }
 
     private start(): void {
+        this.backgroundSprite = new Sprite(PathResources.BACKGROUND, new Vector2(0, 0));
+
         this.update();
         let fixedDeltaTime = PhysicManager.getInstance().getFixedDeltaTime();
-        
         setInterval(() => this.fixedUpdate(), fixedDeltaTime);
     }
 
@@ -52,6 +57,8 @@ class Game {
         this.clearCanvas();
 
         // write code here
+        this.backgroundSprite.draw(this.context);
+
         this.platformManager.createPlatforms(deltaTime, this.canvas.width-200);
         this.platformManager.updatePlatforms(deltaTime, this.context);
 
@@ -60,7 +67,7 @@ class Game {
         this.HandlePlayer(deltaTime);
         
 
-
+        
         // write code here
         requestAnimationFrame(() => this.update());
 

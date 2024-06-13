@@ -1,13 +1,16 @@
-import Transform from "../../base-types/components/transform";
+import Sprite from "../../base-types/sprite";
 import Vector2 from "../../base-types/vector2";
-import ProductInterface from "../../types/factory/product";
+import PathResources from "../../pathResources";
 import Platform from "../platform";
+import Animation from '../../base-types/animation';
 
 class UnstablePlatform extends Platform {
     private dropDownSpeed: number;
     private isStomped: boolean;
     private maxDropDownDistance: number;
     private previousY: number;
+    private animation: Animation;
+    private deltaTime: number;
     
     constructor(position: Vector2, scale: Vector2){
         super(position, scale, false);
@@ -17,9 +20,22 @@ class UnstablePlatform extends Platform {
         this.maxDropDownDistance = 100;
         this.color = "brown";
         this.canDestroy = false;
+        this.sprite = new Sprite(PathResources.UNSTABLE_PLATFORM, position);
+        this.deltaTime = 0.01;
+        this.setUpAnimation();
+    }
+    private setUpAnimation():void{
+        let paths: string[] = [];
+        paths.push(PathResources.UNSTABLE_PLATFORM);
+        paths.push(PathResources.UNSTABLE_PLATFORM1);
+        paths.push(PathResources.UNSTABLE_PLATFORM2);
+        paths.push(PathResources.UNSTABLE_PLATFORM3);
+        this.animation = new Animation(paths, this.transform.getPosition(), 0.02);
     }
 
+
     public update(deltaTime: number): void {
+        this.deltaTime = deltaTime;
         super.update(deltaTime);
         if(this.isStomped&&!this.canDestroy){
             if(this.transform.getPosition().y>=this.previousY+this.maxDropDownDistance){
@@ -28,11 +44,25 @@ class UnstablePlatform extends Platform {
             }
             this.movement.move(deltaTime, Vector2.down(), this.dropDownSpeed, this.transform);
         }
+        
+    }
+    public draw(context: CanvasRenderingContext2D): void {
+        if(this.isStomped){
+            this.animation.setPosition(this.transform.getPosition());
+            this.animation.draw(context, this.deltaTime);
+            
+            return;
+        }
+        super.draw(context);
+
+        
     }
 
     public operation(): void {
         this.isStomped = true;
+        this.animation.setPosition(this.transform.getPosition());
         this.previousY = this.transform.getPosition().y;
+        
     }
 
 }

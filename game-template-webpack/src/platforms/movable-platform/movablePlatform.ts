@@ -1,4 +1,6 @@
+import Sprite from "../../base-types/sprite";
 import Vector2 from "../../base-types/vector2";
+import PathResources from "../../pathResources";
 import Platform from "../platform";
 
 class MovablePlatform extends Platform { 
@@ -14,7 +16,7 @@ class MovablePlatform extends Platform {
 
         this.maxLeft = this.transform.getPosition().x-100;
         this.maxRight = this.transform.getPosition().x+100;
-
+        this.sprite = new Sprite(PathResources.MOVABLE_PLATFORM, position);
     }
     public update(deltaTime: number): void {
         super.update(deltaTime);

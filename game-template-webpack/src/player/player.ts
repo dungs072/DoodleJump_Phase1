@@ -11,6 +11,8 @@ import PlatformManager from "../platforms/platformManager";
 import Platform from '../platforms/platform';
 import PlayerFighter from "./playerFighter";
 import ProjectileManager from "../projectile/projectileManager";
+import PlayerModel from "./playerModel";
+import { Action } from "../types/Action";
 class Player extends GameObject implements SystemInterface, RenderInterface {
     private movementSpeed: number;
     private jumpForce: number;
@@ -24,6 +26,8 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     private movement: Movement;
     private fighter: PlayerFighter;
 
+    private playerModel: PlayerModel;
+
     private platFormManager: PlatformManager;
     private projectileManager: ProjectileManager;
 
@@ -32,7 +36,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
 
     constructor(position: Vector2, scale: Vector2) {
         super();
-        this.movementSpeed = 250;
+        this.movementSpeed = 300;
         this.jumpForce = 250;
         this.maxBorder = 250;
         
@@ -55,14 +59,17 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         
         this.collider = new Collider();
         let topLeft = new Vector2(this.transform.getPosition().x, 
-                                this.transform.getPosition().y + 15);
+                                this.transform.getPosition().y + 100);
         let downRight = Vector2.add(this.transform.getPosition(), this.transform.getScale());
         this.collider.setBounds(topLeft, downRight);
         this.collider.setIsStatic(false);
+        this.collider.setOffset(115);
         this.addComponent(this.collider);
 
         this.spawnProjectilePos = Vector2.add(this.transform.getPosition(), 
                             new Vector2(this.transform.getScale().x/2,-10));
+
+        this.playerModel = new PlayerModel(this.transform.getPosition());
     }
     public update(deltaTime: number): void {
         this.handleInput(deltaTime);
@@ -86,12 +93,15 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {
             let direction = Vector2.left();
             this.movement.move(deltaTime, direction, this.movementSpeed, this.transform);
+            this.playerModel.takeAction(Action.LEFT_NORMAL);
         }
         if (KeyCode.isDown(KeyCode.RIGHT_ARROW)) {
             let direction = Vector2.right();
             this.movement.move(deltaTime, direction, this.movementSpeed, this.transform);
+            this.playerModel.takeAction(Action.RIGHT_NORMAL);
         }
         if(KeyCode.isDownButNotHold(KeyCode.UP_ARROW)){
+            this.playerModel.takeAction(Action.FORWARD_NORMAL);
             this.fighter.fight(this.spawnProjectilePos, Vector2.up());
         }
         if (KeyCode.isDownButNotHold(KeyCode.SPACE)) {
@@ -119,25 +129,23 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
                 this.rb.setVelocity(Vector2.zero());
                 this.rb.addForce(Vector2.up(), forceAmount);
                 this.isAddForceDown = false;
+                this.playerModel.handleJumpSprite();
             }
 
         }
     }
 
     public draw(context: CanvasRenderingContext2D): void {
-        if(this.collider.getIsTrigger()){
-            context.fillStyle = 'blue';
-        }
-        else{
-            context.fillStyle = 'grey';
-        }
+        // if(this.collider.getIsTrigger()){
+        //     context.fillStyle = 'blue';
+        // }
+        // else{
+        //     context.fillStyle = 'grey';
+        // }
+        this.playerModel.setPosition(new Vector2(this.transform.getPosition().x-33, 
+                                                this.transform.getPosition().y));
+        this.playerModel.getCurrentSprite().draw(context);
         
-        let transform = this.getComponent(Transform);
-        if (transform == null) {
-            return;
-        }
-        context.fillRect(transform.getPosition().x, transform.getPosition().y,
-            transform.getScale().x, transform.getScale().y);
         this.collider.draw(context);
     }
 
