@@ -102,5 +102,9 @@ class PhysicManager{
     public getFixedDeltaTime(): number{
         return this.fixedDeltaTime;
     }
+    public clearData(): void{
+        this.physicObjs = [];
+        //this.notStaticPhysicObjs = [];
+    }
 }
 export default PhysicManager;

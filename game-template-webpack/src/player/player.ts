@@ -17,6 +17,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     private movementSpeed: number;
     private jumpForce: number;
     private maxBorder: number;
+    private maxChangeJumpToNormalTime: number;
 
     private spawnProjectilePos: Vector2;
 
@@ -33,12 +34,14 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
 
     private previousHeight: number;
     private isAddForceDown: boolean;
+    private currentTime: number;
 
     constructor(position: Vector2, scale: Vector2) {
         super();
         this.movementSpeed = 300;
         this.jumpForce = 250;
         this.maxBorder = 250;
+        this.maxChangeJumpToNormalTime = 0.05;
         
         this.transform = this.getComponent(Transform)!;
         this.transform?.setPosition(position);
@@ -73,6 +76,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     }
     public update(deltaTime: number): void {
         this.handleInput(deltaTime);
+        this.handleNormalSprite(deltaTime);
         this.updateChildTransform();
         this.collider.setIsTrigger(this.transform.getPosition().y<this.previousHeight);
         this.previousHeight = this.transform.getPosition().y;
@@ -136,17 +140,22 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     }
 
     public draw(context: CanvasRenderingContext2D): void {
-        // if(this.collider.getIsTrigger()){
-        //     context.fillStyle = 'blue';
-        // }
-        // else{
-        //     context.fillStyle = 'grey';
-        // }
+        
         this.playerModel.setPosition(new Vector2(this.transform.getPosition().x-33, 
                                                 this.transform.getPosition().y));
         this.playerModel.getCurrentSprite().draw(context);
         
         this.collider.draw(context);
+    }
+    private handleNormalSprite(deltaTime: number): void{
+        if(this.collider.getIsTrigger()){
+            this.currentTime+=deltaTime;
+            if(this.currentTime>this.maxChangeJumpToNormalTime){
+                this.currentTime = 0;
+                this.playerModel.handleNormalSprite();
+            }
+        }
+       
     }
 
     public setPlatformManager(platformManager: PlatformManager): void{

@@ -59,6 +59,17 @@ class PlayerModel{
             this.currentSprite = this.forwardJumpSprite;
         }
     }
+    public handleNormalSprite(){
+        if(this.currentSprite==this.leftJumpSprite){
+            this.currentSprite = this.leftNormalSprite;
+        }
+        else if(this.currentSprite==this.rightJumpSprite){
+            this.currentSprite = this.rightNormalSprite;
+        }
+        else if(this.currentSprite==this.forwardJumpSprite){
+            this.currentSprite = this.forwardNormalSprite;
+        }
+    }
 
 
 }

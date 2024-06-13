@@ -1,7 +1,6 @@
 import Sprite from "../../base-types/sprite";
 import Vector2 from "../../base-types/vector2";
 import PathResources from "../../pathResources";
-import ProductInterface from "../../types/factory/product";
 import Platform from "../platform";
 
 class StablePlatform extends Platform { 

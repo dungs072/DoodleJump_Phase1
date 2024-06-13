@@ -1,7 +1,7 @@
 import Vector2 from "./base-types/vector2";
 import Player from "./player/player";
 import PlatformManager from './platforms/platformManager';
-import PhysicManager from "./physic/physicManager";
+import PhysicManager from './physic/physicManager';
 import ProjectileManager from "./projectile/projectileManager";
 import Sprite from "./base-types/sprite";
 import PathResources from "./pathResources";
@@ -9,6 +9,8 @@ class Game {
 
     private canvas: HTMLCanvasElement;
     private context: CanvasRenderingContext2D;
+    private modal: HTMLElement;
+    private playAgainButton: HTMLButtonElement;
 
     private player: Player;
     private platformManager: PlatformManager;
@@ -17,37 +19,53 @@ class Game {
     private lastRenderTime: number;
 
     private backgroundSprite: Sprite;
+
+    private gameOver: boolean = false;
     
 
 
     constructor() {
         this.canvas = document.createElement('canvas') as HTMLCanvasElement;
         this.context = this.canvas.getContext('2d')!;
+        this.modal = document.getElementById('modal') as HTMLElement;
+        this.playAgainButton = document.getElementById('playAgainButton') as HTMLButtonElement;
+
+        this.playAgainButton.addEventListener('click', () => {
+                        this.setUpGame();
+        });
         this.canvas.width = 640;
         this.canvas.height = 600;
-
-        document.body.appendChild(this.canvas);
-        let playerPosition = new Vector2(this.canvas.width / 2, this.canvas.height - 100);
-        let playerScale = new Vector2(60, 120);
-        this.player = new Player(playerPosition, playerScale);
-        this.platformManager = new PlatformManager();
-        this.player.setPlatformManager(this.platformManager);
-        this.projectileManger = new ProjectileManager();
-        this.player.setProjectileManager(this.projectileManger);
         this.lastRenderTime = 0;
-        PhysicManager.getInstance().addNotStaticPhysicObj(this.player);
-        let platformPosition = new Vector2(playerPosition.x-50, playerPosition.y+playerScale.y);
-        let scale = new Vector2(100, 30);
-        this.platformManager.createStablePlatform(platformPosition, scale);
+        document.body.appendChild(this.canvas);
+     
         this.start();
     }
 
     private start(): void {
-        this.backgroundSprite = new Sprite(PathResources.BACKGROUND, new Vector2(0, 0));
-
+        this.setUpGame();
         this.update();
         let fixedDeltaTime = PhysicManager.getInstance().getFixedDeltaTime();
         setInterval(() => this.fixedUpdate(), fixedDeltaTime);
+    }
+    private setUpGame(): void{
+        let playerPosition = new Vector2(this.canvas.width / 2, this.canvas.height - 100);
+        let playerScale = new Vector2(60, 120);
+        this.player = new Player(playerPosition, playerScale);
+
+        this.platformManager = new PlatformManager();
+        this.player.setPlatformManager(this.platformManager);
+
+        this.projectileManger = new ProjectileManager();
+        this.player.setProjectileManager(this.projectileManger);
+
+        
+        PhysicManager.getInstance().addNotStaticPhysicObj(this.player);
+        let platformPosition = new Vector2(playerPosition.x-50, playerPosition.y+playerScale.y);
+        let scale = new Vector2(100, 30);
+        this.platformManager.createStablePlatform(platformPosition, scale);
+        this.backgroundSprite = new Sprite(PathResources.BACKGROUND, new Vector2(0, 0));
+        this.gameOver = false;
+        this.toggleModal(false);
     }
 
     private update(): void {
@@ -55,24 +73,32 @@ class Game {
         const deltaTime = (currentTime - this.lastRenderTime) / 1000;
         this.lastRenderTime = currentTime;
         this.clearCanvas();
-
+        
         // write code here
         this.backgroundSprite.draw(this.context);
+        if(!this.gameOver){
+           
 
-        this.platformManager.createPlatforms(deltaTime, this.canvas.width-200);
-        this.platformManager.updatePlatforms(deltaTime, this.context);
+            this.platformManager.createPlatforms(deltaTime, this.canvas.width-200);
+            this.platformManager.updatePlatforms(deltaTime, this.context);
+    
+            this.projectileManger.updateProjectiles(deltaTime, this.context);
+    
+            this.handlePlayer(deltaTime);
+        }
+        else{
+            this.player.update(deltaTime);
+            this.player.draw(this.context);
+            if(this.player.getPosition().y>this.canvas.height+50){
+                this.toggleModal(true);
+            }
+        }
 
-        this.projectileManger.updateProjectiles(deltaTime, this.context);
-
-        this.HandlePlayer(deltaTime);
-        
-
-        
         // write code here
         requestAnimationFrame(() => this.update());
 
     }
-    private HandlePlayer(deltaTime: number){
+    private handlePlayer(deltaTime: number){
         this.player.update(deltaTime);
         this.player.draw(this.context);
         if(this.player.getPosition().x>this.canvas.width){
@@ -82,6 +108,16 @@ class Game {
         if(this.player.getPosition().x<0){
             let newPos = new Vector2(this.canvas.width, this.player.getPosition().y);
             this.player.setPosition(newPos);
+        }
+        if(this.player.getPosition().y>this.canvas.height+50){
+            if(this.gameOver){
+                this.toggleModal(true);
+            }
+            this.platformManager.clearData();
+            PhysicManager.getInstance().clearData();
+            this.projectileManger.clearData();
+            this.gameOver = true;
+            this.player.setPosition(new Vector2(this.player.getPosition().x, 0));
         }
     }
 
@@ -96,6 +132,9 @@ class Game {
 
     private clearCanvas() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+    private toggleModal(show: boolean) {
+       this.modal.style.display = show ? 'flex' : 'none';
     }
 
    

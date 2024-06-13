@@ -22,5 +22,8 @@ class ProjectileManager{
             
         }
     }
+    public clearData(): void{
+        this.projectiles = [];
+    }
 }
 export default ProjectileManager;

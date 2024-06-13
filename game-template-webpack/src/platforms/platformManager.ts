@@ -106,5 +106,9 @@ class PlatformManager {
     public getPlatforms(): Platform[]{
         return this.platforms;
     }
+    public clearData(): void{
+        this.platformCreators = [];
+        this.platforms = [];
+    }
 }
 export default PlatformManager;
