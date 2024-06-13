@@ -11,7 +11,7 @@ class RigidBody implements ComponentInterface {
         this.mass = 1;
     }
     public addForce(direction: Vector2, forceAmount: number): void {
-        this.velocity = Vector2.multiply(direction, forceAmount);
+        this.velocity = Vector2.add(this.velocity,Vector2.multiply(direction, forceAmount));
     }
     public clampToZeroVelocity(amount: number): void {
         if(this.velocity.x<0){

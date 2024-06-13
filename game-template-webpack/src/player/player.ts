@@ -8,9 +8,11 @@ import RigidBody from '../base-types/components/rigidbody';
 import Collider from "../base-types/components/collider";
 import Movement from "../general/movement";
 import PlatformManager from "../platforms/platformManager";
+import Platform from '../platforms/platform';
 class Player extends GameObject implements SystemInterface, RenderInterface {
     private movementSpeed: number;
     private jumpForce: number;
+    private maxBorder: number;
 
     private rb: RigidBody;
     private collider: Collider;
@@ -20,11 +22,14 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     private platFormManager: PlatformManager ;
 
     private previousHeight: number;
+    private isAddForceDown: boolean;
 
     constructor(position: Vector2, scale: Vector2) {
         super();
         this.movementSpeed = 250;
         this.jumpForce = 250;
+        this.maxBorder = 250;
+        
         this.transform = this.getComponent(Transform)!;
         this.transform?.setPosition(position);
         this.transform?.setScale(scale);
@@ -50,17 +55,19 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     }
     public update(deltaTime: number): void {
         this.handleInput(deltaTime);
-
-        
         this.collider.setIsTrigger(this.transform.getPosition().y<this.previousHeight);
         this.previousHeight = this.transform.getPosition().y;
 
-        if(this.transform.getPosition().y>=200){
+        if(this.transform.getPosition().y>=this.maxBorder){
             return;
+        }
+        else if(!this.isAddForceDown){
+            this.rb.addForce(Vector2.down(), 45); // need to calculate this again there
+            this.isAddForceDown = true;
         }
         this.movement.move(deltaTime, Vector2.down(), this.movementSpeed+50, this.transform);
         this.previousHeight = this.transform.getPosition().y;
-        this.platFormManager.getPublisher().setData(100);
+        this.platFormManager.getPublisher().setData(50);
         this.platFormManager.getPublisher().notify();
     }
     public handleInput(deltaTime: number){
@@ -77,11 +84,24 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             if (rigidbody == null) {
                 return;
             }
-            rigidbody.addForce(Vector2.up(), this.jumpForce)
+            let velocity = Vector2.multiply(Vector2.up(), this.jumpForce);
+            rigidbody.setVelocity(velocity);
         }
     }
-    public onCollisionEnter(other: Collider): void {
-        this.rb.addForce(Vector2.up(), this.jumpForce);
+    public onCollisionEnter(other: GameObject): void {
+        // check if collide with Platform
+        if(other instanceof Platform){
+            let platform = (other as Platform);
+            platform.operation();
+            if(platform.getCanJump()){
+                var forceAmount = this.jumpForce;
+
+                this.rb.setVelocity(Vector2.zero());
+                this.rb.addForce(Vector2.up(), forceAmount);
+                this.isAddForceDown = false;
+            }
+
+        }
     }
 
     public draw(context: CanvasRenderingContext2D): void {
@@ -103,6 +123,12 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
 
     public SetPlatFormManager(platformManager: PlatformManager): void{
         this.platFormManager = platformManager;
+    }
+    public getPosition(): Vector2{
+        return this.transform.getPosition();
+    }
+    public setPosition(position: Vector2): void{
+        this.transform.setPosition(position);
     }
 
 }

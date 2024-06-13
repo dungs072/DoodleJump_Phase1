@@ -3,7 +3,9 @@ import ComponentInterface from "../types/component";
 import PhysicsInterface from "../types/physicSystem";
 import Collider from "./components/collider";
 class  GameObject implements PhysicsInterface {
+    // change to dictionary for reducing time complexity
     private components: ComponentsArray
+    private canDraw: boolean;
     constructor() {
         this.components = new ComponentsArray();
         this.initGameObject();
@@ -12,6 +14,7 @@ class  GameObject implements PhysicsInterface {
     private initGameObject(): void {
         let transform = new Transform();
         this.components.Push(transform);
+        this.canDraw = true;
     }
     public getComponent<T extends ComponentInterface>(componentClass: { new(): T }): T | null {
         return this.components.getInstanceFor<T>(componentClass);
@@ -27,14 +30,20 @@ class  GameObject implements PhysicsInterface {
         return transform.getPosition().x < 0 || transform.getPosition().x > canvas.width ||
             transform.getPosition().y < 0 || transform.getPosition().y > canvas.height;
     }
-    public onCollisionEnter(other: Collider): void {
+    public onCollisionEnter(other: GameObject): void {
         // implement collision here
+    }
+    public setCanDraw(state: boolean): void{
+        this.canDraw = state;
+    }
+    public getCanDraw(): boolean{
+        return this.canDraw;
     }
 }
 class ComponentsArray extends Array<ComponentInterface> {
     public getInstanceFor<T extends ComponentInterface>(componentClass: { new(): T; }) {
         for (var i = 0; i < this.length; i++) {
-            if ((<any>this[i].constructor).name === (<any>componentClass).name) {
+            if ((this[i].constructor).name === (componentClass).name) {
                 return this[i];
             }
         }

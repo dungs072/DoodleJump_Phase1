@@ -6,6 +6,7 @@ import RigidBody from "./base-types/components/rigidbody";
 import Collider from "./base-types/components/collider";
 import Platform from "./platforms/platform";
 import PlatformManager from './platforms/platformManager';
+import StablePlatform from "./platforms/stable-platform/stablePlatform";
 class Game {
     private readonly fixedDeltaTime = 0.02;
     canvas: HTMLCanvasElement;
@@ -34,14 +35,10 @@ class Game {
         this.lastRenderTime = 0;
 
         this.notStaticPhysicObjs.push(this.player);
-
+        this.platformManager.setPhysicObjs(this.physicObjs);
         let platformPosition = new Vector2(playerPosition.x-50, playerPosition.y+playerScale.y);
         let scale = new Vector2(100, 30);
-        let platform = new Platform(platformPosition, scale);
-        this.platformManager.getPublisher().subcribe(platform);
-        this.platformManager.addPlatform(platform);
-        this.platformManager.setPhysicObjs(this.physicObjs);
-        this.physicObjs.push(platform);
+        this.platformManager.createStablePlatform(platformPosition, scale);
         this.start();
     }
 
@@ -60,13 +57,25 @@ class Game {
         this.platformManager.createPlatforms(deltaTime, this.canvas.width-200);
         this.platformManager.updatePlatforms(deltaTime, this.context);
 
-        this.player.update(deltaTime);
-        this.player.draw(this.context);
+        this.HandlePlayer(deltaTime);
+        
 
 
         // write code here
         requestAnimationFrame(() => this.update());
 
+    }
+    private HandlePlayer(deltaTime: number){
+        this.player.update(deltaTime);
+        this.player.draw(this.context);
+        if(this.player.getPosition().x>this.canvas.width){
+            let newPos = new Vector2(0, this.player.getPosition().y);
+            this.player.setPosition(newPos);
+        }
+        if(this.player.getPosition().x<0){
+            let newPos = new Vector2(this.canvas.width, this.player.getPosition().y);
+            this.player.setPosition(newPos);
+        }
     }
 
     private fixedUpdate(): void {
@@ -103,7 +112,7 @@ class Game {
                 }
 
                 if (!collider.getIsTrigger()&&collider.hasCollision(otherCollider)) {
-                    this.notStaticPhysicObjs[i].onCollisionEnter(otherCollider);
+                    this.notStaticPhysicObjs[i].onCollisionEnter(this.physicObjs[j]);
                 }
                 
             }
