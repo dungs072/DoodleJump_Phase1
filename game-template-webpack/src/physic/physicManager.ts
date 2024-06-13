@@ -15,6 +15,12 @@ class PhysicManager{
         this.physicObjs = [];
         this.notStaticPhysicObjs = [];
     }
+    public static getInstance(): PhysicManager{
+        if (!PhysicManager.Instance) {
+            PhysicManager.Instance = new PhysicManager();
+        }
+        return PhysicManager.Instance;
+    }
     public handleCorePhysic(): void {
         for (let i = 0; i < this.notStaticPhysicObjs.length; i++) {
             
@@ -88,12 +94,7 @@ class PhysicManager{
         let indexPhysic = this.physicObjs.indexOf(obj);
         this.physicObjs.slice(indexPhysic, 1);
     }
-    public static getInstance(): PhysicManager{
-        if (!PhysicManager.getInstance()) {
-            PhysicManager.Instance = new PhysicManager();
-        }
-        return PhysicManager.Instance;
-    }
+   
     public getFixedDeltaTime(): number{
         return this.fixedDeltaTime;
     }

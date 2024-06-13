@@ -25,7 +25,6 @@ class Game {
         this.platformManager = new PlatformManager();
         this.player.SetPlatFormManager(this.platformManager);
         this.lastRenderTime = 0;
-
         PhysicManager.getInstance().addNotStaticPhysicObj(this.player);
         let platformPosition = new Vector2(playerPosition.x-50, playerPosition.y+playerScale.y);
         let scale = new Vector2(100, 30);
@@ -35,7 +34,9 @@ class Game {
 
     private start(): void {
         this.update();
-        setInterval(() => this.fixedUpdate(), PhysicManager.getInstance().getFixedDeltaTime());
+        let fixedDeltaTime = PhysicManager.getInstance().getFixedDeltaTime();
+        
+        setInterval(() => this.fixedUpdate(), fixedDeltaTime);
     }
 
     private update(): void {
