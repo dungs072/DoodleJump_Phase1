@@ -9,17 +9,23 @@ import Collider from "../base-types/components/collider";
 import Movement from "../general/movement";
 import PlatformManager from "../platforms/platformManager";
 import Platform from '../platforms/platform';
+import PlayerFighter from "./playerFighter";
+import ProjectileManager from "../projectile/projectileManager";
 class Player extends GameObject implements SystemInterface, RenderInterface {
     private movementSpeed: number;
     private jumpForce: number;
     private maxBorder: number;
 
+    private spawnProjectilePos: Vector2;
+
     private rb: RigidBody;
     private collider: Collider;
     private transform: Transform;
     private movement: Movement;
+    private fighter: PlayerFighter;
 
-    private platFormManager: PlatformManager ;
+    private platFormManager: PlatformManager;
+    private projectileManager: ProjectileManager;
 
     private previousHeight: number;
     private isAddForceDown: boolean;
@@ -44,6 +50,8 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
 
         this.movement = new Movement();
         this.addComponent(this.movement);
+
+        
         
         this.collider = new Collider();
         let topLeft = new Vector2(this.transform.getPosition().x, 
@@ -52,9 +60,13 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.collider.setBounds(topLeft, downRight);
         this.collider.setIsStatic(false);
         this.addComponent(this.collider);
+
+        this.spawnProjectilePos = Vector2.add(this.transform.getPosition(), 
+                            new Vector2(this.transform.getScale().x/2,-10));
     }
     public update(deltaTime: number): void {
         this.handleInput(deltaTime);
+        this.updateChildTransform();
         this.collider.setIsTrigger(this.transform.getPosition().y<this.previousHeight);
         this.previousHeight = this.transform.getPosition().y;
 
@@ -70,7 +82,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.platFormManager.getPublisher().setData(50);
         this.platFormManager.getPublisher().notify();
     }
-    public handleInput(deltaTime: number){
+    private handleInput(deltaTime: number){
         if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {
             let direction = Vector2.left();
             this.movement.move(deltaTime, direction, this.movementSpeed, this.transform);
@@ -79,7 +91,10 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             let direction = Vector2.right();
             this.movement.move(deltaTime, direction, this.movementSpeed, this.transform);
         }
-        if (KeyCode.isDownButNotHold(KeyCode.UP_ARROW)) {
+        if(KeyCode.isDownButNotHold(KeyCode.UP_ARROW)){
+            this.fighter.fight(this.spawnProjectilePos, Vector2.up());
+        }
+        if (KeyCode.isDownButNotHold(KeyCode.SPACE)) {
             let rigidbody = this.getComponent(RigidBody);
             if (rigidbody == null) {
                 return;
@@ -87,6 +102,11 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             let velocity = Vector2.multiply(Vector2.up(), this.jumpForce);
             rigidbody.setVelocity(velocity);
         }
+        
+    }
+    private updateChildTransform(){
+        this.spawnProjectilePos = Vector2.add(this.transform.getPosition(), 
+        new Vector2(this.transform.getScale().x/2,-10));
     }
     public onCollisionEnter(other: GameObject): void {
         // check if collide with Platform
@@ -121,8 +141,13 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.collider.draw(context);
     }
 
-    public SetPlatFormManager(platformManager: PlatformManager): void{
+    public setPlatformManager(platformManager: PlatformManager): void{
         this.platFormManager = platformManager;
+    }
+    public setProjectileManager(projectileManager: ProjectileManager): void{
+        this.projectileManager = projectileManager;
+        this.fighter = new PlayerFighter(this.projectileManager);
+        this.addComponent(this.fighter);
     }
     public getPosition(): Vector2{
         return this.transform.getPosition();

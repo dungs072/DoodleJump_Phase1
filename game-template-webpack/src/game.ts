@@ -2,15 +2,19 @@ import Vector2 from "./base-types/vector2";
 import Player from "./player/player";
 import PlatformManager from './platforms/platformManager';
 import PhysicManager from "./physic/physicManager";
+import ProjectileManager from "./projectile/projectileManager";
 class Game {
 
     canvas: HTMLCanvasElement;
     context: CanvasRenderingContext2D;
 
     player: Player;
+    platformManager: PlatformManager;
+    projectileManger: ProjectileManager;
    
     lastRenderTime: number;
-    platformManager: PlatformManager;
+    
+
 
     constructor() {
         this.canvas = document.createElement('canvas') as HTMLCanvasElement;
@@ -23,7 +27,9 @@ class Game {
         let playerScale = new Vector2(30, 30);
         this.player = new Player(playerPosition, playerScale);
         this.platformManager = new PlatformManager();
-        this.player.SetPlatFormManager(this.platformManager);
+        this.player.setPlatformManager(this.platformManager);
+        this.projectileManger = new ProjectileManager();
+        this.player.setProjectileManager(this.projectileManger);
         this.lastRenderTime = 0;
         PhysicManager.getInstance().addNotStaticPhysicObj(this.player);
         let platformPosition = new Vector2(playerPosition.x-50, playerPosition.y+playerScale.y);
@@ -48,6 +54,8 @@ class Game {
         // write code here
         this.platformManager.createPlatforms(deltaTime, this.canvas.width-200);
         this.platformManager.updatePlatforms(deltaTime, this.context);
+
+        this.projectileManger.updateProjectiles(deltaTime, this.context);
 
         this.HandlePlayer(deltaTime);
         

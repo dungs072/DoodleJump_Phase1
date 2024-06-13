@@ -89,12 +89,14 @@ class PlatformManager {
 
     public updatePlatforms(deltaTime: number, context: CanvasRenderingContext2D) {
         for(let i = this.platforms.length-1;i>=0;i--){
-            if(this.platforms[i].getCanDestroy()){
-                this.platforms.splice(i, 1);
-                PhysicManager.getInstance().removePhysicObjs(this.platforms[i]);
-            }
             this.platforms[i].update(deltaTime);
             this.platforms[i].draw(context);
+            if(this.platforms[i].getCanDestroy()){
+                PhysicManager.getInstance().removePhysicObjs(this.platforms[i]);
+                this.publisher.unsubcribe(this.platforms[i]);
+                this.platforms.splice(i, 1);
+            }
+
         }
         this.platforms.forEach(platform => {
             

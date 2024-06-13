@@ -16,7 +16,7 @@ abstract class Platform extends GameObject implements SystemInterface, RenderInt
     private movementSpeed: number;
     private maxDistanceToDestroy: number;
     protected canJump: boolean;
-    protected canDestroy: boolean;
+    
     protected color: string;
 
     private targetY: number;
@@ -87,9 +87,7 @@ abstract class Platform extends GameObject implements SystemInterface, RenderInt
     public getCanJump(){
         return this.canJump;
     }
-    public getCanDestroy(){
-        return this.canDestroy;
-    }
+
     public getTransform(){
         return this.transform;
     }

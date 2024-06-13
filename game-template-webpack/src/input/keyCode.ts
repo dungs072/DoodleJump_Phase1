@@ -4,6 +4,8 @@ class KeyCode {
     public static readonly UP_ARROW = 38;
     public static readonly DOWN_ARROW = 40;
 
+    public static readonly SPACE = 32;
+
     public static keys: { [key: number]: boolean } = {};
 
     public static isDown(keyCode: number): boolean {

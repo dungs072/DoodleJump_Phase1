@@ -6,6 +6,7 @@ class  GameObject implements PhysicsInterface {
     // change to dictionary for reducing time complexity
     private components: ComponentsArray
     private canDraw: boolean;
+    protected canDestroy: boolean;
     constructor() {
         this.components = new ComponentsArray();
         this.initGameObject();
@@ -15,6 +16,7 @@ class  GameObject implements PhysicsInterface {
         let transform = new Transform();
         this.components.Push(transform);
         this.canDraw = true;
+        this.canDestroy = false;
     }
     public getComponent<T extends ComponentInterface>(componentClass: { new(): T }): T | null {
         return this.components.getInstanceFor<T>(componentClass);
@@ -38,6 +40,9 @@ class  GameObject implements PhysicsInterface {
     }
     public getCanDraw(): boolean{
         return this.canDraw;
+    }
+    public getCanDestroy(){
+        return this.canDestroy;
     }
 }
 class ComponentsArray extends Array<ComponentInterface> {

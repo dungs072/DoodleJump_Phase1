@@ -73,11 +73,11 @@ class PhysicManager{
         for(let i =0;i< this.physicObjs.length;i++){
             let collider = this.physicObjs[i].getComponent(Collider);
             if (collider == null) {
-                return;
+                continue;
             }
             let transform = this.physicObjs[i].getComponent(Transform);
             if (transform == null) {
-                return;
+                continue;
             }
             let downRight = collider.getDownRightBound()
             collider.setBounds(transform.getPosition(), downRight);
@@ -93,6 +93,10 @@ class PhysicManager{
     public removePhysicObjs(obj: GameObject): void {
         let indexPhysic = this.physicObjs.indexOf(obj);
         this.physicObjs.slice(indexPhysic, 1);
+    }
+    public removeNotStaticPhysicObjs(obj: GameObject): void {
+        let indexPhysic = this.notStaticPhysicObjs.indexOf(obj);
+        this.notStaticPhysicObjs.slice(indexPhysic, 1);
     }
    
     public getFixedDeltaTime(): number{
