@@ -8,10 +8,14 @@ class PlatformManager {
     private platforms: Platform[];
     private physicObjs: GameObject[]
     private previousYPosition: number;
+    private maxSpawnTime: number;
+    private currentSpawnTime: number;
     constructor(){
         this.publisher = new Publisher<number>();
         this.platforms = [];
         this.previousYPosition = 500;
+        this.maxSpawnTime = 0.2;
+        this.currentSpawnTime = 0;
     }
     public getPublisher(): Publisher<number>{
         return this.publisher;
@@ -19,8 +23,9 @@ class PlatformManager {
     public addPlatform(platform: Platform): void{
         this.platforms.push(platform);
     }
-    public createPlatforms(canvasWidth: number) {
-        if (Math.random() < 0.03) {
+    public createPlatforms(deltaTime: number,canvasWidth: number) {
+        this.currentSpawnTime+=deltaTime;
+        if (this.currentSpawnTime>this.maxSpawnTime) {
             let position = new Vector2(Math.random() * canvasWidth, this.previousYPosition-100);
             let scale = new Vector2(100, 30);
             let platform = new Platform(position, scale);
@@ -28,7 +33,9 @@ class PlatformManager {
             this.physicObjs.push(platform);
             this.publisher.subcribe(platform);
             this.previousYPosition = position.y;
+            this.currentSpawnTime = 0;
         }
+
     }
 
     public updatePlatforms(deltaTime: number, context: CanvasRenderingContext2D) {

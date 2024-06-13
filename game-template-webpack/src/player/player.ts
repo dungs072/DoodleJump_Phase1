@@ -28,7 +28,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.transform = this.getComponent(Transform)!;
         this.transform?.setPosition(position);
         this.transform?.setScale(scale);
-        this.start()
+        this.start();
     }
 
     public start(): void {
@@ -41,15 +41,27 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.addComponent(this.movement);
         
         this.collider = new Collider();
-        let downRight = new Vector2(this.transform.getScale().x, this.transform.getScale().y);
-        this.collider.setBounds(this.transform.getPosition(), downRight);
+        let topLeft = new Vector2(this.transform.getPosition().x, 
+                                this.transform.getPosition().y + 15);
+        let downRight = Vector2.add(this.transform.getPosition(), this.transform.getScale());
+        this.collider.setBounds(topLeft, downRight);
         this.collider.setIsStatic(false);
         this.addComponent(this.collider);
     }
     public update(deltaTime: number): void {
         this.handleInput(deltaTime);
-        this.collider.setIsTrigger(this.previousHeight>this.transform.getPosition().y);
+
+        
+        this.collider.setIsTrigger(this.transform.getPosition().y<this.previousHeight);
         this.previousHeight = this.transform.getPosition().y;
+
+        if(this.transform.getPosition().y>=200){
+            return;
+        }
+        this.movement.move(deltaTime, Vector2.down(), this.movementSpeed+50, this.transform);
+        this.previousHeight = this.transform.getPosition().y;
+        this.platFormManager.getPublisher().setData(100);
+        this.platFormManager.getPublisher().notify();
     }
     public handleInput(deltaTime: number){
         if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {
@@ -70,13 +82,6 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     }
     public onCollisionEnter(other: Collider): void {
         this.rb.addForce(Vector2.up(), this.jumpForce);
-        if(this.transform.getPosition().y>=400){
-            return;
-        }
-        this.platFormManager.getPublisher().setData(300);
-        this.platFormManager.getPublisher().notify();
-
-        
     }
 
     public draw(context: CanvasRenderingContext2D): void {

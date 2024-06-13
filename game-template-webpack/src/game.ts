@@ -3,10 +3,8 @@ import GameObject from "./base-types/gameObject";
 import Vector2 from "./base-types/vector2";
 import Player from "./player/player";
 import RigidBody from "./base-types/components/rigidbody";
-import PhysicData from "./base-types/physics/physicData";
 import Collider from "./base-types/components/collider";
 import Platform from "./platforms/platform";
-import PhysicsInterface from "./types/physicSystem";
 import PlatformManager from './platforms/platformManager';
 class Game {
     private readonly fixedDeltaTime = 0.02;
@@ -59,7 +57,7 @@ class Game {
         this.clearCanvas();
 
         // write code here
-        this.platformManager.createPlatforms(this.canvas.width);
+        this.platformManager.createPlatforms(deltaTime, this.canvas.width-200);
         this.platformManager.updatePlatforms(deltaTime, this.context);
 
         this.player.update(deltaTime);
@@ -90,8 +88,10 @@ class Game {
             if (collider == null) {
                 return;
             }
-            var downRight = collider.getDownRightBound()
-            collider.setBounds(transform.getPosition(), downRight);
+            var topLeft = new Vector2(transform.getPosition().x, transform.getPosition().y + 25);
+            var downRight = new Vector2(transform.getScale().x, transform.getScale().y-25);
+
+            collider.setBounds(topLeft, downRight);
             for (let j = 0; j < this.physicObjs.length; j++) {
                 if(this.notStaticPhysicObjs[i]==this.physicObjs[j]){
                     continue;

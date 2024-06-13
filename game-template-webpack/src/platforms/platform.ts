@@ -20,7 +20,7 @@ class Platform extends GameObject implements SystemInterface, RenderInterface, S
         this.transform = this.getComponent(Transform)!;
         this.transform.setPosition(position);
         this.transform.setScale(scale);
-        this.movementSpeed = 350;
+        this.movementSpeed = 500;
         this.targetY = this.transform.getPosition().y;
         this.start();
     }
@@ -40,7 +40,6 @@ class Platform extends GameObject implements SystemInterface, RenderInterface, S
             return;
         }
         this.movement.move(deltaTime, Vector2.down(), this.movementSpeed, this.transform);
-
     }
 
     public draw(context: CanvasRenderingContext2D) {

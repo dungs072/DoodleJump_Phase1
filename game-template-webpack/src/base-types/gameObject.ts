@@ -2,7 +2,7 @@ import Transform from "./components/transform";
 import ComponentInterface from "../types/component";
 import PhysicsInterface from "../types/physicSystem";
 import Collider from "./components/collider";
-class GameObject implements PhysicsInterface {
+class  GameObject implements PhysicsInterface {
     private components: ComponentsArray
     constructor() {
         this.components = new ComponentsArray();

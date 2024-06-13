@@ -49,7 +49,7 @@ class Collider implements RenderInterface {
         return overlapX && overlapY;
     }
 
-    draw(context: CanvasRenderingContext2D): void {
+    public draw(context: CanvasRenderingContext2D): void {
         context.strokeStyle = '#008000';
         context.strokeRect(this.topLeftBound.x,
                         this.topLeftBound.y,
