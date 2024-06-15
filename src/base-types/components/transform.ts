@@ -1,26 +1,26 @@
-import Vector2 from "../Vector2";
-import ComponentInterface from "../../types/component";
+import Vector2 from '../Vector2'
+import ComponentInterface from '../../types/component'
 
 class Transform implements ComponentInterface {
-    private position: Vector2;
-    private scale: Vector2;
+    private position: Vector2
+    private scale: Vector2
 
     constructor() {
-        this.position = new Vector2(0, 0);
-        this.scale = new Vector2(1, 1);
+        this.position = new Vector2(0, 0)
+        this.scale = new Vector2(1, 1)
     }
     public getPosition(): Vector2 {
-        return this.position;
+        return this.position
     }
     public getScale(): Vector2 {
-        return this.scale;
+        return this.scale
     }
 
     public setPosition(position: Vector2): void {
-        this.position = position;
+        this.position = position
     }
     public setScale(scale: Vector2): void {
-        this.scale = scale;
+        this.scale = scale
     }
 }
 

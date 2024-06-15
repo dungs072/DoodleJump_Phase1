@@ -1,4 +1,4 @@
-class FontManager{
-    public static readonly Arial = "20px Arial";
+class FontManager {
+    public static readonly Arial = '20px Arial'
 }
-export default FontManager;
+export default FontManager

@@ -1,4 +1,2 @@
-interface ComponentInterface {
-
-}
+interface ComponentInterface {}
 export default ComponentInterface

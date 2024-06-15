@@ -1,4 +1,4 @@
 interface RenderInterface {
-    draw(context: CanvasRenderingContext2D): void;
+    draw(context: CanvasRenderingContext2D): void
 }
-export default RenderInterface;
+export default RenderInterface

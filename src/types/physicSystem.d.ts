@@ -1,4 +1,4 @@
 interface PhysicsInterface {
-    onCollisionEnter(other: Collider): void;
+    onCollisionEnter(other: Collider): void
 }
 export default PhysicsInterface

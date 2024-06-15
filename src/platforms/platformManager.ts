@@ -2,13 +2,10 @@ import GameObject from "../base-types/GameObject";
 import Vector2 from "../base-types/Vector2";
 import Creator from "../patterns/factory/Creator";
 import Publisher from "../patterns/observer/Publisher";
-import PhysicManager from "../physic/PhysicManager";
-import MovablePlatform from "./movable-platform/MovablePlatform";
+import PhysicManager from '../physic/PhysicManager';
 import MovablePlatformCreator from "./movable-platform/MovablePlatformCreator";
 import Platform from "./Platform";
-import StablePlatform from "./stable-platform/StablePlatform";
 import StablePlatformCreator from './stable-platform/StablePlatformCreator';
-import UnstablePlatform from "./unstable-platform/UnstablePlatform";
 import UnstablePlatformCreator from './unstable-platform/UnstablePlatformCreator';
 
 class PlatformManager {
@@ -49,17 +46,16 @@ class PlatformManager {
         }
         
         if (this.currentSpawnTime>this.maxSpawnTime&&isMaxPlatform) {
-            let position = new Vector2(Math.random() * canvasWidth, this.previousYPosition-100);
+            let position = new Vector2(Math.random() * canvasWidth, this.previousYPosition-150);
             let scale = new Vector2(120, 30);
             let platformCreatorIndex = Math.floor(Math.random() * this.platformCreators.length);
             let platformCreator = this.platformCreators[platformCreatorIndex];
             let product = platformCreator.createProduct(position, scale);
             let gameObj = product.getGameObject();
             if(gameObj instanceof Platform){
-                let platform = gameObj as Platform;
-                this.platforms.push(platform);
-                this.publisher.subcribe(platform);
-                PhysicManager.getInstance().addphysicObjs(platform);
+                this.platforms.push(gameObj);
+                this.publisher.subcribe(gameObj);
+                PhysicManager.getInstance().addphysicObjs(gameObj);
             }
             
             if(lastPlatform!=null){
@@ -69,16 +65,16 @@ class PlatformManager {
         }
 
     }
-    public createStablePlatform(position: Vector2, scale: Vector2){
+    public createStablePlatform(position: Vector2, scale: Vector2): GameObject{
         let platformCreator = this.platformCreators[0];
         let product = platformCreator.createProduct(position, scale);
         let gameObj = product.getGameObject();
         if(gameObj instanceof Platform){
-            let platform = gameObj as Platform;
-            this.platforms.push(platform);
-            this.publisher.subcribe(platform);
+            this.platforms.push(gameObj);
+            this.publisher.subcribe(gameObj); 
+            PhysicManager.getInstance().addphysicObjs(gameObj);
         }
-        PhysicManager.getInstance().addphysicObjs(gameObj);
+        return gameObj;
     }
     private getTheLastPlatform(): Platform|null{
         if(this.platforms.length==0){
@@ -95,10 +91,11 @@ class PlatformManager {
                 PhysicManager.getInstance().removePhysicObjs(this.platforms[i]);
                 this.publisher.unsubcribe(this.platforms[i]);
                 this.platforms.splice(i, 1);
-                
             }
 
         }
+        
+        //console.log(PhysicManager.getInstance().getFirstLengthPhysicObjs());
         // this.platforms = this.platforms.filter(platform => !platform.isOutsideCanvas(this.canvas));
     }
     public getPlatforms(): Platform[]{
