@@ -1,14 +1,12 @@
-import Vector2 from "./base-types/vector2";
-import Player from "./player/player";
-import PlatformManager from './platforms/platformManager';
-import PhysicManager from './physic/physicManager';
-import ProjectileManager from "./projectile/projectileManager";
-import Sprite from "./base-types/sprite";
-import PathResources from "./pathResources";
-import ButtonManager from './ui/buttonManager';
-import UIManager from "./ui/uiManager";
-import GameController from './mechanism/gameController';
-import GameState from "./base-types/enums/gameState";
+import Vector2 from "./base-types/Vector2";
+import Player from "./player/Player";
+import PlatformManager from './platforms/PlatformManager';
+import PhysicManager from './physic/PhysicManager';
+import ProjectileManager from "./projectile/ProjectileManager";
+import Sprite from "./base-types/Sprite";
+import PathResources from "./PathResources";
+import ButtonManager from './ui/ButtonManager';
+import GameController from './mechanism/GameController';
 class Game {
 
     private canvas: HTMLCanvasElement;
@@ -64,6 +62,7 @@ class Game {
         requestAnimationFrame(() => this.update());
 
     }
+    
     
 
     private fixedUpdate(): void {

@@ -1,5 +1,5 @@
-import Transform from "../base-types/components/transform";
-import Vector2 from "../base-types/vector2";
+import Transform from "../base-types/components/Transform";
+import Vector2 from "../base-types/Vector2";
 import ComponentInterface from '../types/component';
 
 class Movement implements ComponentInterface{

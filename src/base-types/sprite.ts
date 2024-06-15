@@ -1,5 +1,5 @@
 import RenderInterface from "../types/render";
-import Vector2 from "./vector2";
+import Vector2 from "./Vector2";
 
 class Sprite implements RenderInterface{
     private position: Vector2;

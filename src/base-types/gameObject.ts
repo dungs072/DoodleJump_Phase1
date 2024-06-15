@@ -1,4 +1,4 @@
-import Transform from "./components/transform";
+import Transform from "./components/Transform";
 import ComponentInterface from "../types/component";
 import PhysicsInterface from "../types/physicSystem";
 class  GameObject implements PhysicsInterface {

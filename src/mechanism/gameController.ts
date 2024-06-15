@@ -1,15 +1,14 @@
-import GameState from '../base-types/enums/gameState';
-import Sprite from '../base-types/sprite';
-import Vector2 from '../base-types/vector2';
-import PathResources from '../pathResources';
-import PhysicManager from '../physic/physicManager';
-import PlatformManager from '../platforms/platformManager';
-import Player from '../player/player';
-import ProjectileManager from '../projectile/projectileManager';
-import UIManager from '../ui/uiManager';
-import GameMenu from './gameMenu';
-import GamePlay from './gamePlay';
-import GameStateHandler from './gameStateHandler';
+
+import Vector2 from '../base-types/Vector2';
+import GameState from '../base-types/enums/GameState';
+import PhysicManager from '../physic/PhysicManager';
+import PlatformManager from '../platforms/PlatformManager';
+import Player from '../player/Player';
+import ProjectileManager from '../projectile/ProjectileManager';
+import UIManager from '../ui/UIManager';
+import GameMenu from './GameMenu';
+import GamePlay from './GamePlay';
+import GameStateHandler from './GameStateHandler';
 class GameController{
     private gamePlay: GamePlay;
     private gameMenu: GameMenu;

@@ -1,7 +1,7 @@
-import GameState from "../base-types/enums/gameState";
+import GameState from "../base-types/enums/GameState";
 import SubcriberInterface from "../types/observer/subcriber";
-import UIManager from "../ui/uiManager";
-import GameStateHandler from "./gameStateHandler";
+import UIManager from "../ui/UIManager";
+import GameStateHandler from "./GameStateHandler";
 
 class GameMenu implements SubcriberInterface<string>{
     private gameStateHandler: GameStateHandler;

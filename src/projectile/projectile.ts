@@ -1,9 +1,9 @@
-import Collider from "../base-types/components/collider";
-import RigidBody from "../base-types/components/rigidbody";
-import Transform from "../base-types/components/transform";
-import GameObject from "../base-types/gameObject";
-import Vector2 from "../base-types/vector2";
-import Movement from "../general/movement";
+import Collider from "../base-types/components/Collider";
+import RigidBody from "../base-types/components/Rigidbody";
+import Transform from "../base-types/components/Transform";
+import GameObject from "../base-types/GameObject";
+import Vector2 from "../base-types/Vector2";
+import Movement from "../general/Movement";
 import RenderInterface from "../types/render";
 import SystemInterface from "../types/system";
 

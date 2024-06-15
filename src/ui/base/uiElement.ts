@@ -1,7 +1,7 @@
-import GameObject from "../../base-types/gameObject";
-import Sprite from '../../base-types/sprite';
-import Vector2 from "../../base-types/vector2";
-import Transform from '../../base-types/components/transform';
+import GameObject from "../../base-types/GameObject";
+import Sprite from '../../base-types/Sprite';
+import Vector2 from "../../base-types/Vector2";
+import Transform from '../../base-types/components/Transform';
 import RenderInterface from "../../types/render";
 
 class UIElement extends GameObject implements RenderInterface{

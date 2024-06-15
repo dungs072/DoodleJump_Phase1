@@ -1,4 +1,4 @@
-import Vector2 from "../../base-types/vector2";
+import Vector2 from "../../base-types/Vector2";
 import ProductInterface from "../../types/factory/product";
 
 abstract class Creator{

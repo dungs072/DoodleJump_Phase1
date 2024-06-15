@@ -1,13 +1,13 @@
-import Collider from "../base-types/components/collider";
-import Transform from "../base-types/components/transform";
-import GameObject from "../base-types/gameObject";
-import Vector2 from "../base-types/vector2";
-import Movement from "../general/movement";
+import Collider from "../base-types/components/Collider";
+import Transform from "../base-types/components/Transform";
+import GameObject from "../base-types/GameObject";
+import Vector2 from "../base-types/Vector2";
+import Movement from "../general/Movement";
 import ProductInterface from "../types/factory/product";
 import SubcriberInterface from "../types/observer/subcriber";
 import RenderInterface from "../types/render";
 import SystemInterface from "../types/system";
-import Sprite from '../base-types/sprite';
+import Sprite from '../base-types/Sprite';
 
 abstract class Platform extends GameObject implements SystemInterface, RenderInterface, SubcriberInterface<number>, ProductInterface {
     private collider: Collider;

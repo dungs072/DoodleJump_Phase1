@@ -1,7 +1,7 @@
-import Sprite from "../../base-types/sprite";
-import Vector2 from "../../base-types/vector2";
-import PathResources from "../../pathResources";
-import Platform from "../platform";
+import Sprite from "../../base-types/Sprite";
+import Vector2 from "../../base-types/Vector2";
+import PathResources from "../../PathResources";
+import Platform from "../Platform";
 
 class StablePlatform extends Platform { 
     constructor(position: Vector2, scale: Vector2){

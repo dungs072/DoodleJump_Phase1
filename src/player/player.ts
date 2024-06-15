@@ -1,20 +1,20 @@
-import GameObject from "../base-types/gameObject";
-import Vector2 from "../base-types/vector2";
-import Transform from "../base-types/components/transform";
+import GameObject from "../base-types/GameObject";
+import Vector2 from "../base-types/Vector2";
+import Transform from "../base-types/components/Transform";
 import SystemInterface from "../types/system";
-import KeyCode from "../input/keyCode";
+import KeyCode from "../input/KeyCode";
 import RenderInterface from "../types/render";
-import RigidBody from '../base-types/components/rigidbody';
-import Collider from "../base-types/components/collider";
-import Movement from "../general/movement";
-import PlatformManager from "../platforms/platformManager";
-import Platform from '../platforms/platform';
-import PlayerFighter from "./playerFighter";
-import ProjectileManager from "../projectile/projectileManager";
-import PlayerModel from "./playerModel";
+import RigidBody from '../base-types/components/Rigidbody';
+import Collider from "../base-types/components/Collider";
+import Movement from "../general/Movement";
+import PlatformManager from "../platforms/PlatformManager";
+import Platform from '../platforms/Platform';
+import PlayerFighter from "./PlayerFighter";
+import ProjectileManager from "../projectile/ProjectileManager";
+import PlayerModel from "./PlayerModel";
 
-import ScoreCalculate from "../score/scoreCalculator";
-import Action from "../base-types/enums/action";
+import ScoreCalculate from "../score/ScoreCalculator";
+import Action from "../base-types/enums/Action";
 
 class Player extends GameObject implements SystemInterface, RenderInterface {
     private movementSpeed: number;

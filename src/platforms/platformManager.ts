@@ -1,15 +1,15 @@
-import GameObject from "../base-types/gameObject";
-import Vector2 from "../base-types/vector2";
-import Creator from "../patterns/factory/creator";
-import Publisher from "../patterns/observer/publisher";
-import PhysicManager from "../physic/physicManager";
-import MovablePlatform from "./movable-platform/movablePlatform";
-import MovablePlatformCreator from "./movable-platform/movablePlatformCreator";
-import Platform from "./platform";
-import StablePlatform from "./stable-platform/stablePlatform";
-import StablePlatformCreator from './stable-platform/stablePlatformCreator';
-import UnstablePlatform from "./unstable-platform/unstablePlatform";
-import UnstablePlatformCreator from './unstable-platform/unstablePlatformCreator';
+import GameObject from "../base-types/GameObject";
+import Vector2 from "../base-types/Vector2";
+import Creator from "../patterns/factory/Creator";
+import Publisher from "../patterns/observer/Publisher";
+import PhysicManager from "../physic/PhysicManager";
+import MovablePlatform from "./movable-platform/MovablePlatform";
+import MovablePlatformCreator from "./movable-platform/MovablePlatformCreator";
+import Platform from "./Platform";
+import StablePlatform from "./stable-platform/StablePlatform";
+import StablePlatformCreator from './stable-platform/StablePlatformCreator';
+import UnstablePlatform from "./unstable-platform/UnstablePlatform";
+import UnstablePlatformCreator from './unstable-platform/UnstablePlatformCreator';
 
 class PlatformManager {
     private publisher: Publisher<number>;

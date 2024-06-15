@@ -1,8 +1,8 @@
-import GameState from "../base-types/enums/gameState";
+import GameState from "../base-types/enums/GameState";
 import SubcriberInterface from "../types/observer/subcriber";
-import UIManager from "../ui/uiManager";
-import GameStateHandler from "./gameStateHandler";
-import GameController from './gameController';
+import UIManager from "../ui/UIManager";
+import GameStateHandler from "./GameStateHandler";
+import GameController from './GameController';
 
 class GamePlay implements SubcriberInterface<string>{
     private gameStateHandler: GameStateHandler;

@@ -1,8 +1,8 @@
-import Sprite from "../../base-types/sprite";
-import Vector2 from "../../base-types/vector2";
-import Publisher from "../../patterns/observer/publisher";
-import FontManager from "./fontManager";
-import UIElement from "./uiElement";
+import Sprite from "../../base-types/Sprite";
+import Vector2 from "../../base-types/Vector2";
+import Publisher from "../../patterns/observer/Publisher";
+import FontManager from "./FontManager";
+import UIElement from "./UIElement";
 import SubcriberInterface from '../../types/observer/subcriber';
 
 class Button extends UIElement{

@@ -1,5 +1,5 @@
-import Vector2 from "../base-types/vector2";
-import Button from "./base/button";
+import Vector2 from "../base-types/Vector2";
+import Button from "./base/Button";
 
 class ButtonManager{
     private buttons: Button[];

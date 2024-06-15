@@ -1,4 +1,4 @@
-import GameObject from "../../base-types/gameObject";
+import GameObject from "../../base-types/GameObject";
 interface ProductInterface{
     operation(): void;
     getGameObject(): GameObject;

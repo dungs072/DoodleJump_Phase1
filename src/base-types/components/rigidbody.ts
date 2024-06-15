@@ -1,5 +1,5 @@
 import ComponentInterface from "../../types/component";
-import Vector2 from "../vector2";
+import Vector2 from "../Vector2";
 
 class RigidBody implements ComponentInterface {
     private useGravity: boolean;
@@ -47,10 +47,6 @@ class RigidBody implements ComponentInterface {
     public setMass(mass: number) {
         this.mass = mass;
     }
-
-
-
-
 
 }
 export default RigidBody;

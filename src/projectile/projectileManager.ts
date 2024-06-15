@@ -1,5 +1,5 @@
-import PhysicManager from "../physic/physicManager";
-import Projectile from "./projectile";
+import PhysicManager from "../physic/PhysicManager";
+import Projectile from "./Projectile";
 
 class ProjectileManager{
     private projectiles: Projectile[];

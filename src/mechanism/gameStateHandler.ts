@@ -1,4 +1,4 @@
-import GameState from "../base-types/enums/gameState";
+import GameState from "../base-types/enums/GameState";
 
 class GameStateHandler{
     private gameState: GameState;

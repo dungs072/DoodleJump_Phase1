@@ -1,5 +1,5 @@
-import Sprite from "./sprite";
-import Vector2 from "./vector2";
+import Sprite from "./Sprite";
+import Vector2 from "./Vector2";
 import RenderInterface from '../types/render';
 
 class Animation {

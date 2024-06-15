@@ -1,11 +1,11 @@
-import Sprite from "../base-types/sprite";
-import Vector2 from "../base-types/vector2";
-import PathResources from "../pathResources";
+import Sprite from "../base-types/Sprite";
+import Vector2 from "../base-types/Vector2";
+import PathResources from "../PathResources";
 import RenderInterface from "../types/render";
-import Button from "./base/button";
-import UIElement from "./base/uiElement";
-import GameOverMenuUI from "./gameOverMenuUI";
-import MainMenuUI from "./mainMenuUI";
+import Button from "./base/Button";
+import UIElement from "./base/UIElement";
+import GameOverMenuUI from "./GameOverMenuUI";
+import MainMenuUI from "./MainMenuUI";
 
 class UIManager implements RenderInterface{
     private gameOverMenuUI: GameOverMenuUI; 

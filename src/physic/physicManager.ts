@@ -1,8 +1,8 @@
-import Collider from "../base-types/components/collider";
-import RigidBody from "../base-types/components/rigidbody";
-import Transform from "../base-types/components/transform";
-import GameObject from "../base-types/gameObject";
-import Vector2 from "../base-types/vector2";
+import Collider from "../base-types/components/Collider";
+import RigidBody from "../base-types/components/Rigidbody";
+import Transform from "../base-types/components/Transform";
+import GameObject from "../base-types/GameObject";
+import Vector2 from "../base-types/Vector2";
 
 class PhysicManager{
     private physicObjs: GameObject[];
