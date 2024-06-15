@@ -47,7 +47,7 @@ class  GameObject implements PhysicsInterface {
 // edit later
 class ComponentsArray extends Array<ComponentInterface> {
     public getInstanceFor<T extends ComponentInterface>(componentClass: { new(): T; }) {
-        for (var i = 0; i < this.length; i++) {
+        for (let i = 0; i < this.length; i++) {
             if ((this[i].constructor).name === (componentClass).name) {
                 return this[i];
             }

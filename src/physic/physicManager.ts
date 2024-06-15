@@ -33,8 +33,8 @@ class PhysicManager{
             if (collider == null) {
                 return;
             }
-            var topLeft = new Vector2(transform.getPosition().x, transform.getPosition().y + collider.getOffset());
-            var downRight = new Vector2(transform.getScale().x, transform.getScale().y-collider.getOffset());
+            let topLeft = new Vector2(transform.getPosition().x, transform.getPosition().y + collider.getOffset());
+            let downRight = new Vector2(transform.getScale().x, transform.getScale().y-collider.getOffset());
 
             collider.setBounds(topLeft, downRight);
             for (let j = 0; j < this.physicObjs.length; j++) {

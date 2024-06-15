@@ -43,7 +43,7 @@ class PlatformManager {
     public createPlatforms(deltaTime: number, canvasWidth: number) {
         this.currentSpawnTime+=deltaTime;
         let lastPlatform = this.getTheLastPlatform();
-        var isMaxPlatform = true;
+        let isMaxPlatform = true;
         if(lastPlatform!=null){
             isMaxPlatform = this.maxHeightToSpawn < lastPlatform.getTransform().getPosition().y;
         }
@@ -99,9 +99,6 @@ class PlatformManager {
             }
 
         }
-        this.platforms.forEach(platform => {
-            
-        });
         // this.platforms = this.platforms.filter(platform => !platform.isOutsideCanvas(this.canvas));
     }
     public getPlatforms(): Platform[]{

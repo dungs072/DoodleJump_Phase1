@@ -135,7 +135,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             let platform = (other as Platform);
             platform.operation();
             if(platform.getCanJump()){
-                var forceAmount = this.jumpForce;
+                let forceAmount = this.jumpForce;
 
                 this.rb.setVelocity(Vector2.zero());
                 this.rb.addForce(Vector2.up(), forceAmount);
