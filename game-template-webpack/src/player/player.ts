@@ -12,7 +12,10 @@ import Platform from '../platforms/platform';
 import PlayerFighter from "./playerFighter";
 import ProjectileManager from "../projectile/projectileManager";
 import PlayerModel from "./playerModel";
-import { Action } from "../types/Action";
+
+import ScoreCalculate from "../score/scoreCalculator";
+import Action from "../base-types/enums/action";
+
 class Player extends GameObject implements SystemInterface, RenderInterface {
     private movementSpeed: number;
     private jumpForce: number;
@@ -26,6 +29,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     private transform: Transform;
     private movement: Movement;
     private fighter: PlayerFighter;
+    private scoreCalculator: ScoreCalculate;
 
     private playerModel: PlayerModel;
 
@@ -73,6 +77,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
                             new Vector2(this.transform.getScale().x/2,-10));
 
         this.playerModel = new PlayerModel(this.transform.getPosition());
+        this.scoreCalculator = new ScoreCalculate();
     }
     public update(deltaTime: number): void {
         this.handleInput(deltaTime);
@@ -92,6 +97,8 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.previousHeight = this.transform.getPosition().y;
         this.platFormManager.getPublisher().setData(50);
         this.platFormManager.getPublisher().notify();
+        this.scoreCalculator.addCurrentScore(50);
+        //console.log(this.scoreCalculator.getCurrentScore());
     }
     private handleInput(deltaTime: number){
         if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {
@@ -135,7 +142,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
                 this.isAddForceDown = false;
                 this.playerModel.handleJumpSprite();
             }
-
+            
         }
     }
 
@@ -154,6 +161,9 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
                 this.currentTime = 0;
                 this.playerModel.handleNormalSprite();
             }
+        }
+        else{
+            this.playerModel.handleNormalSprite();
         }
        
     }

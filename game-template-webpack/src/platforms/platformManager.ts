@@ -40,7 +40,7 @@ class PlatformManager {
     public addPlatform(platform: Platform): void{
         this.platforms.push(platform);
     }
-    public createPlatforms(deltaTime: number,canvasWidth: number) {
+    public createPlatforms(deltaTime: number, canvasWidth: number) {
         this.currentSpawnTime+=deltaTime;
         let lastPlatform = this.getTheLastPlatform();
         var isMaxPlatform = true;
@@ -95,6 +95,7 @@ class PlatformManager {
                 PhysicManager.getInstance().removePhysicObjs(this.platforms[i]);
                 this.publisher.unsubcribe(this.platforms[i]);
                 this.platforms.splice(i, 1);
+                
             }
 
         }

@@ -1,7 +1,6 @@
 import Transform from "./components/transform";
 import ComponentInterface from "../types/component";
 import PhysicsInterface from "../types/physicSystem";
-import Collider from "./components/collider";
 class  GameObject implements PhysicsInterface {
     // change to dictionary for reducing time complexity
     private components: ComponentsArray
@@ -45,6 +44,7 @@ class  GameObject implements PhysicsInterface {
         return this.canDestroy;
     }
 }
+// edit later
 class ComponentsArray extends Array<ComponentInterface> {
     public getInstanceFor<T extends ComponentInterface>(componentClass: { new(): T; }) {
         for (var i = 0; i < this.length; i++) {

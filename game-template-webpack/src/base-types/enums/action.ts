@@ -1,4 +1,4 @@
-export enum Action {
+enum Action {
     LEFT_JUMP,
     LEFT_NORMAL,
     RIGHT_JUMP,
@@ -6,3 +6,4 @@ export enum Action {
     FORWARD_JUMP,
     FORWARD_NORMAL
 }
+export default Action;

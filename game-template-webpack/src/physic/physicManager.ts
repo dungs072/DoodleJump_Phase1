@@ -9,17 +9,17 @@ class PhysicManager{
     private notStaticPhysicObjs: GameObject[];
     private readonly fixedDeltaTime = 0.02;
 
-    private static Instance: PhysicManager;
+    private static instance: PhysicManager;
 
     constructor(){
         this.physicObjs = [];
         this.notStaticPhysicObjs = [];
     }
     public static getInstance(): PhysicManager{
-        if (!PhysicManager.Instance) {
-            PhysicManager.Instance = new PhysicManager();
+        if (!PhysicManager.instance) {
+            PhysicManager.instance = new PhysicManager();
         }
-        return PhysicManager.Instance;
+        return PhysicManager.instance;
     }
     public handleCorePhysic(): void {
         for (let i = 0; i < this.notStaticPhysicObjs.length; i++) {
@@ -92,11 +92,11 @@ class PhysicManager{
     }
     public removePhysicObjs(obj: GameObject): void {
         let indexPhysic = this.physicObjs.indexOf(obj);
-        this.physicObjs.slice(indexPhysic, 1);
+        this.physicObjs.splice(indexPhysic, 1);
     }
     public removeNotStaticPhysicObjs(obj: GameObject): void {
         let indexPhysic = this.notStaticPhysicObjs.indexOf(obj);
-        this.notStaticPhysicObjs.slice(indexPhysic, 1);
+        this.notStaticPhysicObjs.splice(indexPhysic, 1);
     }
    
     public getFixedDeltaTime(): number{

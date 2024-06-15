@@ -1,7 +1,8 @@
 import Sprite from "../base-types/sprite";
 import Vector2 from "../base-types/vector2";
 import PathResources from "../pathResources";
-import { Action } from "../types/Action";
+import Action from "../base-types/enums/action";
+
 class PlayerModel{
     private leftJumpSprite: Sprite;
     private leftNormalSprite: Sprite;

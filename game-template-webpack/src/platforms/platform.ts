@@ -8,7 +8,6 @@ import SubcriberInterface from "../types/observer/subcriber";
 import RenderInterface from "../types/render";
 import SystemInterface from "../types/system";
 import Sprite from '../base-types/sprite';
-import PathResources from "../pathResources";
 
 abstract class Platform extends GameObject implements SystemInterface, RenderInterface, SubcriberInterface<number>, ProductInterface {
     private collider: Collider;
@@ -29,7 +28,7 @@ abstract class Platform extends GameObject implements SystemInterface, RenderInt
         this.transform.setPosition(position);
         this.transform.setScale(scale);
         this.movementSpeed = 500;
-        this.maxDistanceToDestroy = 1500;
+        this.maxDistanceToDestroy = 650;
         this.targetY = this.transform.getPosition().y;
         this.canDestroy = false;
         this.canJump = canJump;

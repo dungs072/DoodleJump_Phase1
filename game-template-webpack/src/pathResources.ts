@@ -15,5 +15,13 @@ class PathResources{
     public static readonly RIGHT_JUMP:string = "../assets/images/characters/aliens/rightJump.png";
     public static readonly RIGHT_NORMAL:string = "../assets/images/characters/aliens/rightNormal.png";
 
+    public static readonly MENU_BUTTON:string = "../assets/images/uis/menuButton.png";
+    public static readonly PLAY_AGAIN_BUTTON:string = "../assets/images/uis/playAgainButton.png";
+
+    public static readonly PLAY_GAME:string = "../assets/images/uis/playGameButton.png";
+
+    public static readonly DOODLE_JUMP_TEXT:string = "../assets/images/uis/doodleJumpText.png";
+
+
 }
 export default PathResources;
