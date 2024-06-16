@@ -55,7 +55,7 @@ abstract class Platform
                 this.movement.move(
                     deltaTime,
                     Vector2.down(),
-                    this.movementSpeed + 500,
+                    this.movementSpeed + 450,
                     this.transform
                 )
             } else {

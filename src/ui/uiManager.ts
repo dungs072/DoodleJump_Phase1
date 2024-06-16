@@ -6,6 +6,7 @@ import Button from './base/Button'
 import UIElement from './base/UIElement'
 import GameOverMenuUI from './GameOverMenuUI'
 import MainMenuUI from './MainMenuUI'
+import Text from './base/Text'
 
 class UIManager implements RenderInterface {
     private gameOverMenuUI: GameOverMenuUI
@@ -14,6 +15,8 @@ class UIManager implements RenderInterface {
     private startGameButton: Button
     private playAgainButton: Button
     private menuButton: Button
+
+    private scoreText: Text
 
     private static instance: UIManager
 
@@ -81,6 +84,9 @@ class UIManager implements RenderInterface {
             menuButtonBg
         )
         this.gameOverMenuUI.setMenuButton(this.menuButton)
+
+        // main game
+        this.scoreText = new Text(new Vector2(75, 15), Vector2.one(), 'Score: 0', 'red', null)
     }
     public draw(context: CanvasRenderingContext2D): void {
         if (this.isGameOver) {
@@ -88,6 +94,9 @@ class UIManager implements RenderInterface {
         }
         if (this.isMainMenu) {
             this.mainMenuUI.draw(context)
+        }
+        if (this.scoreText.getIsActive()) {
+            this.scoreText.draw(context)
         }
     }
 
@@ -99,6 +108,9 @@ class UIManager implements RenderInterface {
         this.isGameOver = state
         this.gameOverMenuUI.setIsActive(state)
     }
+    public toggleMainGameUI(state: boolean): void {
+        this.scoreText.setIsActive(state)
+    }
     public getStartGameButton(): Button {
         return this.startGameButton
     }
@@ -107,6 +119,9 @@ class UIManager implements RenderInterface {
     }
     public getMenuButton(): Button {
         return this.menuButton
+    }
+    public setScoreText(text: string): void {
+        this.scoreText.setText('Score: ' + text)
     }
 }
 export default UIManager

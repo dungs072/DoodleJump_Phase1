@@ -5,20 +5,25 @@ import Transform from '../../base-types/components/Transform'
 import RenderInterface from '../../types/render'
 
 class UIElement extends GameObject implements RenderInterface {
-    private background: Sprite
+    private background: Sprite | null
     private transform: Transform
     private isActive: boolean
-    constructor(position: Vector2, scale: Vector2, background: Sprite) {
+    constructor(position: Vector2, scale: Vector2, background: Sprite | null) {
         super()
-        this.background = background
-        this.background.setPosition(position)
+        if (background != null) {
+            this.background = background
+            this.background.setPosition(position)
+        }
+
         this.transform = this.getComponent(Transform)!
         this.transform.setPosition(position)
         this.transform.setScale(scale)
         this.isActive = true
     }
     public draw(context: CanvasRenderingContext2D): void {
-        this.background.draw(context)
+        if (this.background != null) {
+            this.background.draw(context)
+        }
     }
     public setPosition(position: Vector2): void {
         this.transform.setPosition(position)

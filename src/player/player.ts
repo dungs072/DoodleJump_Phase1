@@ -6,7 +6,6 @@ import KeyCode from '../input/KeyCode'
 import RenderInterface from '../types/render'
 import Collider from '../base-types/components/Collider'
 import Movement from '../general/Movement'
-import PlatformManager from '../platforms/PlatformManager'
 import Platform from '../platforms/Platform'
 import PlayerFighter from './PlayerFighter'
 import ProjectileManager from '../projectile/ProjectileManager'
@@ -15,13 +14,13 @@ import PlayerModel from './PlayerModel'
 import ScoreCalculate from '../score/ScoreCalculator'
 import Action from '../base-types/enums/Action'
 import RigidBody from '../base-types/components/Rigidbody'
+import Publisher from '../patterns/observer/Publisher'
+import UIManager from '../ui/UIManager'
 
 class Player extends GameObject implements SystemInterface, RenderInterface {
     private jumpForce: number
     private movementSpeed: number
-    private dropSpeed: number
     private maxBorder: number
-    private targetJumpYPosition: number
     private maxChangeJumpToNormalTime: number
     private maxTriggerTime: number
 
@@ -37,7 +36,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
 
     private playerModel: PlayerModel
 
-    private platFormManager: PlatformManager
+    private publisher: Publisher<number>
     private projectileManager: ProjectileManager
 
     private currentTime: number
@@ -59,7 +58,6 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.transform = this.getComponent(Transform)!
         this.transform?.setPosition(position)
         this.transform?.setScale(scale)
-        this.targetJumpYPosition = Infinity
         this.start()
     }
 
@@ -168,9 +166,13 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             if (platform.getCanJump()) {
                 if (other.getTransform().getPosition().y <= 550) {
                     let distance = 550 - other.getTransform().getPosition().y
-                    this.platFormManager.getPublisher().setData(distance)
-                    this.platFormManager.getPublisher().notify()
-                    this.scoreCalculator.addCurrentScore(50)
+                    this.publisher.setData(distance)
+                    this.publisher.notify()
+                    let num = Math.floor(distance)
+                    this.scoreCalculator.addCurrentScore(num)
+                    UIManager.getInstance().setScoreText(
+                        this.scoreCalculator.getCurrentScore().toString()
+                    )
                 }
 
                 this.rb.setVelocity(Vector2.zero())
@@ -192,8 +194,8 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         }
     }
 
-    public setPlatformManager(platformManager: PlatformManager): void {
-        this.platFormManager = platformManager
+    public setPublisher(publisher: Publisher<number>): void {
+        this.publisher = publisher
     }
     public getPosition(): Vector2 {
         return this.transform.getPosition()
@@ -203,6 +205,8 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     }
     public clearData(): void {
         this.setPosition(new Vector2(this.getPosition().x, 0))
+        this.scoreCalculator.setCurrentScore(0)
+        UIManager.getInstance().setScoreText('0')
     }
 }
 export default Player

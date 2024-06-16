@@ -38,7 +38,7 @@ class GameController {
         this.player = new Player(playerPosition, playerScale)
 
         this.platformManager = new PlatformManager()
-        this.player.setPlatformManager(this.platformManager)
+        this.player.setPublisher(this.platformManager.getPublisher())
 
         PhysicManager.getInstance().addNotStaticPhysicObj(this.player)
 
@@ -51,11 +51,14 @@ class GameController {
             this.platformManager.createPlatforms(deltaTime, 420)
             this.platformManager.update(deltaTime)
             this.handlePlayer(deltaTime)
+            UIManager.getInstance().toggleMainGameUI(true)
         } else if (this.getGameState() == GameState.GAME_OVER) {
             UIManager.getInstance().toggleMainMenu(false)
+            UIManager.getInstance().toggleMainGameUI(false)
             UIManager.getInstance().toggleGameOver(true)
         } else if (this.getGameState() == GameState.MAIN_MENU) {
             UIManager.getInstance().toggleGameOver(false)
+            UIManager.getInstance().toggleMainGameUI(false)
             UIManager.getInstance().toggleMainMenu(true)
         }
     }

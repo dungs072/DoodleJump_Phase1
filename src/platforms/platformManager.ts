@@ -1,3 +1,4 @@
+import Transform from '../base-types/components/Transform'
 import GameObject from '../base-types/GameObject'
 import Vector2 from '../base-types/Vector2'
 import Creator from '../patterns/factory/Creator'
@@ -6,6 +7,7 @@ import PhysicManager from '../physic/PhysicManager'
 import MovablePlatformCreator from './movable-platform/MovablePlatformCreator'
 import Platform from './Platform'
 import StablePlatformCreator from './stable-platform/StablePlatformCreator'
+import UnstablePlatform from './unstable-platform/UnstablePlatform'
 import UnstablePlatformCreator from './unstable-platform/UnstablePlatformCreator'
 
 class PlatformManager {
@@ -23,7 +25,7 @@ class PlatformManager {
         this.platforms = []
         this.previousYPosition = 500
         this.maxHeightToSpawn = -4000
-        this.maxSpawnTime = 1
+        this.maxSpawnTime = 0
         this.currentSpawnTime = 0
         this.platformCreators = []
         this.platformCreators.push(new StablePlatformCreator())
@@ -45,7 +47,10 @@ class PlatformManager {
         }
 
         if (this.currentSpawnTime > this.maxSpawnTime && isMaxPlatform) {
-            let position = new Vector2(Math.random() * canvasWidth, this.previousYPosition - 80)
+            if (lastPlatform != null) {
+                this.previousYPosition = lastPlatform.getTransform().getPosition().y
+            }
+            let position = new Vector2(Math.random() * canvasWidth, this.previousYPosition - 150)
             let scale = new Vector2(110, 30)
             let platformCreatorIndex = Math.floor(Math.random() * this.platformCreators.length)
             let platformCreator = this.platformCreators[platformCreatorIndex]
@@ -56,11 +61,34 @@ class PlatformManager {
                 this.publisher.subcribe(gameObj)
                 PhysicManager.getInstance().addphysicObjs(gameObj)
             }
-
-            if (lastPlatform != null) {
-                this.previousYPosition = lastPlatform.getTransform().getPosition().y
+            if (gameObj instanceof UnstablePlatform) {
+                let position = new Vector2(Math.random() * canvasWidth, this.previousYPosition - 75)
+                this.createStablePlatform(position, scale)
             }
+            if (this.previousYPosition - position.y > 275) {
+                let position = new Vector2(
+                    Math.random() * canvasWidth,
+                    this.previousYPosition + 150
+                )
+                this.createStablePlatform(position, scale)
+            }
+
             this.currentSpawnTime = 0
+            for (let i = 0; i < this.platforms.length - 1; i++) {
+                let distance =
+                    this.platforms[i].getTransform().getPosition().y -
+                    this.platforms[i + 1].getTransform().getPosition().y
+                if (distance > 300) {
+                    this.platforms[i + 1]
+                        .getTransform()
+                        .setPosition(
+                            new Vector2(
+                                this.platforms[i + 1].getTransform().getPosition().x,
+                                this.platforms[i + 1].getTransform().getPosition().y + distance / 2
+                            )
+                        )
+                }
+            }
         }
     }
     public createStablePlatform(position: Vector2, scale: Vector2): GameObject {
