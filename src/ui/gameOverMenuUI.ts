@@ -23,5 +23,10 @@ class GameOverMenuUI extends UIElement {
         this.playAgainButton.draw(context)
         this.menuButton.draw(context)
     }
+    public setIsActive(state: boolean): void {
+        super.setIsActive(state)
+        this.playAgainButton.setIsActive(state)
+        this.menuButton.setIsActive(state)
+    }
 }
 export default GameOverMenuUI

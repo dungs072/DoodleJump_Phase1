@@ -15,7 +15,6 @@ class GameController {
 
     private player: Player
     private platformManager: PlatformManager
-    private projectileManger: ProjectileManager
 
     constructor() {
         this.gameStateHandler = new GameStateHandler()
@@ -34,15 +33,12 @@ class GameController {
     }
 
     public setUpGame(): void {
-        let playerPosition = new Vector2(320, 400)
+        let playerPosition = new Vector2(320, 300)
         let playerScale = new Vector2(60, 120)
         this.player = new Player(playerPosition, playerScale)
 
         this.platformManager = new PlatformManager()
         this.player.setPlatformManager(this.platformManager)
-
-        this.projectileManger = new ProjectileManager()
-        this.player.setProjectileManager(this.projectileManger)
 
         PhysicManager.getInstance().addNotStaticPhysicObj(this.player)
 
@@ -50,14 +46,11 @@ class GameController {
         let scale = new Vector2(100, 30)
         this.platformManager.createStablePlatform(platformPosition, scale)
     }
-    public update(deltaTime: number, context: CanvasRenderingContext2D) {
+    public update(deltaTime: number) {
         if (this.getGameState() == GameState.GAME_PLAY) {
             this.platformManager.createPlatforms(deltaTime, 420)
-            this.platformManager.updatePlatforms(deltaTime, context)
-
-            this.projectileManger.updateProjectiles(deltaTime, context)
-
-            this.handlePlayer(deltaTime, context)
+            this.platformManager.update(deltaTime)
+            this.handlePlayer(deltaTime)
         } else if (this.getGameState() == GameState.GAME_OVER) {
             UIManager.getInstance().toggleMainMenu(false)
             UIManager.getInstance().toggleGameOver(true)
@@ -65,13 +58,20 @@ class GameController {
             UIManager.getInstance().toggleGameOver(false)
             UIManager.getInstance().toggleMainMenu(true)
         }
-        // for UI
+    }
+    public draw(context: CanvasRenderingContext2D) {
         UIManager.getInstance().draw(context)
+
+        if (this.platformManager) {
+            this.platformManager.draw(context)
+        }
+        if (this.player) {
+            this.player.draw(context)
+        }
     }
 
-    private handlePlayer(deltaTime: number, context: CanvasRenderingContext2D) {
+    private handlePlayer(deltaTime: number) {
         this.player.update(deltaTime)
-        this.player.draw(context)
         if (this.player.getPosition().x > 640) {
             let newPos = new Vector2(0, this.player.getPosition().y)
             this.player.setPosition(newPos)
@@ -80,15 +80,14 @@ class GameController {
             let newPos = new Vector2(640, this.player.getPosition().y)
             this.player.setPosition(newPos)
         }
-        if (this.player.getPosition().y > 650) {
+        if (this.player.getPosition().y >= 600) {
             // if(this.gameOver){
             //     this.toggleModal(true);
             // }
             this.setGameState(GameState.GAME_OVER)
             this.platformManager.clearData()
             PhysicManager.getInstance().clearData()
-            this.projectileManger.clearData()
-            this.player.setPosition(new Vector2(this.player.getPosition().x, 0))
+            this.player.clearData()
         }
     }
 }

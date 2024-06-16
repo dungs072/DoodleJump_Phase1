@@ -22,5 +22,9 @@ class MainMenuUI extends UIElement {
         this.startGameButton.draw(context)
         this.doodleJumpText.draw(context)
     }
+    public setIsActive(state: boolean): void {
+        super.setIsActive(state)
+        this.startGameButton.setIsActive(state)
+    }
 }
 export default MainMenuUI

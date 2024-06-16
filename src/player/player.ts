@@ -4,7 +4,6 @@ import Transform from '../base-types/components/Transform'
 import SystemInterface from '../types/system'
 import KeyCode from '../input/KeyCode'
 import RenderInterface from '../types/render'
-import RigidBody from '../base-types/components/Rigidbody'
 import Collider from '../base-types/components/Collider'
 import Movement from '../general/Movement'
 import PlatformManager from '../platforms/PlatformManager'
@@ -15,54 +14,61 @@ import PlayerModel from './PlayerModel'
 
 import ScoreCalculate from '../score/ScoreCalculator'
 import Action from '../base-types/enums/Action'
+import RigidBody from '../base-types/components/Rigidbody'
 
 class Player extends GameObject implements SystemInterface, RenderInterface {
-    private movementSpeed: number
     private jumpForce: number
+    private movementSpeed: number
+    private dropSpeed: number
     private maxBorder: number
+    private targetJumpYPosition: number
     private maxChangeJumpToNormalTime: number
+    private maxTriggerTime: number
 
     private spawnProjectilePos: Vector2
 
-    private rb: RigidBody
     private collider: Collider
+    private rb: RigidBody
     private transform: Transform
     private movement: Movement
     private fighter: PlayerFighter
     private scoreCalculator: ScoreCalculate
+    private projectileManger: ProjectileManager
 
     private playerModel: PlayerModel
 
     private platFormManager: PlatformManager
     private projectileManager: ProjectileManager
 
-    private previousHeight: number
-    private isAddForceDown: boolean
     private currentTime: number
+    private currentTriggerTime: number
+    private previousHeight: number
+
+    private canFalseTrigger: boolean
 
     constructor(position: Vector2, scale: Vector2) {
         super()
-        this.movementSpeed = 300
-        this.jumpForce = 250
-        this.maxBorder = 250
-        this.maxChangeJumpToNormalTime = 0.05
+        this.movementSpeed = 450
+        this.jumpForce = 700
+        this.maxBorder = 100
+        this.maxChangeJumpToNormalTime = 0.25
+        this.maxTriggerTime = 0.1
+        this.currentTriggerTime = 0
+        this.canFalseTrigger = false
 
         this.transform = this.getComponent(Transform)!
         this.transform?.setPosition(position)
         this.transform?.setScale(scale)
+        this.targetJumpYPosition = Infinity
         this.start()
     }
 
     public start(): void {
-        this.rb = new RigidBody()
-        this.rb.setMass(100)
-        this.rb.setUseGravity(true)
-        this.addComponent(this.rb)
-
         this.movement = new Movement()
         this.addComponent(this.movement)
 
         this.collider = new Collider()
+        this.collider.setOffset(115)
         let topLeft = new Vector2(
             this.transform.getPosition().x,
             this.transform.getPosition().y + this.collider.getOffset()
@@ -73,8 +79,12 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         )
         this.collider.setBounds(topLeft, downRight)
         this.collider.setIsStatic(false)
-        this.collider.setOffset(115)
         this.addComponent(this.collider)
+
+        this.rb = new RigidBody()
+        this.rb.setMass(550)
+        this.rb.setUseGravity(true)
+        this.addComponent(this.rb)
 
         this.spawnProjectilePos = Vector2.add(
             this.transform.getPosition(),
@@ -83,26 +93,42 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
 
         this.playerModel = new PlayerModel(this.transform.getPosition())
         this.scoreCalculator = new ScoreCalculate()
+        this.projectileManger = new ProjectileManager()
+        this.fighter = new PlayerFighter(this.projectileManager)
+        this.addComponent(this.fighter)
     }
     public update(deltaTime: number): void {
         this.handleInput(deltaTime)
         this.handleNormalSprite(deltaTime)
         this.updateChildTransform()
+
         this.collider.setIsTrigger(this.transform.getPosition().y < this.previousHeight)
         this.previousHeight = this.transform.getPosition().y
 
-        if (this.transform.getPosition().y >= this.maxBorder) {
-            return
-        } else if (!this.isAddForceDown) {
-            this.rb.addForce(Vector2.down(), 45) // need to calculate this again there
-            this.isAddForceDown = true
+        if (this.canFalseTrigger) {
+            this.currentTriggerTime += deltaTime
+            if (this.currentTriggerTime >= this.maxTriggerTime) {
+                this.collider.setIsTrigger(false)
+                this.currentTriggerTime = 0
+                this.canFalseTrigger = false
+            }
         }
-        this.movement.move(deltaTime, Vector2.down(), this.movementSpeed + 50, this.transform)
-        this.previousHeight = this.transform.getPosition().y
-        this.platFormManager.getPublisher().setData(50)
-        this.platFormManager.getPublisher().notify()
-        this.scoreCalculator.addCurrentScore(50)
-        //console.log(this.scoreCalculator.getCurrentScore());
+        if (this.transform.getPosition().y < this.maxBorder) {
+            this.rb.clampToZeroVelocity(75)
+        }
+
+        this.playerModel.setPosition(
+            new Vector2(this.transform.getPosition().x - 33, this.transform.getPosition().y)
+        )
+    }
+    public draw(context: CanvasRenderingContext2D): void {
+        this.playerModel.getCurrentSprite().draw(context)
+        this.collider.draw(context)
+        if (this.projectileManager) {
+            this.projectileManager.draw(context)
+        }
+        context.fillStyle = 'red'
+        context.fillRect(0, this.maxBorder, 1080, 10)
     }
     private handleInput(deltaTime: number) {
         if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {
@@ -115,17 +141,17 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             this.movement.move(deltaTime, direction, this.movementSpeed, this.transform)
             this.playerModel.takeAction(Action.RIGHT_NORMAL)
         }
-        if (KeyCode.isDownButNotHold(KeyCode.UP_ARROW)) {
-            this.playerModel.takeAction(Action.FORWARD_NORMAL)
-            this.fighter.fight(this.spawnProjectilePos, Vector2.up())
-        }
+        // if (KeyCode.isDownButNotHold(KeyCode.UP_ARROW)) {
+        //     this.playerModel.takeAction(Action.FORWARD_NORMAL)
+        //     this.fighter.fight(this.spawnProjectilePos, Vector2.up())
+        // }
         if (KeyCode.isDownButNotHold(KeyCode.SPACE)) {
-            let rigidbody = this.getComponent(RigidBody)
-            if (rigidbody == null) {
-                return
-            }
-            let velocity = Vector2.multiply(Vector2.up(), this.jumpForce)
-            rigidbody.setVelocity(velocity)
+            // let rigidbody = this.getComponent(RigidBody)
+            // if (rigidbody == null) {
+            //     return
+            // }
+            // // let velocity = Vector2.multiply(Vector2.up(), this.jumpForce)
+            // // rigidbody.setVelocity(velocity)
         }
     }
     private updateChildTransform() {
@@ -140,24 +166,20 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             let platform = other as Platform
             platform.operation()
             if (platform.getCanJump()) {
-                let forceAmount = this.jumpForce
+                if (other.getTransform().getPosition().y <= 550) {
+                    let distance = 550 - other.getTransform().getPosition().y
+                    this.platFormManager.getPublisher().setData(distance)
+                    this.platFormManager.getPublisher().notify()
+                    this.scoreCalculator.addCurrentScore(50)
+                }
 
                 this.rb.setVelocity(Vector2.zero())
-                this.rb.addForce(Vector2.up(), forceAmount)
-                this.isAddForceDown = false
+                this.rb.addForce(Vector2.up(), this.jumpForce)
                 this.playerModel.handleJumpSprite()
             }
         }
     }
 
-    public draw(context: CanvasRenderingContext2D): void {
-        this.playerModel.setPosition(
-            new Vector2(this.transform.getPosition().x - 33, this.transform.getPosition().y)
-        )
-        this.playerModel.getCurrentSprite().draw(context)
-
-        this.collider.draw(context)
-    }
     private handleNormalSprite(deltaTime: number): void {
         if (this.collider.getIsTrigger()) {
             this.currentTime += deltaTime
@@ -173,16 +195,14 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     public setPlatformManager(platformManager: PlatformManager): void {
         this.platFormManager = platformManager
     }
-    public setProjectileManager(projectileManager: ProjectileManager): void {
-        this.projectileManager = projectileManager
-        this.fighter = new PlayerFighter(this.projectileManager)
-        this.addComponent(this.fighter)
-    }
     public getPosition(): Vector2 {
         return this.transform.getPosition()
     }
     public setPosition(position: Vector2): void {
         this.transform.setPosition(position)
+    }
+    public clearData(): void {
+        this.setPosition(new Vector2(this.getPosition().x, 0))
     }
 }
 export default Player

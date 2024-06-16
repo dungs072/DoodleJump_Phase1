@@ -7,7 +7,6 @@ import Vector2 from '../base-types/Vector2'
 class PhysicManager {
     private physicObjs: GameObject[]
     private notStaticPhysicObjs: GameObject[]
-    private readonly fixedDeltaTime = 0.02
 
     private static instance: PhysicManager
 
@@ -21,9 +20,8 @@ class PhysicManager {
         }
         return PhysicManager.instance
     }
-    public handleCorePhysic(): void {
+    public handleCorePhysic(deltaTime: number): void {
         for (let i = 0; i < this.notStaticPhysicObjs.length; i++) {
-            let rigidbody = this.notStaticPhysicObjs[i].getComponent(RigidBody)
             let transform = this.notStaticPhysicObjs[i].getComponent(Transform)
             if (transform == null) {
                 return
@@ -51,41 +49,39 @@ class PhysicManager {
                 if (otherCollider == null) {
                     continue
                 }
-
                 if (!collider.getIsTrigger() && collider.hasCollision(otherCollider)) {
                     this.notStaticPhysicObjs[i].onCollisionEnter(this.physicObjs[j])
                 }
             }
-
+            let rigidbody = this.notStaticPhysicObjs[i].getComponent(RigidBody)
             if (rigidbody == null) {
                 return
             }
             if (!rigidbody.getVelocity().isZero()) {
-                let jumpPosition = Vector2.multiply(rigidbody.getVelocity(), this.fixedDeltaTime)
+                let jumpPosition = Vector2.multiply(rigidbody.getVelocity(), deltaTime)
                 let newPosition = Vector2.add(transform.getPosition(), jumpPosition)
                 transform.setPosition(newPosition)
-                rigidbody.clampToZeroVelocity(this.fixedDeltaTime * 50)
-            }
-            if (rigidbody?.canUseGravity()) {
-                let distance = rigidbody.getMass() * this.fixedDeltaTime
+                rigidbody.clampToZeroVelocity(100 * deltaTime)
+            } else if (rigidbody?.canUseGravity()) {
+                let distance = rigidbody.getMass() * deltaTime
                 let dropPosition = Vector2.multiply(Vector2.down(), distance)
 
                 let newPosition = Vector2.add(transform.getPosition(), dropPosition)
                 transform.setPosition(newPosition)
             }
         }
-        for (let i = 0; i < this.physicObjs.length; i++) {
-            let collider = this.physicObjs[i].getComponent(Collider)
-            if (collider == null) {
-                continue
-            }
-            let transform = this.physicObjs[i].getComponent(Transform)
-            if (transform == null) {
-                continue
-            }
-            let downRight = collider.getDownRightBound()
-            collider.setBounds(transform.getPosition(), downRight)
-        }
+        // for (let i = 0; i < this.physicObjs.length; i++) {
+        //     let collider = this.physicObjs[i].getComponent(Collider)
+        //     if (collider == null) {
+        //         continue
+        //     }
+        //     let transform = this.physicObjs[i].getComponent(Transform)
+        //     if (transform == null) {
+        //         continue
+        //     }
+        //     let downRight = collider.getDownRightBound()
+        //     collider.setBounds(transform.getPosition(), downRight)
+        // }
     }
 
     public addNotStaticPhysicObj(obj: GameObject): void {
@@ -110,9 +106,6 @@ class PhysicManager {
         return this.physicObjs[0]
     }
 
-    public getFixedDeltaTime(): number {
-        return this.fixedDeltaTime
-    }
     public clearData(): void {
         this.physicObjs = []
         //this.notStaticPhysicObjs = [];

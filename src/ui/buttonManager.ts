@@ -15,18 +15,17 @@ class ButtonManager {
     }
 
     public onClick(position: Vector2) {
-        console.log(position)
         this.buttons.forEach((button) => {
-            if (
-                position.x > button.getPosition().x &&
-                position.x < button.getPosition().x + button.getScale().x &&
-                position.y > button.getPosition().y &&
-                position.y < button.getPosition().y + button.getScale().y
-            ) {
-                button.onClick()
+            if (button.getIsActive()) {
+                if (
+                    position.x > button.getPosition().x &&
+                    position.x < button.getPosition().x + button.getScale().x &&
+                    position.y > button.getPosition().y &&
+                    position.y < button.getPosition().y + button.getScale().y
+                ) {
+                    button.onClick()
+                }
             }
-
-            console.log(button)
         })
     }
     public addButton(button: Button) {

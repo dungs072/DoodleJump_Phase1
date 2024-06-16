@@ -7,6 +7,7 @@ import RenderInterface from '../../types/render'
 class UIElement extends GameObject implements RenderInterface {
     private background: Sprite
     private transform: Transform
+    private isActive: boolean
     constructor(position: Vector2, scale: Vector2, background: Sprite) {
         super()
         this.background = background
@@ -14,6 +15,7 @@ class UIElement extends GameObject implements RenderInterface {
         this.transform = this.getComponent(Transform)!
         this.transform.setPosition(position)
         this.transform.setScale(scale)
+        this.isActive = true
     }
     public draw(context: CanvasRenderingContext2D): void {
         this.background.draw(context)
@@ -26,6 +28,12 @@ class UIElement extends GameObject implements RenderInterface {
     }
     public getScale(): Vector2 {
         return this.transform.getScale()
+    }
+    public setIsActive(state: boolean): void {
+        this.isActive = state
+    }
+    public getIsActive(): boolean {
+        return this.isActive
     }
 }
 export default UIElement

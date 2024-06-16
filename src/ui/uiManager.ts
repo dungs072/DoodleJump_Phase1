@@ -93,9 +93,11 @@ class UIManager implements RenderInterface {
 
     public toggleMainMenu(state: boolean): void {
         this.isMainMenu = state
+        this.mainMenuUI.setIsActive(state)
     }
     public toggleGameOver(state: boolean): void {
         this.isGameOver = state
+        this.gameOverMenuUI.setIsActive(state)
     }
     public getStartGameButton(): Button {
         return this.startGameButton

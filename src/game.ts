@@ -29,9 +29,7 @@ class Game {
     private start(): void {
         this.backgroundSprite = new Sprite(PathResources.BACKGROUND, new Vector2(0, 0))
         this.setEvents()
-        this.update()
-        let fixedDeltaTime = PhysicManager.getInstance().getFixedDeltaTime()
-        setInterval(() => this.fixedUpdate(), fixedDeltaTime)
+        this.gameLoop()
     }
     private setEvents(): void {
         this.canvas.addEventListener('click', (event) => {
@@ -42,25 +40,26 @@ class Game {
         })
     }
 
-    private update(): void {
+    private gameLoop(): void {
         const currentTime = performance.now()
         const deltaTime = (currentTime - this.lastRenderTime) / 1000
         this.lastRenderTime = currentTime
         this.clearCanvas()
 
         // write code here
-        this.backgroundSprite.draw(this.context)
-        this.gameController.update(deltaTime, this.context)
+        this.update(deltaTime)
+        this.render()
 
         // write code here
-        requestAnimationFrame(() => this.update())
+        requestAnimationFrame(() => this.gameLoop())
     }
-
-    private fixedUpdate(): void {
-        // write code relate to physics here
-
-        // write code here
-        PhysicManager.getInstance().handleCorePhysic()
+    private update(deltaTime: number): void {
+        PhysicManager.getInstance().handleCorePhysic(deltaTime)
+        this.gameController.update(deltaTime)
+    }
+    private render() {
+        this.backgroundSprite.draw(this.context)
+        this.gameController.draw(this.context)
     }
 
     private clearCanvas() {
