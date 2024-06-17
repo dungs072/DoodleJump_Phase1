@@ -1,7 +1,7 @@
-import Vector2 from './base-types/Vector2'
-import PhysicManager from './physic/PhysicManager'
-import ButtonManager from './ui/ButtonManager'
-import GameController from './mechanism/GameController'
+import Vector2 from './game-engine/base-types/Vector2'
+import PhysicManager from './game-engine/physic/PhysicManager'
+import ButtonManager from './doodle-jump-game/ui/ButtonManager'
+import GameController from './doodle-jump-game/mechanism/GameController'
 class Game {
     private canvas: HTMLCanvasElement
     private context: CanvasRenderingContext2D
