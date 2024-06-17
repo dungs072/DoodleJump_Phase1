@@ -24,7 +24,7 @@ class PlatformManager {
         this.publisher = new Publisher<number>()
         this.platforms = []
         this.previousYPosition = 500
-        this.maxHeightToSpawn = -4000
+        this.maxHeightToSpawn = -1000
         this.maxSpawnTime = 0
         this.currentSpawnTime = 0
         this.platformCreators = []

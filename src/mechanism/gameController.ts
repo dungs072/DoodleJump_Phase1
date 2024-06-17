@@ -1,3 +1,5 @@
+import PathResources from '../PathResources'
+import Sprite from '../base-types/Sprite'
 import Vector2 from '../base-types/Vector2'
 import GameState from '../base-types/enums/GameState'
 import PhysicManager from '../physic/PhysicManager'
@@ -16,13 +18,18 @@ class GameController {
     private player: Player
     private platformManager: PlatformManager
 
-    constructor() {
+    private backgroundSprite: Sprite
+    private canvas: HTMLCanvasElement
+
+    constructor(canvas: HTMLCanvasElement) {
+        this.canvas = canvas
         this.gameStateHandler = new GameStateHandler()
         this.gamePlay = new GamePlay(this.gameStateHandler, this)
         this.gameMenu = new GameMenu(this.gameStateHandler)
         UIManager.getInstance().getStartGameButton().subcribe(this.gamePlay)
         UIManager.getInstance().getPlayAgainButton().subcribe(this.gamePlay)
         UIManager.getInstance().getMenuButton().subcribe(this.gameMenu)
+        this.backgroundSprite = new Sprite(PathResources.BACKGROUND, new Vector2(0, 0))
     }
 
     public getGameState(): GameState {
@@ -52,6 +59,16 @@ class GameController {
             this.platformManager.update(deltaTime)
             this.handlePlayer(deltaTime)
             UIManager.getInstance().toggleMainGameUI(true)
+            if (this.player.getPosition().y < this.canvas.height / 2) {
+                this.backgroundSprite.setPosition(
+                    new Vector2(
+                        0,
+                        this.backgroundSprite.getPosition().y -
+                            this.canvas.height / 2 -
+                            this.player.getPosition().y
+                    )
+                )
+            }
         } else if (this.getGameState() == GameState.GAME_OVER) {
             UIManager.getInstance().toggleMainMenu(false)
             UIManager.getInstance().toggleMainGameUI(false)
@@ -63,6 +80,13 @@ class GameController {
         }
     }
     public draw(context: CanvasRenderingContext2D) {
+        context.save()
+        if (this.getGameState() == GameState.GAME_PLAY) {
+            if (this.player.getPosition().y < this.canvas.height / 2) {
+                context.translate(0, this.canvas.height / 2 - this.player.getPosition().y)
+            }
+        }
+        this.backgroundSprite.draw(context)
         UIManager.getInstance().draw(context)
 
         if (this.platformManager) {
@@ -71,6 +95,8 @@ class GameController {
         if (this.player) {
             this.player.draw(context)
         }
+
+        context.restore()
     }
 
     private handlePlayer(deltaTime: number) {

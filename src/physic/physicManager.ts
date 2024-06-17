@@ -61,7 +61,7 @@ class PhysicManager {
                 let jumpPosition = Vector2.multiply(rigidbody.getVelocity(), deltaTime)
                 let newPosition = Vector2.add(transform.getPosition(), jumpPosition)
                 transform.setPosition(newPosition)
-                rigidbody.clampToZeroVelocity(100 * deltaTime)
+                rigidbody.clampToZeroVelocity(1000 * deltaTime)
             } else if (rigidbody?.canUseGravity()) {
                 let distance = rigidbody.getMass() * deltaTime
                 let dropPosition = Vector2.multiply(Vector2.down(), distance)
@@ -70,18 +70,18 @@ class PhysicManager {
                 transform.setPosition(newPosition)
             }
         }
-        // for (let i = 0; i < this.physicObjs.length; i++) {
-        //     let collider = this.physicObjs[i].getComponent(Collider)
-        //     if (collider == null) {
-        //         continue
-        //     }
-        //     let transform = this.physicObjs[i].getComponent(Transform)
-        //     if (transform == null) {
-        //         continue
-        //     }
-        //     let downRight = collider.getDownRightBound()
-        //     collider.setBounds(transform.getPosition(), downRight)
-        // }
+        for (let i = 0; i < this.physicObjs.length; i++) {
+            let collider = this.physicObjs[i].getComponent(Collider)
+            if (collider == null) {
+                continue
+            }
+            let transform = this.physicObjs[i].getComponent(Transform)
+            if (transform == null) {
+                continue
+            }
+            let downRight = collider.getDownRightBound()
+            collider.setBounds(transform.getPosition(), downRight)
+        }
     }
 
     public addNotStaticPhysicObj(obj: GameObject): void {

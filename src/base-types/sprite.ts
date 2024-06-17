@@ -15,5 +15,8 @@ class Sprite implements RenderInterface {
     public setPosition(position: Vector2): void {
         this.position = position
     }
+    public getPosition(): Vector2 {
+        return this.position
+    }
 }
 export default Sprite

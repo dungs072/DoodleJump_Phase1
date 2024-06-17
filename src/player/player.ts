@@ -20,7 +20,6 @@ import UIManager from '../ui/UIManager'
 class Player extends GameObject implements SystemInterface, RenderInterface {
     private jumpForce: number
     private movementSpeed: number
-    private maxBorder: number
     private maxChangeJumpToNormalTime: number
     private maxTriggerTime: number
 
@@ -49,7 +48,6 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         super()
         this.movementSpeed = 450
         this.jumpForce = 700
-        this.maxBorder = 100
         this.maxChangeJumpToNormalTime = 0.25
         this.maxTriggerTime = 0.1
         this.currentTriggerTime = 0
@@ -66,7 +64,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.addComponent(this.movement)
 
         this.collider = new Collider()
-        this.collider.setOffset(115)
+        this.collider.setOffset(110)
         let topLeft = new Vector2(
             this.transform.getPosition().x,
             this.transform.getPosition().y + this.collider.getOffset()
@@ -80,7 +78,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.addComponent(this.collider)
 
         this.rb = new RigidBody()
-        this.rb.setMass(550)
+        this.rb.setMass(400)
         this.rb.setUseGravity(true)
         this.addComponent(this.rb)
 
@@ -111,9 +109,6 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
                 this.canFalseTrigger = false
             }
         }
-        if (this.transform.getPosition().y < this.maxBorder) {
-            this.rb.clampToZeroVelocity(75)
-        }
 
         this.playerModel.setPosition(
             new Vector2(this.transform.getPosition().x - 33, this.transform.getPosition().y)
@@ -125,8 +120,6 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         if (this.projectileManager) {
             this.projectileManager.draw(context)
         }
-        context.fillStyle = 'red'
-        context.fillRect(0, this.maxBorder, 1080, 10)
     }
     private handleInput(deltaTime: number) {
         if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {
@@ -166,8 +159,6 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             if (platform.getCanJump()) {
                 if (other.getTransform().getPosition().y <= 550) {
                     let distance = 550 - other.getTransform().getPosition().y
-                    this.publisher.setData(distance)
-                    this.publisher.notify()
                     let num = Math.floor(distance)
                     this.scoreCalculator.addCurrentScore(num)
                     UIManager.getInstance().setScoreText(
@@ -202,6 +193,9 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     }
     public setPosition(position: Vector2): void {
         this.transform.setPosition(position)
+    }
+    public isDown(): boolean {
+        return this.rb.getVelocity() == Vector2.zero()
     }
     public clearData(): void {
         this.setPosition(new Vector2(this.getPosition().x, 0))

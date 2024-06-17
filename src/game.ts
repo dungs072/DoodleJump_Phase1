@@ -12,8 +12,6 @@ class Game {
 
     private lastRenderTime: number
 
-    private backgroundSprite: Sprite
-
     constructor() {
         this.canvas = document.createElement('canvas') as HTMLCanvasElement
         this.context = this.canvas.getContext('2d')!
@@ -22,12 +20,11 @@ class Game {
         this.canvas.height = 600
         this.lastRenderTime = 0
         document.body.appendChild(this.canvas)
-        this.gameController = new GameController()
+        this.gameController = new GameController(this.canvas)
         this.start()
     }
 
     private start(): void {
-        this.backgroundSprite = new Sprite(PathResources.BACKGROUND, new Vector2(0, 0))
         this.setEvents()
         this.gameLoop()
     }
@@ -58,7 +55,7 @@ class Game {
         this.gameController.update(deltaTime)
     }
     private render() {
-        this.backgroundSprite.draw(this.context)
+        this.clearCanvas()
         this.gameController.draw(this.context)
     }
 
