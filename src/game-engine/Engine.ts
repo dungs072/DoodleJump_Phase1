@@ -1,38 +1,35 @@
-import Vector2 from './game-engine/base-types/Vector2'
-import PhysicManager from './game-engine/physic/PhysicManager'
-import ButtonManager from './doodle-jump-game/ui/ButtonManager'
-import GameController from './doodle-jump-game/mechanism/GameController'
-class Game {
+import PhysicManager from './physic/PhysicManager'
+import Scene from './scene/Scene'
+import SceneManager from './scene/SceneManager'
+
+class Engine {
     private canvas: HTMLCanvasElement
     private context: CanvasRenderingContext2D
 
-    private gameController: GameController
-
     private lastRenderTime: number
 
-    constructor() {
+    private sceneManager: SceneManager
+
+    constructor(width: number, height: number) {
         this.canvas = document.createElement('canvas') as HTMLCanvasElement
         this.context = this.canvas.getContext('2d')!
 
-        this.canvas.width = 640
-        this.canvas.height = 600
+        this.canvas.width = width
+        this.canvas.height = height
         this.lastRenderTime = 0
         document.body.appendChild(this.canvas)
-        this.gameController = new GameController(this.canvas)
         this.start()
     }
 
     private start(): void {
-        this.setEvents()
+        this.createScene('Default')
         this.gameLoop()
     }
-    private setEvents(): void {
-        this.canvas.addEventListener('click', (event) => {
-            let rect = this.canvas.getBoundingClientRect()
-            let x = event.clientX - rect.left
-            let y = event.clientY - rect.top
-            ButtonManager.getInstance().onClick(new Vector2(x, y))
-        })
+    public createScene(sceneName: string) {
+        this.sceneManager = new SceneManager()
+        let defaultScene = new Scene(sceneName)
+        this.sceneManager.addScene(defaultScene.getSceneName(), defaultScene)
+        this.sceneManager.toggleSceneOn(sceneName)
     }
 
     private gameLoop(): void {
@@ -50,16 +47,17 @@ class Game {
     }
     private update(deltaTime: number): void {
         PhysicManager.getInstance().handleCorePhysic(deltaTime)
-        this.gameController.update(deltaTime)
+        let scene = this.sceneManager.getCurrentActiveScene()
+        scene.update(deltaTime)
     }
     private render() {
         this.clearCanvas()
-        this.gameController.draw(this.context)
+        let scene = this.sceneManager.getCurrentActiveScene()
+        scene.draw(this.context)
     }
 
     private clearCanvas() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
     }
 }
-// Start the game
-const game = new Game()
+export default Engine

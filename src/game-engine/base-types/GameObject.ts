@@ -1,7 +1,9 @@
 import Transform from './components/Transform'
 import ComponentInterface from '../types/component'
 import PhysicsInterface from '../types/physicSystem'
-class GameObject implements PhysicsInterface {
+import SystemInterface from '../types/system'
+import RenderInterface from '../types/render'
+class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     // change to dictionary for reducing time complexity
     private components: ComponentsArray
     private canDraw: boolean
@@ -10,13 +12,24 @@ class GameObject implements PhysicsInterface {
         this.components = new ComponentsArray()
         this.initGameObject()
     }
-
     private initGameObject(): void {
         let transform = new Transform()
         this.components.Push(transform)
         this.canDraw = true
         this.canDestroy = false
+        this.start()
     }
+
+    public start(): void {
+        // start object
+    }
+    public update(deltaTime: number): void {
+        // update object
+    }
+    public draw(context: CanvasRenderingContext2D): void {
+        // draw object
+    }
+
     public getComponent<T extends ComponentInterface>(componentClass: { new (): T }): T | null {
         return this.components.getInstanceFor<T>(componentClass)
     }

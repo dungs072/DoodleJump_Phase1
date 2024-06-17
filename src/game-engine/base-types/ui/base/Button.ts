@@ -3,7 +3,7 @@ import Vector2 from '../../Vector2'
 import Publisher from '../../../../doodle-jump-game/patterns/observer/Publisher'
 import FontManager from './FontManager'
 import UIElement from './UIElement'
-import SubcriberInterface from '../../../types/observer/subcriber'
+import SubcriberInterface from '../../../../doodle-jump-game/types/observer/subcriber'
 
 class Button extends UIElement {
     private text: string

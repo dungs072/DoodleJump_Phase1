@@ -1,6 +1,6 @@
 import Vector2 from '../../../game-engine/base-types/Vector2'
 import Creator from '../../patterns/factory/Creator'
-import ProductInterface from '../../../game-engine/types/factory/product'
+import ProductInterface from '../../types/factory/product'
 import StablePlatform from './StablePlatform'
 
 class StablePlatformCreator extends Creator {

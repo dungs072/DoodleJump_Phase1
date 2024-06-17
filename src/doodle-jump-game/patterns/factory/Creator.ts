@@ -1,5 +1,5 @@
 import Vector2 from '../../../game-engine/base-types/Vector2'
-import ProductInterface from '../../../game-engine/types/factory/product'
+import ProductInterface from '../../types/factory/product'
 
 abstract class Creator {
     public abstract createProduct(position: Vector2, scale: Vector2): ProductInterface

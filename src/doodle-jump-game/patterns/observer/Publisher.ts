@@ -1,5 +1,5 @@
-import PublisherInterface from '../../../game-engine/types/observer/publisher'
-import SubcriberInterface from '../../../game-engine/types/observer/subcriber'
+import PublisherInterface from '../../types/observer/publisher'
+import SubcriberInterface from '../../types/observer/subcriber'
 
 class Publisher<T> implements PublisherInterface<T> {
     private subcribers: SubcriberInterface<T>[] = []
