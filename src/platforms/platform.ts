@@ -20,20 +20,19 @@ abstract class Platform
 
     private movementSpeed: number
     private maxDistanceToDestroy: number
-    private currentData: number
     protected canJump: boolean
 
     protected color: string
 
-    private targetY: number
+    private collisionPlayerPositionY: number
     constructor(position: Vector2, scale: Vector2, canJump: boolean) {
         super()
         this.transform = this.getComponent(Transform)!
         this.transform.setPosition(position)
         this.transform.setScale(scale)
         this.movementSpeed = 300
-        this.maxDistanceToDestroy = 595
-        this.targetY = this.transform.getPosition().y
+        this.maxDistanceToDestroy = 250
+        this.collisionPlayerPositionY = Infinity
         this.canDestroy = false
         this.canJump = canJump
         this.color = 'red'
@@ -50,24 +49,15 @@ abstract class Platform
         this.addComponent(this.movement)
     }
     public update(deltaTime: number): void {
-        if (this.targetY > this.transform.getPosition().y) {
-            if (this.currentData > 100) {
-                this.movement.move(
-                    deltaTime,
-                    Vector2.down(),
-                    this.movementSpeed + 450,
-                    this.transform
-                )
-            } else {
-                this.movement.move(deltaTime, Vector2.down(), this.movementSpeed, this.transform)
-            }
-        }
         this.sprite.setPosition(
             new Vector2(this.transform.getPosition().x - 10, this.transform.getPosition().y)
         )
         let downRight = this.collider.getDownRightBound()
         this.collider.setBounds(this.transform.getPosition(), downRight)
-        if (this.transform.getPosition().y >= this.maxDistanceToDestroy) {
+        if (
+            this.transform.getPosition().y - this.collisionPlayerPositionY >=
+            this.maxDistanceToDestroy
+        ) {
             this.canDestroy = true
         }
     }
@@ -83,8 +73,7 @@ abstract class Platform
         this.collider.draw(context)
     }
     public receive(data: number): void {
-        this.targetY = this.transform.getPosition().y + data
-        this.currentData = data
+        this.collisionPlayerPositionY = data
     }
     public operation(): void {
         console.log('nothing')

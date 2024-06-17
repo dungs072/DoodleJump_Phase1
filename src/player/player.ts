@@ -33,14 +33,15 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
     private scoreCalculator: ScoreCalculate
     private projectileManger: ProjectileManager
 
+    private publisher: Publisher<number>
     private playerModel: PlayerModel
 
-    private publisher: Publisher<number>
     private projectileManager: ProjectileManager
 
     private currentTime: number
     private currentTriggerTime: number
     private previousHeight: number
+    private maxHeight: number
 
     private canFalseTrigger: boolean
 
@@ -92,27 +93,16 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.projectileManger = new ProjectileManager()
         this.fighter = new PlayerFighter(this.projectileManager)
         this.addComponent(this.fighter)
+        this.previousHeight = this.transform.getPosition().y
+        this.maxHeight = this.previousHeight
     }
     public update(deltaTime: number): void {
         this.handleInput(deltaTime)
         this.handleNormalSprite(deltaTime)
         this.updateChildTransform()
-
-        this.collider.setIsTrigger(this.transform.getPosition().y < this.previousHeight)
-        this.previousHeight = this.transform.getPosition().y
-
-        if (this.canFalseTrigger) {
-            this.currentTriggerTime += deltaTime
-            if (this.currentTriggerTime >= this.maxTriggerTime) {
-                this.collider.setIsTrigger(false)
-                this.currentTriggerTime = 0
-                this.canFalseTrigger = false
-            }
-        }
-
-        this.playerModel.setPosition(
-            new Vector2(this.transform.getPosition().x - 33, this.transform.getPosition().y)
-        )
+        this.handleTrigger(deltaTime)
+        this.calculateHeight()
+        this.updateModel()
     }
     public draw(context: CanvasRenderingContext2D): void {
         this.playerModel.getCurrentSprite().draw(context)
@@ -121,6 +111,7 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             this.projectileManager.draw(context)
         }
     }
+
     private handleInput(deltaTime: number) {
         if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {
             let direction = Vector2.left()
@@ -151,24 +142,43 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             new Vector2(this.transform.getScale().x / 2, -10)
         )
     }
+    private updateModel(): void {
+        this.playerModel.setPosition(
+            new Vector2(this.transform.getPosition().x - 33, this.transform.getPosition().y)
+        )
+    }
+    private handleTrigger(deltaTime: number): void {
+        this.collider.setIsTrigger(this.transform.getPosition().y < this.previousHeight)
+        this.previousHeight = this.transform.getPosition().y
+
+        if (this.canFalseTrigger) {
+            this.currentTriggerTime += deltaTime
+            if (this.currentTriggerTime >= this.maxTriggerTime) {
+                this.collider.setIsTrigger(false)
+                this.currentTriggerTime = 0
+                this.canFalseTrigger = false
+            }
+        }
+    }
+    private calculateHeight(): void {
+        if (this.maxHeight > this.transform.getPosition().y) {
+            let num = Math.floor(this.maxHeight - this.transform.getPosition().y)
+            this.setScore(num)
+            this.maxHeight = this.transform.getPosition().y
+        }
+    }
     public onCollisionEnter(other: GameObject): void {
         // check if collide with Platform
         if (other instanceof Platform) {
             let platform = other as Platform
             platform.operation()
             if (platform.getCanJump()) {
-                if (other.getTransform().getPosition().y <= 550) {
-                    let distance = 550 - other.getTransform().getPosition().y
-                    let num = Math.floor(distance)
-                    this.scoreCalculator.addCurrentScore(num)
-                    UIManager.getInstance().setScoreText(
-                        this.scoreCalculator.getCurrentScore().toString()
-                    )
-                }
-
                 this.rb.setVelocity(Vector2.zero())
                 this.rb.addForce(Vector2.up(), this.jumpForce)
                 this.playerModel.handleJumpSprite()
+
+                this.publisher.setData(this.transform.getPosition().y)
+                this.publisher.notify()
             }
         }
     }
@@ -184,18 +194,28 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             this.playerModel.handleNormalSprite()
         }
     }
-
     public setPublisher(publisher: Publisher<number>): void {
         this.publisher = publisher
     }
+
     public getPosition(): Vector2 {
         return this.transform.getPosition()
     }
     public setPosition(position: Vector2): void {
         this.transform.setPosition(position)
     }
-    public isDown(): boolean {
-        return this.rb.getVelocity() == Vector2.zero()
+    public setScore(num: number): void {
+        this.scoreCalculator.addCurrentScore(num)
+        UIManager.getInstance().setScoreText(this.scoreCalculator.getCurrentScore().toString())
+    }
+    public saveHighScore(): void {
+        this.scoreCalculator.saveHighScore()
+        UIManager.getInstance()
+            .getGameOverMenuUI()
+            .setHighScore(this.scoreCalculator.getHighScore())
+        UIManager.getInstance()
+            .getGameOverMenuUI()
+            .setCurrentScore(this.scoreCalculator.getCurrentScore())
     }
     public clearData(): void {
         this.setPosition(new Vector2(this.getPosition().x, 0))

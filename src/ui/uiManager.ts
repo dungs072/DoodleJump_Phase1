@@ -65,6 +65,26 @@ class UIManager implements RenderInterface {
             new Vector2(640, 600),
             backgroundGameOverMenu
         )
+        let currentScoreText = new Text(
+            new Vector2(200, 150),
+            new Vector2(0, 0),
+            'Your score: ',
+            'red',
+            300,
+            null
+        )
+        this.gameOverMenuUI.setCurrentScoreText(currentScoreText)
+
+        let highScoreText = new Text(
+            new Vector2(200, 200),
+            new Vector2(100, 100),
+            'High score: ',
+            'red',
+            300,
+            null
+        )
+        this.gameOverMenuUI.setHighScoreText(highScoreText)
+
         let playAgainButtonBg = new Sprite(PathResources.PLAY_AGAIN_BUTTON, new Vector2(0, 0))
         this.playAgainButton = new Button(
             new Vector2(280, 350),
@@ -86,7 +106,7 @@ class UIManager implements RenderInterface {
         this.gameOverMenuUI.setMenuButton(this.menuButton)
 
         // main game
-        this.scoreText = new Text(new Vector2(75, 15), Vector2.one(), 'Score: 0', 'red', null)
+        this.scoreText = new Text(new Vector2(75, 15), Vector2.one(), 'Score: 0', 'red', 100, null)
     }
     public draw(context: CanvasRenderingContext2D): void {
         if (this.isGameOver) {
@@ -95,9 +115,9 @@ class UIManager implements RenderInterface {
         if (this.isMainMenu) {
             this.mainMenuUI.draw(context)
         }
-        if (this.scoreText.getIsActive()) {
-            this.scoreText.draw(context)
-        }
+        // if (this.scoreText.getIsActive()) {
+        //     this.scoreText.draw(context)
+        // }
     }
 
     public toggleMainMenu(state: boolean): void {
@@ -120,8 +140,14 @@ class UIManager implements RenderInterface {
     public getMenuButton(): Button {
         return this.menuButton
     }
+    public getGameOverMenuUI(): GameOverMenuUI {
+        return this.gameOverMenuUI
+    }
     public setScoreText(text: string): void {
         this.scoreText.setText('Score: ' + text)
+    }
+    public getScore(): Text {
+        return this.scoreText
     }
 }
 export default UIManager

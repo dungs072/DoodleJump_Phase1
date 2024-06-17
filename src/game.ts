@@ -1,7 +1,5 @@
 import Vector2 from './base-types/Vector2'
 import PhysicManager from './physic/PhysicManager'
-import Sprite from './base-types/Sprite'
-import PathResources from './PathResources'
 import ButtonManager from './ui/ButtonManager'
 import GameController from './mechanism/GameController'
 class Game {

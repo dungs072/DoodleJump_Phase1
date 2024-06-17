@@ -26,6 +26,7 @@ class UIElement extends GameObject implements RenderInterface {
         }
     }
     public setPosition(position: Vector2): void {
+        this.background?.setPosition(position)
         this.transform.setPosition(position)
     }
     public getPosition(): Vector2 {

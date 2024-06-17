@@ -14,8 +14,7 @@ class PlatformManager {
     private publisher: Publisher<number>
     private platforms: Platform[]
     private previousYPosition: number
-    private maxHeightToSpawn: number
-    private maxSpawnTime: number
+    private maxPlatform: number
     private currentSpawnTime: number
 
     private platformCreators: Creator[]
@@ -24,8 +23,7 @@ class PlatformManager {
         this.publisher = new Publisher<number>()
         this.platforms = []
         this.previousYPosition = 500
-        this.maxHeightToSpawn = -1000
-        this.maxSpawnTime = 0
+        this.maxPlatform = 12
         this.currentSpawnTime = 0
         this.platformCreators = []
         this.platformCreators.push(new StablePlatformCreator())
@@ -40,53 +38,37 @@ class PlatformManager {
     }
     public createPlatforms(deltaTime: number, canvasWidth: number) {
         this.currentSpawnTime += deltaTime
-        let lastPlatform = this.getTheLastPlatform()
-        let isMaxPlatform = true
-        if (lastPlatform != null) {
-            isMaxPlatform = this.maxHeightToSpawn < lastPlatform.getTransform().getPosition().y
-        }
-
-        if (this.currentSpawnTime > this.maxSpawnTime && isMaxPlatform) {
-            if (lastPlatform != null) {
-                this.previousYPosition = lastPlatform.getTransform().getPosition().y
-            }
-            let position = new Vector2(Math.random() * canvasWidth, this.previousYPosition - 150)
-            let scale = new Vector2(110, 30)
-            let platformCreatorIndex = Math.floor(Math.random() * this.platformCreators.length)
-            let platformCreator = this.platformCreators[platformCreatorIndex]
-            let product = platformCreator.createProduct(position, scale)
-            let gameObj = product.getGameObject()
-            if (gameObj instanceof Platform) {
-                this.platforms.push(gameObj)
-                this.publisher.subcribe(gameObj)
-                PhysicManager.getInstance().addphysicObjs(gameObj)
-            }
-            if (gameObj instanceof UnstablePlatform) {
-                let position = new Vector2(Math.random() * canvasWidth, this.previousYPosition - 75)
-                this.createStablePlatform(position, scale)
-            }
-            if (this.previousYPosition - position.y > 275) {
+        // let lastPlatform = this.getTheLastPlatform()
+        // if (lastPlatform != null) {
+        //     isMaxPlatform = this.maxHeightToSpawn < lastPlatform.getTransform().getPosition().y
+        // }
+        if (this.platforms.length < this.maxPlatform) {
+            for (let i = 0; i < this.maxPlatform - this.platforms.length; i++) {
+                let rangeHeight = this.getRandomInRange(75, 200)
                 let position = new Vector2(
                     Math.random() * canvasWidth,
-                    this.previousYPosition + 150
+                    this.previousYPosition - rangeHeight
                 )
-                this.createStablePlatform(position, scale)
-            }
-
-            this.currentSpawnTime = 0
-            for (let i = 0; i < this.platforms.length - 1; i++) {
-                let distance =
-                    this.platforms[i].getTransform().getPosition().y -
-                    this.platforms[i + 1].getTransform().getPosition().y
-                if (distance > 300) {
-                    this.platforms[i + 1]
-                        .getTransform()
-                        .setPosition(
-                            new Vector2(
-                                this.platforms[i + 1].getTransform().getPosition().x,
-                                this.platforms[i + 1].getTransform().getPosition().y + distance / 2
-                            )
-                        )
+                let scale = new Vector2(110, 30)
+                let platformCreatorIndex = Math.floor(Math.random() * this.platformCreators.length)
+                let platformCreator = this.platformCreators[platformCreatorIndex]
+                let product = platformCreator.createProduct(position, scale)
+                let gameObj = product.getGameObject()
+                if (gameObj instanceof Platform) {
+                    this.platforms.push(gameObj)
+                    this.publisher.subcribe(gameObj)
+                    PhysicManager.getInstance().addphysicObjs(gameObj)
+                }
+                if (gameObj instanceof UnstablePlatform) {
+                    let position = new Vector2(
+                        Math.random() * canvasWidth,
+                        this.previousYPosition - 75
+                    )
+                    this.createStablePlatform(position, scale)
+                }
+                let platform = this.getTheLastPlatform()
+                if (platform != null) {
+                    this.previousYPosition = platform.getTransform().getPosition().y
                 }
             }
         }
@@ -107,6 +89,12 @@ class PlatformManager {
             return null
         }
         return this.platforms[this.platforms.length - 1]
+    }
+    public getTheFirstPlatform(): Platform | null {
+        if (this.platforms.length == 0) {
+            return null
+        }
+        return this.platforms[0]
     }
 
     public update(deltaTime: number) {
@@ -132,6 +120,9 @@ class PlatformManager {
     }
     public clearData(): void {
         this.platforms = []
+    }
+    private getRandomInRange(min: number, max: number): number {
+        return Math.floor(Math.random() * (max - min + 1)) + min
     }
 }
 export default PlatformManager
