@@ -3,6 +3,14 @@ import Scene from './Scene'
 class SceneManager {
     private scenes = new Map<string, Scene>()
     private currentActiveScene: Scene
+    private static instance: SceneManager
+
+    public static getInstance(): SceneManager {
+        if (!SceneManager.instance) {
+            SceneManager.instance = new SceneManager()
+        }
+        return SceneManager.instance
+    }
 
     public addScene(sceneName: string, scene: Scene): void {
         if (this.scenes.has(sceneName)) {

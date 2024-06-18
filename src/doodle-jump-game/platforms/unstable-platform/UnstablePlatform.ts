@@ -1,8 +1,10 @@
-import Sprite from '../../../game-engine/base-types/2d/Sprite'
+import Sprite from '../../../game-engine/base-types/components/render/Sprite'
 import Vector2 from '../../../game-engine/base-types/Vector2'
 import PathResources from '../../../game-engine/PathResources'
 import Platform from '../Platform'
-import Animation from '../../../game-engine/base-types/2d/Animation'
+import Animation from '../../../game-engine/base-types/components/render/Animation'
+import PlatformModel from '../PlatformModel'
+import Transform from '../../../game-engine/base-types/components/Transform'
 
 class UnstablePlatform extends Platform {
     private dropDownSpeed: number
@@ -18,12 +20,16 @@ class UnstablePlatform extends Platform {
         this.dropDownSpeed = 200
         this.isStomped = false
         this.maxDropDownDistance = 100
-        this.color = 'brown'
         this.canDestroy = false
-        this.sprite = new Sprite(PathResources.UNSTABLE_PLATFORM, position)
+
         this.deltaTime = 0.01
+
+        let sprite = new Sprite(PathResources.UNSTABLE_PLATFORM)
+        this.setUpModel(sprite)
+
         this.setUpAnimation()
     }
+
     private setUpAnimation(): void {
         let paths: string[] = []
         paths.push(PathResources.UNSTABLE_PLATFORM)
@@ -43,19 +49,19 @@ class UnstablePlatform extends Platform {
             }
             this.movement.move(deltaTime, Vector2.down(), this.dropDownSpeed, this.transform)
         }
-        this.animation.setPosition(this.transform.getPosition())
+        // this.animation.setPosition(this.transform.getPosition())
     }
-    public draw(context: CanvasRenderingContext2D): void {
-        if (this.isStomped) {
-            this.animation.draw(context, this.deltaTime)
-            return
-        }
-        super.draw(context)
-    }
+    // public draw(context: CanvasRenderingContext2D): void {
+    //     if (this.isStomped) {
+    //         this.animation.draw(context, this.deltaTime)
+    //         return
+    //     }
+    //     super.draw(context)
+    // }
 
     public operation(): void {
         this.isStomped = true
-        this.animation.setPosition(this.transform.getPosition())
+        //this.animation.setPosition(this.transform.getPosition())
         this.previousY = this.transform.getPosition().y
     }
 }

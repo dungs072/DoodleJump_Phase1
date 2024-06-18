@@ -1,6 +1,8 @@
 import PhysicManager from './physic/PhysicManager'
 import Scene from './scene/Scene'
 import SceneManager from './scene/SceneManager'
+import ButtonManager from './base-types/ui/base/ButtonManager'
+import Vector2 from './base-types/Vector2'
 
 class Engine {
     private canvas: HTMLCanvasElement
@@ -23,10 +25,11 @@ class Engine {
 
     private start(): void {
         this.createScene('Default')
+        this.setEvents()
         this.gameLoop()
     }
     public createScene(sceneName: string) {
-        this.sceneManager = new SceneManager()
+        this.sceneManager = SceneManager.getInstance()
         let defaultScene = new Scene(sceneName)
         this.sceneManager.addScene(defaultScene.getSceneName(), defaultScene)
         this.sceneManager.toggleSceneOn(sceneName)
@@ -38,11 +41,9 @@ class Engine {
         this.lastRenderTime = currentTime
         this.clearCanvas()
 
-        // write code here
         this.update(deltaTime)
         this.render()
 
-        // write code here
         requestAnimationFrame(() => this.gameLoop())
     }
     private update(deltaTime: number): void {
@@ -54,6 +55,17 @@ class Engine {
         this.clearCanvas()
         let scene = this.sceneManager.getCurrentActiveScene()
         scene.draw(this.context)
+    }
+    private setEvents(): void {
+        this.canvas.addEventListener('click', (event: MouseEvent) => {
+            let rect = this.canvas.getBoundingClientRect()
+            let x = event.clientX - rect.left
+            let y = event.clientY - rect.top
+            ButtonManager.getInstance().onClick(new Vector2(x, y))
+        })
+    }
+    public getCanvas(): HTMLCanvasElement {
+        return this.canvas
     }
 
     private clearCanvas() {

@@ -1,31 +1,27 @@
 import Sprite from './Sprite'
-import Vector2 from '../Vector2'
-import RenderInterface from '../../types/render'
+import Vector2 from '../../Vector2'
+import Component from '../Component'
 
-class Animation {
+class Animation extends Component {
     private sprites: Sprite[]
-    private position: Vector2
     private canLoop: boolean
     private maxTimePerSprite: number
     private currentTime: number
     private currentIndex: number
     private isDone: boolean = false
     constructor(paths: string[], position: Vector2, maxTimePerSprite: number) {
+        super()
         this.sprites = []
         for (let i = 0; i < paths.length; i++) {
-            let sprite = new Sprite(paths[i], position)
+            let sprite = new Sprite(paths[i])
             this.sprites.push(sprite)
         }
-        this.position = position
         this.canLoop = false
         this.maxTimePerSprite = maxTimePerSprite
         this.currentTime = maxTimePerSprite
         this.currentIndex = 0
     }
-    draw(context: CanvasRenderingContext2D, deltaTime: number): void {
-        this.sprites[this.currentIndex].setPosition(this.position)
-        this.sprites[this.currentIndex].draw(context)
-
+    public update(deltaTime: number): void {
         if (this.isDone) {
             return
         }
@@ -34,11 +30,10 @@ class Animation {
             this.currentIndex = (this.currentIndex + 1) % this.sprites.length
             this.currentTime = 0
         }
-
         this.isDone = !this.canLoop && this.currentIndex == this.sprites.length - 1
     }
-    public setPosition(position: Vector2): void {
-        this.position = position
+    public draw(context: CanvasRenderingContext2D, position: Vector2): void {
+        this.sprites[this.currentIndex].draw(context, position)
     }
 }
 export default Animation

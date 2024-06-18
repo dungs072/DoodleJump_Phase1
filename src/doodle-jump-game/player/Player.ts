@@ -4,7 +4,7 @@ import Transform from '../../game-engine/base-types/components/Transform'
 import SystemInterface from '../../game-engine/types/system'
 import KeyCode from '../../game-engine/input/KeyCode'
 import RenderInterface from '../../game-engine/types/render'
-import Collider from '../../game-engine/base-types/components/Collider'
+import Collider from '../../game-engine/base-types/components/physic/Collider'
 import Movement from '../general/Movement'
 import Platform from '../platforms/Platform'
 import PlayerFighter from './PlayerFighter'
@@ -12,12 +12,12 @@ import ProjectileManager from '../projectile/ProjectileManager'
 import PlayerModel from './PlayerModel'
 
 import ScoreCalculate from '../score/ScoreCalculator'
-import Action from '../../game-engine/base-types/enums/Action'
-import RigidBody from '../../game-engine/base-types/components/Rigidbody'
+import Action from '../states/Action'
+import RigidBody from '../../game-engine/base-types/components/physic/Rigidbody'
 import Publisher from '../patterns/observer/Publisher'
 import UIManager from '../ui/UIManager'
 
-class Player extends GameObject implements SystemInterface, RenderInterface {
+class Player extends GameObject implements SystemInterface {
     private jumpForce: number
     private movementSpeed: number
     private maxChangeJumpToNormalTime: number
@@ -27,7 +27,6 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
 
     private collider: Collider
     private rb: RigidBody
-    private transform: Transform
     private movement: Movement
     private fighter: PlayerFighter
     private scoreCalculator: ScoreCalculate
@@ -88,7 +87,8 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
             new Vector2(this.transform.getScale().x / 2, -10)
         )
 
-        this.playerModel = new PlayerModel(this.transform.getPosition())
+        this.playerModel = new PlayerModel()
+        this.addChild(this.playerModel)
         this.scoreCalculator = new ScoreCalculate()
         this.projectileManger = new ProjectileManager()
         this.fighter = new PlayerFighter(this.projectileManager)
@@ -102,15 +102,14 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.updateChildTransform()
         this.handleTrigger(deltaTime)
         this.calculateHeight()
-        this.updateModel()
     }
-    public draw(context: CanvasRenderingContext2D): void {
-        this.playerModel.getCurrentSprite().draw(context)
-        this.collider.draw(context)
-        if (this.projectileManager) {
-            this.projectileManager.draw(context)
-        }
-    }
+    // public draw(context: CanvasRenderingContext2D): void {
+    //     this.playerModel.getCurrentSprite().draw(context)
+    //     this.collider.draw(context)
+    //     if (this.projectileManager) {
+    //         this.projectileManager.draw(context)
+    //     }
+    // }
 
     private handleInput(deltaTime: number) {
         if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {
@@ -140,11 +139,6 @@ class Player extends GameObject implements SystemInterface, RenderInterface {
         this.spawnProjectilePos = Vector2.add(
             this.transform.getPosition(),
             new Vector2(this.transform.getScale().x / 2, -10)
-        )
-    }
-    private updateModel(): void {
-        this.playerModel.setPosition(
-            new Vector2(this.transform.getPosition().x - 33, this.transform.getPosition().y)
         )
     }
     private handleTrigger(deltaTime: number): void {

@@ -1,23 +1,34 @@
 import Transform from './components/Transform'
-import ComponentInterface from '../types/component'
 import PhysicsInterface from '../types/physicSystem'
 import SystemInterface from '../types/system'
 import RenderInterface from '../types/render'
+import SceneManager from '../scene/SceneManager'
+import Component from './components/Component'
+import Vector2 from './Vector2'
 class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
-    // change to dictionary for reducing time complexity
-    private components: ComponentsArray
+    private components: Map<Function, Component>
+    private children: GameObject[]
     private canDraw: boolean
     protected canDestroy: boolean
+    protected transform: Transform
+
     constructor() {
-        this.components = new ComponentsArray()
+        this.components = new Map<Function, Component>()
         this.initGameObject()
     }
     private initGameObject(): void {
-        let transform = new Transform()
-        this.components.Push(transform)
+        this.children = []
+        this.transform = new Transform()
+        this.addComponent(this.transform)
         this.canDraw = true
         this.canDestroy = false
+        this.registerToScene()
         this.start()
+    }
+    private registerToScene() {
+        // I have to decouple here: fix fix
+        let scene = SceneManager.getInstance().getCurrentActiveScene()
+        scene.addGameObject(this)
     }
 
     public start(): void {
@@ -27,32 +38,39 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         // update object
     }
     public draw(context: CanvasRenderingContext2D): void {
-        // draw object
+        if (!this.canDraw) {
+            return
+        }
+        this.components.forEach((component) => {
+            if (component.getActive()) {
+                component.draw(context, this.transform.getPosition())
+            }
+        })
     }
 
-    public getComponent<T extends ComponentInterface>(componentClass: { new (): T }): T | null {
-        return this.components.getInstanceFor<T>(componentClass)
+    public getComponent<T extends Component>(componentClass: {
+        new (...args: any[]): T
+    }): T | undefined {
+        return this.components.get(componentClass) as T | undefined
     }
-    public addComponent(component: ComponentInterface): void {
-        this.components.Push(component)
+    public addComponent<T extends Component>(component: T): void {
+        component.setGameObject(this)
+        this.components.set(component.constructor, component)
     }
-    public isOutsideCanvas(canvas: HTMLCanvasElement): boolean {
-        let transform = this.getComponent(Transform)
-        if (transform == null) {
-            return true
+    public removeComponent<T extends Component>(component: T): void {
+        if (this.components.has(component.constructor)) {
+            this.components.delete(component.constructor)
         }
-        return (
-            transform.getPosition().x < 0 ||
-            transform.getPosition().x > canvas.width ||
-            transform.getPosition().y < 0 ||
-            transform.getPosition().y > canvas.height
-        )
     }
+
     public onCollisionEnter(other: GameObject): void {
         // implement collision here
     }
     public setCanDraw(state: boolean): void {
         this.canDraw = state
+        this.children.forEach((child) => {
+            child.setCanDraw(state)
+        })
     }
     public getCanDraw(): boolean {
         return this.canDraw
@@ -60,20 +78,32 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     public getCanDestroy() {
         return this.canDestroy
     }
-}
-// edit later
-class ComponentsArray extends Array<ComponentInterface> {
-    public getInstanceFor<T extends ComponentInterface>(componentClass: { new (): T }) {
-        for (let i = 0; i < this.length; i++) {
-            if (this[i].constructor.name === componentClass.name) {
-                return this[i]
-            }
-        }
-        return null as any
+    public setCanDestroy(state: boolean): void {
+        this.canDestroy = state
     }
-    public Push(component: ComponentInterface): void {
-        this.push(component)
+    public addChild(child: GameObject): void {
+        this.children.push(child)
+        this.transform.setPosition(this.transform.getPosition())
     }
+    public setChildsPosition(position: Vector2): void {
+        this.children.forEach((child) => {
+            child.transform.setPosition(
+                new Vector2(
+                    position.x + child.transform.getLocalPosition().x,
+                    position.y + child.transform.getLocalPosition().y
+                )
+            )
+        })
+    }
+    // public setChildsScale(scale: Vector2): void {
+    //     this.children.forEach((child) => {
+    //         child.transform.setScale(
+    //             new Vector2(
+    //                 this.transform.getScale().x + child.transform.getScale().x,
+    //                 this.transform.getPosition().y + child.transform.getPosition().y
+    //             )
+    //         )
+    //     })
+    // }
 }
-
 export default GameObject

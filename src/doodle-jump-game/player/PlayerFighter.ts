@@ -1,11 +1,12 @@
 import Vector2 from '../../game-engine/base-types/Vector2'
 import Projectile from '../projectile/Projectile'
 import ProjectileManager from '../projectile/ProjectileManager'
-import ComponentInterface from '../../game-engine/types/component'
+import Component from '../../game-engine/base-types/components/Component'
 
-class PlayerFighter implements ComponentInterface {
+class PlayerFighter extends Component {
     private projectileManager: ProjectileManager
     constructor(projectileManager: ProjectileManager) {
+        super()
         this.projectileManager = projectileManager
     }
     public fight(spawnPosition: Vector2, direction: Vector2) {

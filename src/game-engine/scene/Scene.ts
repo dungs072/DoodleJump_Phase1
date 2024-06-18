@@ -1,4 +1,5 @@
 import GameObject from '../base-types/GameObject'
+import EventDispatcher from '../event/EventDispatcher'
 import RenderInterface from '../types/render'
 import SystemInterface from '../types/system'
 
@@ -18,12 +19,18 @@ class Scene implements SystemInterface, RenderInterface {
     }
     public update(deltaTime: number): void {
         this.gameObjects.forEach((gameObject) => {
+            if (gameObject.getCanDestroy()) {
+                let index = this.gameObjects.indexOf(gameObject)
+                this.gameObjects.splice(index)
+            }
             gameObject.update(deltaTime)
         })
     }
     public draw(context: CanvasRenderingContext2D): void {
         this.gameObjects.forEach((gameObject) => {
-            gameObject.draw(context)
+            if (gameObject.getCanDraw()) {
+                gameObject.draw(context)
+            }
         })
     }
     public setActive(state: boolean): void {

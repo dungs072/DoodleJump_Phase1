@@ -1,6 +1,6 @@
-import Vector2 from '../../game-engine/base-types/Vector2'
-import Button from '../../game-engine/base-types/ui/base/Button'
-
+import Vector2 from '../../Vector2'
+import Transform from '../../components/Transform'
+import Button from '../../components/ui/Button'
 class ButtonManager {
     private buttons: Button[]
     private static instance: ButtonManager
@@ -17,13 +17,16 @@ class ButtonManager {
     public onClick(position: Vector2) {
         this.buttons.forEach((button) => {
             if (button.getIsActive()) {
-                if (
-                    position.x > button.getPosition().x &&
-                    position.x < button.getPosition().x + button.getScale().x &&
-                    position.y > button.getPosition().y &&
-                    position.y < button.getPosition().y + button.getScale().y
-                ) {
-                    button.onClick()
+                let transform = button.getGameObject().getComponent(Transform)
+                if (transform) {
+                    if (
+                        position.x > transform.getPosition().x &&
+                        position.x < transform.getPosition().x + transform.getScale().x &&
+                        position.y > transform.getPosition().y &&
+                        position.y < transform.getPosition().y + transform.getScale().y
+                    ) {
+                        button.onClick()
+                    }
                 }
             }
         })

@@ -1,4 +1,4 @@
-import Collider from '../../game-engine/base-types/components/Collider'
+import Collider from '../../game-engine/base-types/components/physic/Collider'
 import Transform from '../../game-engine/base-types/components/Transform'
 import GameObject from '../../game-engine/base-types/GameObject'
 import Vector2 from '../../game-engine/base-types/Vector2'
@@ -7,22 +7,20 @@ import ProductInterface from '../types/factory/product'
 import SubcriberInterface from '../types/observer/subcriber'
 import RenderInterface from '../../game-engine/types/render'
 import SystemInterface from '../../game-engine/types/system'
-import Sprite from '../../game-engine/base-types/2d/Sprite'
+import PlatformModel from './PlatformModel'
+import Sprite from '../../game-engine/base-types/components/render/Sprite'
 
 abstract class Platform
     extends GameObject
     implements SystemInterface, RenderInterface, SubcriberInterface<number>, ProductInterface
 {
+    protected platformModel: PlatformModel
+
     private collider: Collider
     protected transform: Transform
     protected movement: Movement
-    protected sprite: Sprite
-
-    private movementSpeed: number
     private maxDistanceToDestroy: number
     protected canJump: boolean
-
-    protected color: string
 
     private collisionPlayerPositionY: number
     constructor(position: Vector2, scale: Vector2, canJump: boolean) {
@@ -30,12 +28,10 @@ abstract class Platform
         this.transform = this.getComponent(Transform)!
         this.transform.setPosition(position)
         this.transform.setScale(scale)
-        this.movementSpeed = 300
         this.maxDistanceToDestroy = 250
         this.collisionPlayerPositionY = Infinity
         this.canDestroy = false
         this.canJump = canJump
-        this.color = 'red'
         this.start()
     }
 
@@ -49,9 +45,9 @@ abstract class Platform
         this.addComponent(this.movement)
     }
     public update(deltaTime: number): void {
-        this.sprite.setPosition(
-            new Vector2(this.transform.getPosition().x - 10, this.transform.getPosition().y)
-        )
+        // this.sprite.setPosition(
+        //     new Vector2(this.transform.getPosition().x - 10, this.transform.getPosition().y)
+        // )
         let downRight = this.collider.getDownRightBound()
         this.collider.setBounds(this.transform.getPosition(), downRight)
         if (
@@ -62,15 +58,19 @@ abstract class Platform
         }
     }
 
-    public draw(context: CanvasRenderingContext2D): void {
-        if (!this.getCanDraw()) {
-            return
-        }
-        this.drawModel(context)
-    }
-    private drawModel(context: CanvasRenderingContext2D) {
-        this.sprite.draw(context)
-        this.collider.draw(context)
+    // public draw(context: CanvasRenderingContext2D): void {
+    //     if (!this.getCanDraw()) {
+    //         return
+    //     }
+    //     this.drawModel(context)
+    // }
+    // private drawModel(context: CanvasRenderingContext2D) {
+    //     this.sprite.draw(context)
+    //     this.collider.draw(context)
+    // }
+    protected setUpModel(sprite: Sprite) {
+        this.platformModel = new PlatformModel(sprite)
+        this.addChild(this.platformModel)
     }
     public receive(data: number): void {
         this.collisionPlayerPositionY = data

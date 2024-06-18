@@ -1,5 +1,5 @@
-import Collider from '../../game-engine/base-types/components/Collider'
-import RigidBody from '../../game-engine/base-types/components/Rigidbody'
+import Collider from '../../game-engine/base-types/components/physic/Collider'
+import RigidBody from '../../game-engine/base-types/components/physic/Rigidbody'
 import Transform from '../../game-engine/base-types/components/Transform'
 import GameObject from '../../game-engine/base-types/GameObject'
 import Vector2 from '../../game-engine/base-types/Vector2'
@@ -10,7 +10,6 @@ class Projectile extends GameObject implements SystemInterface, RenderInterface 
     private timeToDestroy: number
     private forceAmount: number
     private direction: Vector2
-    private transform: Transform
     private collider: Collider
     private rb: RigidBody
     private style = 'black'
@@ -50,18 +49,18 @@ class Projectile extends GameObject implements SystemInterface, RenderInterface 
         }
         //this.movement.move(deltaTime, this.direction, this.speed, this.transform);
     }
-    public draw(context: CanvasRenderingContext2D): void {
-        context.fillStyle = this.style
-        if (this.transform == null) {
-            return
-        }
-        context.fillRect(
-            this.transform.getPosition().x,
-            this.transform.getPosition().y,
-            this.transform.getScale().x,
-            this.transform.getScale().y
-        )
-        this.collider.draw(context)
-    }
+    // public draw(context: CanvasRenderingContext2D): void {
+    //     context.fillStyle = this.style
+    //     if (this.transform == null) {
+    //         return
+    //     }
+    //     context.fillRect(
+    //         this.transform.getPosition().x,
+    //         this.transform.getPosition().y,
+    //         this.transform.getScale().x,
+    //         this.transform.getScale().y
+    //     )
+    //     this.collider.draw(context)
+    // }
 }
 export default Projectile

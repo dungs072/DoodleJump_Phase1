@@ -1,7 +1,7 @@
 import PathResources from '../../game-engine/PathResources'
-import Sprite from '../../game-engine/base-types/2d/Sprite'
+import Sprite from '../../game-engine/base-types/components/render/Sprite'
 import Vector2 from '../../game-engine/base-types/Vector2'
-import GameState from '../../game-engine/base-types/enums/GameState'
+import GameState from '../states/GameState'
 import PhysicManager from '../../game-engine/physic/PhysicManager'
 import PlatformManager from '../platforms/PlatformManager'
 import Player from '../player/Player'
@@ -9,7 +9,8 @@ import UIManager from '../ui/UIManager'
 import GameMenu from './GameMenu'
 import GamePlay from './GamePlay'
 import GameStateHandler from './GameStateHandler'
-class GameController {
+import GameObject from '../../game-engine/base-types/GameObject'
+class GameController extends GameObject {
     private gamePlay: GamePlay
     private gameMenu: GameMenu
     private gameStateHandler: GameStateHandler
@@ -21,6 +22,7 @@ class GameController {
     private canvas: HTMLCanvasElement
 
     constructor(canvas: HTMLCanvasElement) {
+        super()
         this.canvas = canvas
         this.gameStateHandler = new GameStateHandler()
         this.gamePlay = new GamePlay(this.gameStateHandler, this)
@@ -28,7 +30,7 @@ class GameController {
         UIManager.getInstance().getStartGameButton().subcribe(this.gamePlay)
         UIManager.getInstance().getPlayAgainButton().subcribe(this.gamePlay)
         UIManager.getInstance().getMenuButton().subcribe(this.gameMenu)
-        this.backgroundSprite = new Sprite(PathResources.BACKGROUND, new Vector2(0, 0))
+        this.backgroundSprite = new Sprite(PathResources.BACKGROUND)
     }
 
     public getGameState(): GameState {
@@ -68,27 +70,27 @@ class GameController {
             UIManager.getInstance().toggleMainMenu(true)
         }
     }
-    public draw(context: CanvasRenderingContext2D) {
-        this.backgroundSprite.draw(context)
-        context.save()
-        UIManager.getInstance().getScore().draw(context)
-        if (this.getGameState() == GameState.GAME_PLAY) {
-            if (this.player.getPosition().y < this.canvas.height / 2) {
-                context.translate(0, this.canvas.height / 2 - this.player.getPosition().y)
-            }
-        }
+    // public draw(context: CanvasRenderingContext2D) {
+    //     this.backgroundSprite.draw(context, )
+    //     context.save()
+    //     UIManager.getInstance().getScore().draw(context)
+    //     if (this.getGameState() == GameState.GAME_PLAY) {
+    //         if (this.player.getPosition().y < this.canvas.height / 2) {
+    //             context.translate(0, this.canvas.height / 2 - this.player.getPosition().y)
+    //         }
+    //     }
 
-        UIManager.getInstance().draw(context)
+    //     UIManager.getInstance().draw(context)
 
-        if (this.platformManager) {
-            this.platformManager.draw(context)
-        }
-        if (this.player) {
-            this.player.draw(context)
-        }
+    //     if (this.platformManager) {
+    //         this.platformManager.draw(context)
+    //     }
+    //     if (this.player) {
+    //         this.player.draw(context)
+    //     }
 
-        context.restore()
-    }
+    //     context.restore()
+    // }
 
     private handlePlayer(deltaTime: number) {
         this.player.update(deltaTime)

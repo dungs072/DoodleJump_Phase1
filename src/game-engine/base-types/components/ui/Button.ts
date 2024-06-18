@@ -1,46 +1,40 @@
-import Sprite from '../../2d/Sprite'
+import Sprite from '../render/Sprite'
 import Vector2 from '../../Vector2'
 import Publisher from '../../../../doodle-jump-game/patterns/observer/Publisher'
-import FontManager from './FontManager'
+import FontManager from '../../ui/base/FontManager'
 import UIElement from './UIElement'
 import SubcriberInterface from '../../../../doodle-jump-game/types/observer/subcriber'
+import Transform from '../Transform'
 
 class Button extends UIElement {
     private text: string
     private textColor: string
     private publisher: Publisher<string>
-    constructor(
-        position: Vector2,
-        scale: Vector2,
-        text: string,
-        textColor: string,
-        background: Sprite
-    ) {
-        super(position, scale, background)
+    constructor(text: string, textColor: string, background: Sprite) {
+        super(background)
         this.text = text
         this.textColor = textColor
         this.publisher = new Publisher()
     }
 
-    public draw(context: CanvasRenderingContext2D): void {
-        super.draw(context)
+    public draw(context: CanvasRenderingContext2D, position: Vector2): void {
+        super.draw(context, position)
 
         context.fillStyle = this.textColor
         context.font = FontManager.Arial
         context.textAlign = 'center'
         context.textBaseline = 'middle'
-        context.fillText(
-            this.text,
-            this.getPosition().x + this.getScale().x / 2,
-            this.getPosition().y + this.getScale().y / 2
-        )
+        context.fillText(this.text, position.x, position.y)
         context.strokeStyle = '#008000'
-        context.strokeRect(
-            this.getPosition().x,
-            this.getPosition().y,
-            this.getScale().x,
-            this.getScale().y
-        )
+        let transform = this.getGameObject().getComponent(Transform)
+        if (transform) {
+            context.strokeRect(
+                position.x,
+                position.y,
+                transform.getScale().x,
+                transform.getScale().y
+            )
+        }
     }
     public subcribe(subcriber: SubcriberInterface<string>): void {
         this.publisher.subcribe(subcriber)

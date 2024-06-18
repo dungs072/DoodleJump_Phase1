@@ -1,12 +1,13 @@
-import ComponentInterface from '../../types/component'
-import Vector2 from '../Vector2'
+import Vector2 from '../../Vector2'
+import Component from '../Component'
 
-class RigidBody implements ComponentInterface {
+class RigidBody extends Component {
     private useGravity: boolean
     private velocity: Vector2
     private mass: number
 
     constructor() {
+        super()
         this.velocity = Vector2.zero()
         this.mass = 1
     }

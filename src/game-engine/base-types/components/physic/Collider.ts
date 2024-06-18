@@ -1,13 +1,14 @@
-import RenderInterface from '../../types/render'
-import Vector2 from '../Vector2'
+import Vector2 from '../../Vector2'
+import Component from '../Component'
 
-class Collider implements RenderInterface {
+class Collider extends Component {
     private topLeftBound: Vector2
     private downRightBound: Vector2
     private offset: number
     private isTrigger: boolean
     private isStatic: boolean
     constructor() {
+        super()
         this.isTrigger = false
     }
 

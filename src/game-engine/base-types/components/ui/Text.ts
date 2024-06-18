@@ -1,39 +1,27 @@
-import Sprite from '../../2d/Sprite'
+import Sprite from '../render/Sprite'
 import Vector2 from '../../Vector2'
-import FontManager from './FontManager'
+import FontManager from '../../ui/base/FontManager'
 import UIElement from './UIElement'
 
 class Text extends UIElement {
     private text: string
     private textColor: string
     private width: number
-    constructor(
-        position: Vector2,
-        scale: Vector2,
-        text: string,
-        textColor: string,
-        width: number,
-        background: Sprite | null
-    ) {
-        super(position, scale, background)
+    constructor(text: string, textColor: string, width: number, background: Sprite | null) {
+        super(background)
         this.text = text
         this.textColor = textColor
         this.width = width
     }
 
-    public draw(context: CanvasRenderingContext2D): void {
-        super.draw(context)
+    public draw(context: CanvasRenderingContext2D, position: Vector2): void {
+        super.draw(context, position)
 
         context.fillStyle = this.textColor
         context.font = FontManager.Arial
         context.textAlign = 'center'
         context.textBaseline = 'middle'
-        context.fillText(
-            this.text,
-            this.getPosition().x + this.getScale().x / 2,
-            this.getPosition().y + this.getScale().y / 2,
-            this.width
-        )
+        context.fillText(this.text, position.x, position.y, this.width)
         // context.strokeStyle = '#008000'
         // context.strokeRect(
         //     this.getPosition().x,
@@ -42,7 +30,7 @@ class Text extends UIElement {
         //     this.getScale().y
         // )
     }
-    public setText(text: string): void {
+    public setTextDisplay(text: string): void {
         this.text = text
     }
 }

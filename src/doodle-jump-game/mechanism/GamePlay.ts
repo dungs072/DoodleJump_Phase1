@@ -1,4 +1,4 @@
-import GameState from '../../game-engine/base-types/enums/GameState'
+import GameState from '../states/GameState'
 import SubcriberInterface from '../types/observer/subcriber'
 import UIManager from '../ui/UIManager'
 import GameStateHandler from './GameStateHandler'

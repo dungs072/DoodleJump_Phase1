@@ -1,16 +1,16 @@
-class EventDispatcher {
-    private listeners: { [type: string]: ((event: Event) => void)[] } = {}
+class EventDispatcher<T> {
+    private listeners: { [type: string]: ((event: Event, data: T) => void)[] } = {}
 
-    addEventListener(type: string, listener: (event: Event) => void): void {
+    public addEventListener(type: string, listener: (event: Event, data: T) => void): void {
         if (!this.listeners[type]) {
             this.listeners[type] = []
         }
         this.listeners[type].push(listener)
     }
 
-    dispatchEvent(type: string, event: Event): void {
+    public dispatchEvent(type: string, event: Event, data: T): void {
         if (this.listeners[type]) {
-            this.listeners[type].forEach((listener) => listener(event))
+            this.listeners[type].forEach((listener) => listener(event, data))
         }
     }
 }
