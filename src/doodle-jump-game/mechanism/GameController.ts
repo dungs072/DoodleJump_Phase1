@@ -41,6 +41,10 @@ class GameController extends GameObject {
     }
 
     public setUpGame(): void {
+        if (this.player) {
+            PhysicManager.getInstance().removeNotStaticPhysicObjs(this.player)
+            this.player.setCanDestroy(true)
+        }
         let playerPosition = new Vector2(320, 300)
         let playerScale = new Vector2(60, 120)
         this.player = new Player(playerPosition, playerScale)
@@ -71,23 +75,23 @@ class GameController extends GameObject {
         }
     }
     // public draw(context: CanvasRenderingContext2D) {
-    //     this.backgroundSprite.draw(context, )
+    //     //this.backgroundSprite.draw(context)
     //     context.save()
-    //     UIManager.getInstance().getScore().draw(context)
+    //     //UIManager.getInstance().getScore().draw(context)
     //     if (this.getGameState() == GameState.GAME_PLAY) {
     //         if (this.player.getPosition().y < this.canvas.height / 2) {
     //             context.translate(0, this.canvas.height / 2 - this.player.getPosition().y)
     //         }
     //     }
 
-    //     UIManager.getInstance().draw(context)
+    //     //UIManager.getInstance().draw(context)
 
-    //     if (this.platformManager) {
-    //         this.platformManager.draw(context)
-    //     }
-    //     if (this.player) {
-    //         this.player.draw(context)
-    //     }
+    //     // if (this.platformManager) {
+    //     //     this.platformManager.draw(context)
+    //     // }
+    //     // if (this.player) {
+    //     //     this.player.draw(context)
+    //     // }
 
     //     context.restore()
     // }

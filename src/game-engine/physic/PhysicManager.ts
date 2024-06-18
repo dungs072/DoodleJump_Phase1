@@ -22,52 +22,54 @@ class PhysicManager {
     }
     public handleCorePhysic(deltaTime: number): void {
         for (let i = 0; i < this.notStaticPhysicObjs.length; i++) {
-            let transform = this.notStaticPhysicObjs[i].getComponent(Transform)
-            if (transform == null) {
-                return
-            }
-            let collider = this.notStaticPhysicObjs[i].getComponent(Collider)
-            if (collider == null) {
-                return
-            }
-            let topLeft = new Vector2(
-                transform.getPosition().x,
-                transform.getPosition().y + collider.getOffset()
-            )
-            let downRight = new Vector2(
-                transform.getScale().x,
-                transform.getScale().y - collider.getOffset()
-            )
-
-            collider.setBounds(topLeft, downRight)
-            for (let j = 0; j < this.physicObjs.length; j++) {
-                if (this.notStaticPhysicObjs[i] == this.physicObjs[j]) {
-                    continue
+            if (!this.notStaticPhysicObjs[i].getCanDestroy()) {
+                let transform = this.notStaticPhysicObjs[i].getComponent(Transform)
+                if (transform == null) {
+                    return
                 }
-                let otherCollider = this.physicObjs[j].getComponent(Collider)
-
-                if (otherCollider == null) {
-                    continue
+                let collider = this.notStaticPhysicObjs[i].getComponent(Collider)
+                if (collider == null) {
+                    return
                 }
-                if (!collider.getIsTrigger() && collider.hasCollision(otherCollider)) {
-                    this.notStaticPhysicObjs[i].onCollisionEnter(this.physicObjs[j])
-                }
-            }
-            let rigidbody = this.notStaticPhysicObjs[i].getComponent(RigidBody)
-            if (rigidbody == null) {
-                return
-            }
-            if (!rigidbody.getVelocity().isZero()) {
-                let jumpPosition = Vector2.multiply(rigidbody.getVelocity(), deltaTime)
-                let newPosition = Vector2.add(transform.getPosition(), jumpPosition)
-                transform.setPosition(newPosition)
-                rigidbody.clampToZeroVelocity(1000 * deltaTime)
-            } else if (rigidbody?.canUseGravity()) {
-                let distance = rigidbody.getMass() * deltaTime
-                let dropPosition = Vector2.multiply(Vector2.down(), distance)
+                let topLeft = new Vector2(
+                    transform.getPosition().x,
+                    transform.getPosition().y + collider.getOffset()
+                )
+                let downRight = new Vector2(
+                    transform.getScale().x,
+                    transform.getScale().y - collider.getOffset()
+                )
 
-                let newPosition = Vector2.add(transform.getPosition(), dropPosition)
-                transform.setPosition(newPosition)
+                collider.setBounds(topLeft, downRight)
+                for (let j = 0; j < this.physicObjs.length; j++) {
+                    if (this.notStaticPhysicObjs[i] == this.physicObjs[j]) {
+                        continue
+                    }
+                    let otherCollider = this.physicObjs[j].getComponent(Collider)
+
+                    if (otherCollider == null) {
+                        continue
+                    }
+                    if (!collider.getIsTrigger() && collider.hasCollision(otherCollider)) {
+                        this.notStaticPhysicObjs[i].onCollisionEnter(this.physicObjs[j])
+                    }
+                }
+                let rigidbody = this.notStaticPhysicObjs[i].getComponent(RigidBody)
+                if (rigidbody == null) {
+                    return
+                }
+                if (!rigidbody.getVelocity().isZero()) {
+                    let jumpPosition = Vector2.multiply(rigidbody.getVelocity(), deltaTime)
+                    let newPosition = Vector2.add(transform.getPosition(), jumpPosition)
+                    transform.setPosition(newPosition)
+                    rigidbody.clampToZeroVelocity(1000 * deltaTime)
+                } else if (rigidbody?.canUseGravity()) {
+                    let distance = rigidbody.getMass() * deltaTime
+                    let dropPosition = Vector2.multiply(Vector2.down(), distance)
+
+                    let newPosition = Vector2.add(transform.getPosition(), dropPosition)
+                    transform.setPosition(newPosition)
+                }
             }
         }
         for (let i = 0; i < this.physicObjs.length; i++) {

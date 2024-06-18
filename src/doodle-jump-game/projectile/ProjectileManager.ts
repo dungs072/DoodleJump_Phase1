@@ -20,11 +20,11 @@ class ProjectileManager {
             }
         }
     }
-    public draw(context: CanvasRenderingContext2D): void {
-        for (let i = this.projectiles.length - 1; i >= 0; i--) {
-            this.projectiles[i].draw(context)
-        }
-    }
+    // public draw(context: CanvasRenderingContext2D): void {
+    //     for (let i = this.projectiles.length - 1; i >= 0; i--) {
+    //         this.projectiles[i].draw(context)
+    //     }
+    // }
     public clearData(): void {
         this.projectiles = []
     }

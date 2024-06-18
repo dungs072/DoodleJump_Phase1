@@ -22,14 +22,15 @@ class PlayerModel extends GameObject {
         this.rightNormalSprite = new Sprite(PathResources.RIGHT_NORMAL)
         this.forwardJumpSprite = new Sprite(PathResources.FORWARD_JUMP)
         this.forwardNormalSprite = new Sprite(PathResources.FORWARD_NORMAL)
-        this.setCurrentSprite(this.leftNormalSprite)
+        //this.setCurrentSprite(this.leftNormalSprite)
         this.transform.setLocalPosition(new Vector2(-33, 0))
+        this.takeAction(Action.LEFT_NORMAL)
     }
     public takeAction(action: Action): Sprite {
-        if (action == Action.LEFT_JUMP) {
-            this.setCurrentSprite(this.leftJumpSprite)
-        } else if (action == Action.LEFT_NORMAL) {
+        if (action == Action.LEFT_NORMAL) {
             this.setCurrentSprite(this.leftNormalSprite)
+        } else if (action == Action.LEFT_JUMP) {
+            this.setCurrentSprite(this.leftJumpSprite)
         } else if (action == Action.FORWARD_JUMP) {
             this.setCurrentSprite(this.forwardJumpSprite)
         } else if (action == Action.FORWARD_NORMAL) {
@@ -67,7 +68,6 @@ class PlayerModel extends GameObject {
             this.removeComponent(this.currentSprite)
         }
         this.currentSprite = sprite
-        //this.removeComponent(this.leftNormalSprite)
         this.addComponent(this.currentSprite)
     }
 }

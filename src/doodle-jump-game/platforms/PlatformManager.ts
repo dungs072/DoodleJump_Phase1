@@ -15,7 +15,6 @@ class PlatformManager {
     private platforms: Platform[]
     private previousYPosition: number
     private maxPlatform: number
-    private currentSpawnTime: number
 
     private platformCreators: Creator[]
 
@@ -24,7 +23,6 @@ class PlatformManager {
         this.platforms = []
         this.previousYPosition = 500
         this.maxPlatform = 12
-        this.currentSpawnTime = 0
         this.platformCreators = []
         this.platformCreators.push(new StablePlatformCreator())
         this.platformCreators.push(new UnstablePlatformCreator())
@@ -37,11 +35,6 @@ class PlatformManager {
         this.platforms.push(platform)
     }
     public createPlatforms(deltaTime: number, canvasWidth: number) {
-        this.currentSpawnTime += deltaTime
-        // let lastPlatform = this.getTheLastPlatform()
-        // if (lastPlatform != null) {
-        //     isMaxPlatform = this.maxHeightToSpawn < lastPlatform.getTransform().getPosition().y
-        // }
         if (this.platforms.length < this.maxPlatform) {
             for (let i = 0; i < this.maxPlatform - this.platforms.length; i++) {
                 let rangeHeight = this.getRandomInRange(75, 200)
@@ -110,15 +103,18 @@ class PlatformManager {
         //console.log(PhysicManager.getInstance().getFirstLengthPhysicObjs());
         // this.platforms = this.platforms.filter(platform => !platform.isOutsideCanvas(this.canvas));
     }
-    public draw(context: CanvasRenderingContext2D) {
-        for (let i = this.platforms.length - 1; i >= 0; i--) {
-            this.platforms[i].draw(context)
-        }
-    }
+    // public draw(context: CanvasRenderingContext2D) {
+    //     for (let i = this.platforms.length - 1; i >= 0; i--) {
+    //         this.platforms[i].draw(context)
+    //     }
+    // }
     public getPlatforms(): Platform[] {
         return this.platforms
     }
     public clearData(): void {
+        this.platforms.forEach((platform) => {
+            platform.setCanDestroy(true)
+        })
         this.platforms = []
     }
     private getRandomInRange(min: number, max: number): number {

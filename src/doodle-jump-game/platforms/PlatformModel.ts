@@ -9,6 +9,7 @@ class PlatformModel extends GameObject {
         this.sprite = sprite
         this.addComponent(sprite)
         this.transform.setLocalPosition(new Vector2(0, 0))
+        this.setLayer(1)
     }
 
     public getSprite(): Sprite {

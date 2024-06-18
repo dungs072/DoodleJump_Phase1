@@ -90,11 +90,11 @@ class UIManager {
 
     public toggleMainMenu(state: boolean): void {
         this.isMainMenu = state
-        this.mainMenuUI.setCanDraw(state)
+        this.mainMenuUI.setActive(state)
     }
     public toggleGameOver(state: boolean): void {
         this.isGameOver = state
-        this.gameOverMenuUI.setCanDraw(state)
+        this.gameOverMenuUI.setActive(state)
     }
     public toggleMainGameUI(state: boolean): void {
         this.scoreText.setIsActive(state)

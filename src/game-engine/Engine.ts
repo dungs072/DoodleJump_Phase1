@@ -26,6 +26,7 @@ class Engine {
     private start(): void {
         this.createScene('Default')
         this.setEvents()
+
         this.gameLoop()
     }
     public createScene(sceneName: string) {
@@ -33,6 +34,7 @@ class Engine {
         let defaultScene = new Scene(sceneName)
         this.sceneManager.addScene(defaultScene.getSceneName(), defaultScene)
         this.sceneManager.toggleSceneOn(sceneName)
+        defaultScene.start()
     }
 
     private gameLoop(): void {
@@ -52,7 +54,6 @@ class Engine {
         scene.update(deltaTime)
     }
     private render() {
-        this.clearCanvas()
         let scene = this.sceneManager.getCurrentActiveScene()
         scene.draw(this.context)
     }

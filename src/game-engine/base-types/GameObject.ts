@@ -8,19 +8,21 @@ import Vector2 from './Vector2'
 class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     private components: Map<Function, Component>
     private children: GameObject[]
-    private canDraw: boolean
+    private isActive: boolean
     protected canDestroy: boolean
     protected transform: Transform
+    private layer: number
 
     constructor() {
         this.components = new Map<Function, Component>()
+        this.layer = 0
         this.initGameObject()
     }
     private initGameObject(): void {
         this.children = []
         this.transform = new Transform()
         this.addComponent(this.transform)
-        this.canDraw = true
+        this.isActive = true
         this.canDestroy = false
         this.registerToScene()
         this.start()
@@ -38,7 +40,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         // update object
     }
     public draw(context: CanvasRenderingContext2D): void {
-        if (!this.canDraw) {
+        if (!this.isActive) {
             return
         }
         this.components.forEach((component) => {
@@ -58,28 +60,35 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         this.components.set(component.constructor, component)
     }
     public removeComponent<T extends Component>(component: T): void {
-        if (this.components.has(component.constructor)) {
-            this.components.delete(component.constructor)
-        }
+        console.log(this.components.delete(component.constructor))
     }
 
     public onCollisionEnter(other: GameObject): void {
         // implement collision here
     }
-    public setCanDraw(state: boolean): void {
-        this.canDraw = state
+    public setActive(state: boolean): void {
+        this.isActive = state
+        this.components.forEach((component) => {
+            component.setActive(state)
+        })
         this.children.forEach((child) => {
-            child.setCanDraw(state)
+            child.setActive(state)
         })
     }
-    public getCanDraw(): boolean {
-        return this.canDraw
+    public getActive(): boolean {
+        return this.isActive
     }
-    public getCanDestroy() {
+    public getCanDestroy(): boolean {
         return this.canDestroy
     }
     public setCanDestroy(state: boolean): void {
         this.canDestroy = state
+    }
+    public getLayer(): number {
+        return this.layer
+    }
+    public setLayer(layer: number) {
+        this.layer = layer
     }
     public addChild(child: GameObject): void {
         this.children.push(child)

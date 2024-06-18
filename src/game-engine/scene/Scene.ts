@@ -18,17 +18,17 @@ class Scene implements SystemInterface, RenderInterface {
         })
     }
     public update(deltaTime: number): void {
-        this.gameObjects.forEach((gameObject) => {
-            if (gameObject.getCanDestroy()) {
-                let index = this.gameObjects.indexOf(gameObject)
-                this.gameObjects.splice(index)
+        for (let i = this.gameObjects.length - 1; i >= 0; i--) {
+            if (this.gameObjects[i].getCanDestroy()) {
+                this.gameObjects.splice(i)
+            } else {
+                this.gameObjects[i].update(deltaTime)
             }
-            gameObject.update(deltaTime)
-        })
+        }
     }
     public draw(context: CanvasRenderingContext2D): void {
         this.gameObjects.forEach((gameObject) => {
-            if (gameObject.getCanDraw()) {
+            if (!gameObject.getCanDestroy() && gameObject.getActive()) {
                 gameObject.draw(context)
             }
         })
@@ -48,6 +48,7 @@ class Scene implements SystemInterface, RenderInterface {
     }
     public addGameObject(gameObj: GameObject): void {
         this.gameObjects.push(gameObj)
+        this.gameObjects.sort((a, b) => b.getLayer() - a.getLayer())
     }
     public removeGameObject(gameObj: GameObject): void {
         let index = this.gameObjects.indexOf(gameObj)

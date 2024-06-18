@@ -12,7 +12,6 @@ class UnstablePlatform extends Platform {
     private maxDropDownDistance: number
     private previousY: number
     private animation: Animation
-    private deltaTime: number
 
     constructor(position: Vector2, scale: Vector2) {
         super(position, scale, false)
@@ -21,8 +20,6 @@ class UnstablePlatform extends Platform {
         this.isStomped = false
         this.maxDropDownDistance = 100
         this.canDestroy = false
-
-        this.deltaTime = 0.01
 
         let sprite = new Sprite(PathResources.UNSTABLE_PLATFORM)
         this.setUpModel(sprite)
@@ -40,12 +37,11 @@ class UnstablePlatform extends Platform {
     }
 
     public update(deltaTime: number): void {
-        this.deltaTime = deltaTime
         super.update(deltaTime)
         if (this.isStomped && !this.canDestroy) {
             if (this.transform.getPosition().y >= this.previousY + this.maxDropDownDistance) {
                 this.canDestroy = true
-                //this.setCanDraw(false);
+                console.log('hehe')
             }
             this.movement.move(deltaTime, Vector2.down(), this.dropDownSpeed, this.transform)
         }
