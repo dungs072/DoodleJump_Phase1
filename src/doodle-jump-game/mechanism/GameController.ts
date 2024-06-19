@@ -1,4 +1,4 @@
-import PathResources from '../../game-engine/PathResources'
+import PathResources from '../../game-engine/resources/PathResources'
 import Sprite from '../../game-engine/base-types/components/render/Sprite'
 import Vector2 from '../../game-engine/base-types/Vector2'
 import GameState from '../states/GameState'
@@ -120,6 +120,7 @@ class GameController extends GameObject {
                 this.platformManager.clearData()
                 PhysicManager.getInstance().clearData()
                 this.player.clearData()
+                PhysicManager.getInstance().addNotStaticPhysicObj(this.player)
             }
         }
     }

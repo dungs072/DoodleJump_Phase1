@@ -26,7 +26,7 @@ class Button extends UIElement {
         context.textBaseline = 'middle'
         context.fillText(this.text, position.x, position.y)
         context.strokeStyle = '#008000'
-        let transform = this.getGameObject().getComponent(Transform)
+        let transform = this.getGameObject()?.getComponent(Transform)
         if (transform) {
             context.strokeRect(
                 position.x,

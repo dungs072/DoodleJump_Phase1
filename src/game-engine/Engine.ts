@@ -3,6 +3,7 @@ import Scene from './scene/Scene'
 import SceneManager from './scene/SceneManager'
 import ButtonManager from './base-types/ui/base/ButtonManager'
 import Vector2 from './base-types/Vector2'
+import ResourcesManager from './resources/ResourcesManager'
 
 class Engine {
     private canvas: HTMLCanvasElement
@@ -24,12 +25,16 @@ class Engine {
     }
 
     private start(): void {
+        this.loadResources()
         this.createScene('Default')
         this.setEvents()
 
         this.gameLoop()
     }
-    public createScene(sceneName: string) {
+    private loadResources(): void {
+        ResourcesManager.LoadResources()
+    }
+    private createScene(sceneName: string) {
         this.sceneManager = SceneManager.getInstance()
         let defaultScene = new Scene(sceneName)
         defaultScene.setCanvasHeight(this.canvas.height)

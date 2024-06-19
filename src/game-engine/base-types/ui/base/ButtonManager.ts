@@ -17,7 +17,7 @@ class ButtonManager {
     public onClick(position: Vector2) {
         this.buttons.forEach((button) => {
             if (button.getIsActive()) {
-                let transform = button.getGameObject().getComponent(Transform)
+                let transform = button.getGameObject()?.getComponent(Transform)
                 if (transform) {
                     if (
                         position.x > transform.getPosition().x &&

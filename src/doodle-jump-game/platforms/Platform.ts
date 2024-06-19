@@ -28,7 +28,7 @@ abstract class Platform
         this.transform = this.getComponent(Transform)!
         this.transform.setPosition(position)
         this.transform.setScale(scale)
-        this.maxDistanceToDestroy = 250
+        this.maxDistanceToDestroy = 150
         this.collisionPlayerPositionY = Infinity
         this.canDestroy = false
         this.canJump = canJump
@@ -45,11 +45,6 @@ abstract class Platform
         this.addComponent(this.movement)
     }
     public update(deltaTime: number): void {
-        // this.sprite.setPosition(
-        //     new Vector2(this.transform.getPosition().x - 10, this.transform.getPosition().y)
-        // )
-        // let downRight = this.collider.getDownRightBound()
-        // this.collider.setBounds(this.transform.getPosition(), downRight)
         if (
             this.transform.getPosition().y - this.collisionPlayerPositionY >=
             this.maxDistanceToDestroy
@@ -57,17 +52,6 @@ abstract class Platform
             this.destroy()
         }
     }
-
-    // public draw(context: CanvasRenderingContext2D): void {
-    //     if (!this.getCanDraw()) {
-    //         return
-    //     }
-    //     this.drawModel(context)
-    // }
-    // private drawModel(context: CanvasRenderingContext2D) {
-    //     this.sprite.draw(context)
-    //     this.collider.draw(context)
-    // }
     protected setUpModel(sprite: Sprite) {
         this.platformModel = new PlatformModel(sprite)
         this.addChild(this.platformModel)

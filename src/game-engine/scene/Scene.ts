@@ -31,7 +31,7 @@ class Scene implements SystemInterface, RenderInterface {
                 this.gameObjects.splice(i)
             }
         }
-        console.log(this.gameObjects.length)
+        //console.log(this.gameObjects.length)
     }
     public draw(context: CanvasRenderingContext2D): void {
         // draw background here

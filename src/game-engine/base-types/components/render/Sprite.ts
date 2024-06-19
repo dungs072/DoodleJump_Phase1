@@ -13,7 +13,12 @@ class Sprite extends Component {
         if (!this.isActive) {
             return
         }
+
         context.drawImage(this.image, position.x, position.y)
+    }
+
+    public setImage(image: HTMLImageElement): void {
+        this.image = image
     }
 }
 export default Sprite

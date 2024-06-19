@@ -1,6 +1,6 @@
 import Sprite from '../../../game-engine/base-types/components/render/Sprite'
 import Vector2 from '../../../game-engine/base-types/Vector2'
-import PathResources from '../../../game-engine/PathResources'
+import PathResources from '../../../game-engine/resources/PathResources'
 import Platform from '../Platform'
 import Animation from '../../../game-engine/base-types/components/render/Animation'
 import PlatformModel from '../PlatformModel'
@@ -20,7 +20,7 @@ class UnstablePlatform extends Platform {
         this.isStomped = false
         this.maxDropDownDistance = 100
         this.canDestroy = false
-
+        this.setLayer(1)
         let sprite = new Sprite(PathResources.UNSTABLE_PLATFORM)
         this.setUpModel(sprite)
 
@@ -34,13 +34,17 @@ class UnstablePlatform extends Platform {
         paths.push(PathResources.UNSTABLE_PLATFORM2)
         paths.push(PathResources.UNSTABLE_PLATFORM3)
         this.animation = new Animation(paths, this.transform.getPosition(), 0.02)
+        this.addComponent(this.animation)
     }
 
     public update(deltaTime: number): void {
         super.update(deltaTime)
         if (this.isStomped && !this.canDestroy) {
+            this.platformModel.setActive(false)
+            this.animation.play(deltaTime)
+
             if (this.transform.getPosition().y >= this.previousY + this.maxDropDownDistance) {
-                this.canDestroy = true
+                this.destroy()
             }
             this.movement.move(deltaTime, Vector2.down(), this.dropDownSpeed, this.transform)
         }

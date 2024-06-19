@@ -21,7 +21,7 @@ class Animation extends Component {
         this.currentTime = maxTimePerSprite
         this.currentIndex = 0
     }
-    public update(deltaTime: number): void {
+    public play(deltaTime: number): void {
         if (this.isDone) {
             return
         }

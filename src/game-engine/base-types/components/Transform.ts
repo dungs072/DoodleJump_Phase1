@@ -24,7 +24,7 @@ class Transform extends Component {
 
     public setPosition(position: Vector2): void {
         this.position = position
-        this.getGameObject().setChildsPosition(position)
+        this.getGameObject()?.setChildsPosition(position)
     }
     public setLocalPosition(position: Vector2): void {
         this.localPosition = position

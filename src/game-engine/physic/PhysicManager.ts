@@ -55,9 +55,10 @@ class PhysicManager {
                     }
                 }
                 let rigidbody = this.notStaticPhysicObjs[i].getComponent(RigidBody)
-                if (rigidbody == null) {
+                if (!rigidbody) {
                     return
                 }
+
                 if (!rigidbody.getVelocity().isZero()) {
                     let jumpPosition = Vector2.multiply(rigidbody.getVelocity(), deltaTime)
                     let newPosition = Vector2.add(transform.getPosition(), jumpPosition)

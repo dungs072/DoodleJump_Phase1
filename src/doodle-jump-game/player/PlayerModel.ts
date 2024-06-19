@@ -1,74 +1,56 @@
 import Sprite from '../../game-engine/base-types/components/render/Sprite'
 import Vector2 from '../../game-engine/base-types/Vector2'
-import PathResources from '../../game-engine/PathResources'
 import Action from '../states/Action'
 import GameObject from '../../game-engine/base-types/GameObject'
+import ResourcesManager from '../../game-engine/resources/ResourcesManager'
 
 class PlayerModel extends GameObject {
-    private leftJumpSprite: Sprite
-    private leftNormalSprite: Sprite
-    private rightJumpSprite: Sprite
-    private rightNormalSprite: Sprite
-    private forwardJumpSprite: Sprite
-    private forwardNormalSprite: Sprite
-
-    private currentSprite: Sprite
-
+    private sprite: Sprite
+    private currentAction: Action
     constructor() {
         super()
-        this.leftJumpSprite = new Sprite(PathResources.LEFT_JUMP)
-        this.leftNormalSprite = new Sprite(PathResources.LEFT_NORMAL)
-        this.rightJumpSprite = new Sprite(PathResources.RIGHT_JUMP)
-        this.rightNormalSprite = new Sprite(PathResources.RIGHT_NORMAL)
-        this.forwardJumpSprite = new Sprite(PathResources.FORWARD_JUMP)
-        this.forwardNormalSprite = new Sprite(PathResources.FORWARD_NORMAL)
-        //this.setCurrentSprite(this.leftNormalSprite)
         this.transform.setLocalPosition(new Vector2(-33, 0))
+        this.sprite = new Sprite('')
+        this.addComponent(this.sprite)
         this.takeAction(Action.LEFT_NORMAL)
     }
     public takeAction(action: Action): Sprite {
         if (action == Action.LEFT_NORMAL) {
-            this.setCurrentSprite(this.leftNormalSprite)
+            this.sprite.setImage(ResourcesManager.LeftNormalImage)
         } else if (action == Action.LEFT_JUMP) {
-            this.setCurrentSprite(this.leftJumpSprite)
+            this.sprite.setImage(ResourcesManager.LeftJumpImage)
         } else if (action == Action.FORWARD_JUMP) {
-            this.setCurrentSprite(this.forwardJumpSprite)
+            this.sprite.setImage(ResourcesManager.ForwardJumpImage)
         } else if (action == Action.FORWARD_NORMAL) {
-            this.setCurrentSprite(this.forwardNormalSprite)
+            this.sprite.setImage(ResourcesManager.ForwarNormalImage)
         } else if (action == Action.RIGHT_JUMP) {
-            this.setCurrentSprite(this.rightJumpSprite)
+            this.sprite.setImage(ResourcesManager.RightJumpImage)
         } else if (action == Action.RIGHT_NORMAL) {
-            this.setCurrentSprite(this.rightNormalSprite)
+            this.sprite.setImage(ResourcesManager.RightNormalImage)
         }
-        return this.currentSprite
+        this.currentAction = action
+        return this.sprite
     }
     public getCurrentSprite(): Sprite {
-        return this.currentSprite
+        return this.sprite
     }
     public handleJumpSprite() {
-        if (this.currentSprite == this.leftNormalSprite) {
-            this.setCurrentSprite(this.leftJumpSprite)
-        } else if (this.currentSprite == this.rightNormalSprite) {
-            this.setCurrentSprite(this.rightJumpSprite)
-        } else if (this.currentSprite == this.forwardNormalSprite) {
-            this.setCurrentSprite(this.forwardJumpSprite)
+        if (this.currentAction == Action.LEFT_NORMAL) {
+            this.takeAction(Action.LEFT_JUMP)
+        } else if (this.currentAction == Action.RIGHT_NORMAL) {
+            this.takeAction(Action.RIGHT_JUMP)
+        } else if (this.currentAction == Action.FORWARD_NORMAL) {
+            this.takeAction(Action.FORWARD_JUMP)
         }
     }
     public handleNormalSprite() {
-        if (this.currentSprite == this.leftJumpSprite) {
-            this.setCurrentSprite(this.leftNormalSprite)
-        } else if (this.currentSprite == this.rightJumpSprite) {
-            this.setCurrentSprite(this.rightNormalSprite)
-        } else if (this.currentSprite == this.forwardJumpSprite) {
-            this.setCurrentSprite(this.forwardNormalSprite)
+        if (this.currentAction == Action.LEFT_JUMP) {
+            this.takeAction(Action.LEFT_NORMAL)
+        } else if (this.currentAction == Action.RIGHT_JUMP) {
+            this.takeAction(Action.RIGHT_NORMAL)
+        } else if (this.currentAction == Action.FORWARD_JUMP) {
+            this.takeAction(Action.FORWARD_NORMAL)
         }
-    }
-    private setCurrentSprite(sprite: Sprite): void {
-        if (this.currentSprite) {
-            this.removeComponent(this.currentSprite)
-        }
-        this.currentSprite = sprite
-        this.addComponent(this.currentSprite)
     }
 }
 export default PlayerModel

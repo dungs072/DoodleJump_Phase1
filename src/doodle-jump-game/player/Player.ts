@@ -56,7 +56,6 @@ class Player extends GameObject implements SystemInterface {
         this.transform = this.getComponent(Transform)!
         this.transform?.setPosition(position)
         this.transform?.setScale(scale)
-        this.start()
     }
 
     public start(): void {
@@ -103,13 +102,6 @@ class Player extends GameObject implements SystemInterface {
         this.handleTrigger(deltaTime)
         this.calculateHeight()
     }
-    // public draw(context: CanvasRenderingContext2D): void {
-    //     this.playerModel.getCurrentSprite().draw(context)
-    //     this.collider.draw(context)
-    //     if (this.projectileManager) {
-    //         this.projectileManager.draw(context)
-    //     }
-    // }
 
     private handleInput(deltaTime: number) {
         if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {

@@ -1,6 +1,6 @@
 import Sprite from '../../game-engine/base-types/components/render/Sprite'
 import Vector2 from '../../game-engine/base-types/Vector2'
-import PathResources from '../../game-engine/PathResources'
+import PathResources from '../../game-engine/resources/PathResources'
 import Button from '../../game-engine/base-types/components/ui/Button'
 import GameOverMenuUI from './GameOverMenuUI'
 import MainMenuUI from './MainMenuUI'

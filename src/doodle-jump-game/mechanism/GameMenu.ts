@@ -8,6 +8,7 @@ class GameMenu implements SubcriberInterface<string> {
     constructor(gameStateHandler: GameStateHandler) {
         this.gameStateHandler = gameStateHandler
     }
+    // change the way it works here
     receive(data: string): void {
         UIManager.getInstance().toggleMainMenu(true)
         UIManager.getInstance().toggleGameOver(false)

@@ -1,7 +1,7 @@
 import Sprite from '../../../game-engine/base-types/components/render/Sprite'
 import Transform from '../../../game-engine/base-types/components/Transform'
 import Vector2 from '../../../game-engine/base-types/Vector2'
-import PathResources from '../../../game-engine/PathResources'
+import PathResources from '../../../game-engine/resources/PathResources'
 import Platform from '../Platform'
 import PlatformModel from '../PlatformModel'
 

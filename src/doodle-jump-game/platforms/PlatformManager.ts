@@ -36,12 +36,10 @@ class PlatformManager {
     }
     public createPlatforms(canvasWidth: number) {
         for (let i = 0; i < this.maxPlatform - this.platforms.length; i++) {
-            let rangeHeight = this.getRandomInRange(75, 200)
-            let position = new Vector2(
-                Math.random() * canvasWidth,
-                this.previousYPosition - rangeHeight
-            )
-            let scale = new Vector2(110, 30)
+            let rangeHeight = this.getRandomInRange(100, 200)
+            let firstRandomX = Math.random() * canvasWidth
+            let position = new Vector2(firstRandomX, this.previousYPosition - rangeHeight)
+            let scale = new Vector2(120, 35)
             let platformCreatorIndex = Math.floor(Math.random() * this.platformCreators.length)
             let platformCreator = this.platformCreators[platformCreatorIndex]
             let product = platformCreator.createProduct(position, scale)
@@ -52,11 +50,14 @@ class PlatformManager {
                 PhysicManager.getInstance().addphysicObjs(gameObj)
             }
             if (gameObj instanceof UnstablePlatform) {
-                let randomHeight = this.getRandomInRange(50, 75)
-                let position = new Vector2(
-                    Math.random() * canvasWidth,
-                    this.previousYPosition - randomHeight
-                )
+                let randomX = 0
+                if (firstRandomX - scale.x > 0) {
+                    randomX = this.getRandomInRange(0, firstRandomX - scale.x)
+                } else {
+                    randomX = this.getRandomInRange(firstRandomX + scale.x, canvasWidth)
+                }
+                let randomHeight = this.getRandomInRange(100, 150)
+                let position = new Vector2(randomX, this.previousYPosition - randomHeight)
                 this.createStablePlatform(position, scale)
             }
             let platform = this.getTheLastPlatform()

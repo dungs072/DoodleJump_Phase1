@@ -40,7 +40,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         // update object
     }
 
-    // please dont use it
+    // please dont override it
     public draw(context: CanvasRenderingContext2D): void {
         if (!this.isActive) {
             return
@@ -62,6 +62,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         this.components.set(component.constructor, component)
     }
     public removeComponent<T extends Component>(component: T): void {
+        component.setGameObject(undefined)
         this.components.delete(component.constructor)
     }
 
