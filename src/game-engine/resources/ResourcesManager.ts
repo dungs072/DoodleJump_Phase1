@@ -1,6 +1,12 @@
 import PathResources from './PathResources'
 
 class ResourcesManager {
+    public static PageImage: HTMLImageElement
+    public static DoodleJumpTextImage: HTMLImageElement
+    public static StartButtonImage: HTMLImageElement
+    public static PlayAgainButtonImage: HTMLImageElement
+    public static MenuButtonImage: HTMLImageElement
+
     public static ForwardJumpImage: HTMLImageElement
     public static ForwarNormalImage: HTMLImageElement
 
@@ -20,6 +26,11 @@ class ResourcesManager {
     public static UnstablePlatform3Image: HTMLImageElement
 
     public static LoadResources(): void {
+        this.PageImage = this.loadImage(PathResources.BACKGROUND)
+        this.DoodleJumpTextImage = this.loadImage(PathResources.DOODLE_JUMP_TEXT)
+        this.StartButtonImage = this.loadImage(PathResources.PLAY_GAME)
+        this.PlayAgainButtonImage = this.loadImage(PathResources.PLAY_AGAIN_BUTTON)
+        this.MenuButtonImage = this.loadImage(PathResources.MENU_BUTTON)
         this.ForwardJumpImage = this.loadImage(PathResources.FORWARD_JUMP)
         this.ForwarNormalImage = this.loadImage(PathResources.FORWARD_NORMAL)
 

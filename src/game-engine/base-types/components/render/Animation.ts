@@ -9,11 +9,11 @@ class Animation extends Component {
     private currentTime: number
     private currentIndex: number
     private isDone: boolean = false
-    constructor(paths: string[], position: Vector2, maxTimePerSprite: number) {
+    constructor(images: HTMLImageElement[], maxTimePerSprite: number) {
         super()
         this.sprites = []
-        for (let i = 0; i < paths.length; i++) {
-            let sprite = new Sprite(paths[i])
+        for (let i = 0; i < images.length; i++) {
+            let sprite = new Sprite(images[i])
             this.sprites.push(sprite)
         }
         this.canLoop = false

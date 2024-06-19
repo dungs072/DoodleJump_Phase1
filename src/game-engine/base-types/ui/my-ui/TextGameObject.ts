@@ -3,7 +3,9 @@ import Text from '../../components/ui/Text'
 
 class TextGameObject extends GameObject {
     private text: Text
-
+    constructor(isSticky = false) {
+        super(isSticky)
+    }
     public setText(text: Text): void {
         if (this.text) {
             this.removeComponent<Text>(this.text)

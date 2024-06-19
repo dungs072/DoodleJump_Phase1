@@ -1,5 +1,3 @@
-import PathResources from '../../game-engine/resources/PathResources'
-import Sprite from '../../game-engine/base-types/components/render/Sprite'
 import Vector2 from '../../game-engine/base-types/Vector2'
 import GameState from '../states/GameState'
 import PhysicManager from '../../game-engine/physic/PhysicManager'
@@ -20,7 +18,6 @@ class GameController extends GameObject {
     private player: Player
     private platformManager: PlatformManager
 
-    private backgroundSprite: Sprite
     private canvas: HTMLCanvasElement
 
     constructor(canvas: HTMLCanvasElement) {
@@ -32,7 +29,6 @@ class GameController extends GameObject {
         UIManager.getInstance().getStartGameButton().subcribe(this.gamePlay)
         UIManager.getInstance().getPlayAgainButton().subcribe(this.gamePlay)
         UIManager.getInstance().getMenuButton().subcribe(this.gameMenu)
-        this.backgroundSprite = new Sprite(PathResources.BACKGROUND)
     }
 
     public getGameState(): GameState {
@@ -71,6 +67,7 @@ class GameController extends GameObject {
             UIManager.getInstance().toggleMainGameUI(false)
             UIManager.getInstance().toggleGameOver(true)
             this.handleBorder()
+            SceneManager.getInstance().getCurrentActiveScene().setCanvasMoveY(0)
             //this.player.update(deltaTime)
         } else if (this.getGameState() == GameState.MAIN_MENU) {
             UIManager.getInstance().toggleGameOver(false)
@@ -81,12 +78,13 @@ class GameController extends GameObject {
     private sceneConfig(state: boolean): void {
         let scene = SceneManager.getInstance().getCurrentActiveScene()
         if (state) {
-            let transform = this.player.getComponent(Transform)
+            let transform = this.player?.getComponent(Transform)
             if (transform) {
-                scene.setHeightObject(transform.getPosition().y)
+                if (this.player.getPosition().y < this.canvas.height / 2) {
+                    scene.setCanvasMoveY(this.canvas.height / 2 - this.player.getPosition().y)
+                }
             }
         }
-        scene.setCanMoveUp(state)
     }
     // public draw(context: CanvasRenderingContext2D) {
     //     //this.backgroundSprite.draw(context)
@@ -114,6 +112,7 @@ class GameController extends GameObject {
         this.handleBorder()
         let platform = this.platformManager.getTheFirstPlatform()
         if (platform != null) {
+            //console.log(this.canvas.getBoundingClientRect())
             if (this.player.getPosition().y - platform.getTransform().getPosition().y > 50) {
                 this.player.saveHighScore()
                 this.setGameState(GameState.GAME_OVER)
@@ -126,11 +125,11 @@ class GameController extends GameObject {
     }
 
     private handleBorder() {
-        if (this.player.getPosition().x > 640) {
+        if (this.player.getPosition().x > this.canvas.width) {
             let newPos = new Vector2(0, this.player.getPosition().y)
             this.player.setPosition(newPos)
         }
-        if (this.player.getPosition().x < 0) {
+        if (this.player.getPosition().x < -60) {
             let newPos = new Vector2(640, this.player.getPosition().y)
             this.player.setPosition(newPos)
         }

@@ -13,24 +13,28 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     protected transform: Transform
     private layer: number
 
-    constructor() {
+    constructor(isSticky = false) {
         this.components = new Map<Function, Component>()
         this.layer = 0
-        this.initGameObject()
+        this.initGameObject(isSticky)
     }
-    private initGameObject(): void {
+    private initGameObject(isSticky: boolean): void {
         this.children = []
         this.transform = new Transform()
         this.addComponent(this.transform)
         this.isActive = true
         this.canDestroy = false
-        this.registerToScene()
+        this.registerToScene(isSticky)
         this.start()
     }
-    private registerToScene() {
+    private registerToScene(isSticky: boolean) {
         // I have to decouple here: fix fix
         let scene = SceneManager.getInstance().getCurrentActiveScene()
-        scene.addGameObject(this)
+        if (isSticky) {
+            scene.addStickyGameObject(this)
+        } else {
+            scene.addGameObject(this)
+        }
     }
 
     public start(): void {

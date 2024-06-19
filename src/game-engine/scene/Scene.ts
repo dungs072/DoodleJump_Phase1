@@ -1,19 +1,20 @@
 import GameObject from '../base-types/GameObject'
-import EventDispatcher from '../event/EventDispatcher'
 import RenderInterface from '../types/render'
 import SystemInterface from '../types/system'
 
 class Scene implements SystemInterface, RenderInterface {
     private name: string
     private gameObjects: GameObject[]
+    private stickyGameObjects: GameObject[]
     private isActive: boolean
-    private canMoveUp: boolean
-    private canvasHeight: number
-    private heightObject: number
+    private canvasMoveX: number
+    private canvasMoveY: number
     constructor(name: string) {
         this.gameObjects = []
+        this.stickyGameObjects = []
         this.name = name
-        this.canMoveUp = false
+        this.canvasMoveX = 0
+        this.canvasMoveY = 0
     }
 
     public start(): void {
@@ -31,17 +32,27 @@ class Scene implements SystemInterface, RenderInterface {
                 this.gameObjects.splice(i)
             }
         }
-        //console.log(this.gameObjects.length)
+        for (let i = this.stickyGameObjects.length - 1; i >= 0; i--) {
+            if (this.stickyGameObjects[i]) {
+                if (!this.stickyGameObjects[i].getCanDestroy()) {
+                    this.stickyGameObjects[i].update(deltaTime)
+                }
+            } else {
+                this.stickyGameObjects.splice(i)
+            }
+        }
     }
     public draw(context: CanvasRenderingContext2D): void {
         // draw background here
         context.save()
-        //UIManager.getInstance().getScore().draw(context)
-        if (this.canMoveUp) {
-            if (this.heightObject < this.canvasHeight / 2) {
-                context.translate(0, this.canvasHeight / 2 - this.heightObject)
+        this.stickyGameObjects.forEach((gameObject) => {
+            if (gameObject) {
+                if (!gameObject.getCanDestroy() && gameObject.getActive()) {
+                    gameObject.draw(context)
+                }
             }
-        }
+        })
+        context.translate(this.canvasMoveX, this.canvasMoveY)
         this.gameObjects.forEach((gameObject) => {
             if (!gameObject.getCanDestroy() && gameObject.getActive()) {
                 gameObject.draw(context)
@@ -67,19 +78,26 @@ class Scene implements SystemInterface, RenderInterface {
         // change here to decrease time complexity
         this.gameObjects.sort((a, b) => b.getLayer() - a.getLayer())
     }
+    public addStickyGameObject(gameObj: GameObject): void {
+        this.stickyGameObjects.push(gameObj)
+        // change here to decrease time complexity
+        this.stickyGameObjects.sort((a, b) => b.getLayer() - a.getLayer())
+    }
     public removeGameObject(gameObj: GameObject): void {
         gameObj.setCanDestroy(true)
         let index = this.gameObjects.indexOf(gameObj)
         this.gameObjects.splice(index, 1)
     }
-    public setCanvasHeight(canvasHeight: number): void {
-        this.canvasHeight = canvasHeight
+    public removeStickyGameObject(gameObj: GameObject): void {
+        gameObj.setCanDestroy(true)
+        let index = this.gameObjects.indexOf(gameObj)
+        this.stickyGameObjects.splice(index, 1)
     }
-    public setHeightObject(num: number): void {
-        this.heightObject = num
+    public setCanvasMoveX(value: number): void {
+        this.canvasMoveX = value
     }
-    public setCanMoveUp(state: boolean): void {
-        this.canMoveUp = state
+    public setCanvasMoveY(value: number): void {
+        this.canvasMoveY = value
     }
 }
 export default Scene

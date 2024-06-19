@@ -47,7 +47,8 @@ class Player extends GameObject implements SystemInterface {
     constructor(position: Vector2, scale: Vector2) {
         super()
         this.movementSpeed = 450
-        this.jumpForce = 700
+        this.jumpForce = 550
+
         this.maxChangeJumpToNormalTime = 0.25
         this.maxTriggerTime = 0.1
         this.currentTriggerTime = 0

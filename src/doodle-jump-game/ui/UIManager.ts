@@ -5,21 +5,20 @@ import Button from '../../game-engine/base-types/components/ui/Button'
 import GameOverMenuUI from './GameOverMenuUI'
 import MainMenuUI from './MainMenuUI'
 import Text from '../../game-engine/base-types/components/ui/Text'
+import ResourcesManager from '../../game-engine/resources/ResourcesManager'
+import TextGameObject from '../../game-engine/base-types/ui/my-ui/TextGameObject'
+import GamePlayUI from './GamePlayUI'
 
 class UIManager {
     private gameOverMenuUI: GameOverMenuUI
     private mainMenuUI: MainMenuUI
+    private gamePlayUI: GamePlayUI
 
     private startGameButton: Button
     private playAgainButton: Button
     private menuButton: Button
 
-    private scoreText: Text
-
     private static instance: UIManager
-
-    private isMainMenu: boolean
-    private isGameOver: boolean
 
     public static getInstance(): UIManager {
         if (!UIManager.instance) {
@@ -29,28 +28,26 @@ class UIManager {
     }
     constructor() {
         this.setUI()
-        this.isMainMenu = true
-        this.isGameOver = false
     }
 
     private setUI(): void {
         // main menu panel
-        let backgroundMainMenu = new Sprite(PathResources.BACKGROUND)
+        let backgroundMainMenu = new Sprite(ResourcesManager.PageImage)
 
         this.mainMenuUI = new MainMenuUI(
             new Vector2(0, 0),
             new Vector2(640, 600),
             backgroundMainMenu
         )
-        let playGameButtonBg = new Sprite(PathResources.PLAY_GAME)
+        let playGameButtonBg = new Sprite(ResourcesManager.StartButtonImage)
         this.startGameButton = new Button('', '', playGameButtonBg)
-        let doodleJumpBg = new Sprite(PathResources.DOODLE_JUMP_TEXT)
+        let doodleJumpBg = new Sprite(ResourcesManager.DoodleJumpTextImage)
         let doodleJumpText = new Text('', '', 0, doodleJumpBg)
         this.mainMenuUI.setStartGameButton(this.startGameButton)
         this.mainMenuUI.setDoodleJumpText(doodleJumpText)
 
         // gameover panel
-        let backgroundGameOverMenu = new Sprite(PathResources.BACKGROUND)
+        let backgroundGameOverMenu = new Sprite(ResourcesManager.PageImage)
 
         this.gameOverMenuUI = new GameOverMenuUI(
             new Vector2(0, 0),
@@ -63,16 +60,19 @@ class UIManager {
         let highScoreText = new Text('High score: ', 'red', 300, null)
         this.gameOverMenuUI.setHighScoreText(highScoreText)
 
-        let playAgainButtonBg = new Sprite(PathResources.PLAY_AGAIN_BUTTON)
+        let playAgainButtonBg = new Sprite(ResourcesManager.PlayAgainButtonImage)
         this.playAgainButton = new Button('', '', playAgainButtonBg)
         this.gameOverMenuUI.setPlayAgainButton(this.playAgainButton)
 
-        let menuButtonBg = new Sprite(PathResources.MENU_BUTTON)
+        let menuButtonBg = new Sprite(ResourcesManager.MenuButtonImage)
         this.menuButton = new Button('', '', menuButtonBg)
         this.gameOverMenuUI.setMenuButton(this.menuButton)
 
         // main game
-        this.scoreText = new Text('Score: 0', 'red', 100, null)
+        let sprite = new Sprite(ResourcesManager.PageImage)
+        this.gamePlayUI = new GamePlayUI(Vector2.zero(), new Vector2(640, 600), sprite)
+        let scoreText = new Text('Score: 0', 'red', 100, null)
+        this.gamePlayUI.setScoreText(scoreText)
     }
     // public draw(context: CanvasRenderingContext2D): void {
     //     if (this.isGameOver) {
@@ -87,15 +87,13 @@ class UIManager {
     // }
 
     public toggleMainMenu(state: boolean): void {
-        this.isMainMenu = state
         this.mainMenuUI.setActive(state)
     }
     public toggleGameOver(state: boolean): void {
-        this.isGameOver = state
         this.gameOverMenuUI.setActive(state)
     }
     public toggleMainGameUI(state: boolean): void {
-        this.scoreText.setIsActive(state)
+        this.gamePlayUI.setActive(state)
     }
     public getStartGameButton(): Button {
         return this.startGameButton
@@ -110,10 +108,10 @@ class UIManager {
         return this.gameOverMenuUI
     }
     public setScoreText(text: string): void {
-        this.scoreText.setTextDisplay('Score: ' + text)
+        this.gamePlayUI.getScoreText().setTextDisplay('Score: ' + text)
     }
     public getScore(): Text {
-        return this.scoreText
+        return this.gamePlayUI.getScoreText()
     }
 }
 export default UIManager

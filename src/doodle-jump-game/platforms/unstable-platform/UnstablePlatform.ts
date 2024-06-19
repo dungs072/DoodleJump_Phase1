@@ -3,8 +3,7 @@ import Vector2 from '../../../game-engine/base-types/Vector2'
 import PathResources from '../../../game-engine/resources/PathResources'
 import Platform from '../Platform'
 import Animation from '../../../game-engine/base-types/components/render/Animation'
-import PlatformModel from '../PlatformModel'
-import Transform from '../../../game-engine/base-types/components/Transform'
+import ResourcesManager from '../../../game-engine/resources/ResourcesManager'
 
 class UnstablePlatform extends Platform {
     private dropDownSpeed: number
@@ -21,19 +20,19 @@ class UnstablePlatform extends Platform {
         this.maxDropDownDistance = 100
         this.canDestroy = false
         this.setLayer(1)
-        let sprite = new Sprite(PathResources.UNSTABLE_PLATFORM)
+        let sprite = new Sprite(ResourcesManager.UnstablePlatformImage)
         this.setUpModel(sprite)
 
         this.setUpAnimation()
     }
 
     private setUpAnimation(): void {
-        let paths: string[] = []
-        paths.push(PathResources.UNSTABLE_PLATFORM)
-        paths.push(PathResources.UNSTABLE_PLATFORM1)
-        paths.push(PathResources.UNSTABLE_PLATFORM2)
-        paths.push(PathResources.UNSTABLE_PLATFORM3)
-        this.animation = new Animation(paths, this.transform.getPosition(), 0.02)
+        let images: HTMLImageElement[] = []
+        images.push(ResourcesManager.UnstablePlatformImage)
+        images.push(ResourcesManager.UnstablePlatform1Image)
+        images.push(ResourcesManager.UnstablePlatform2Image)
+        images.push(ResourcesManager.UnstablePlatform3Image)
+        this.animation = new Animation(images, 0.02)
         this.addComponent(this.animation)
     }
 
