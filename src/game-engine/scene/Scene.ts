@@ -41,6 +41,7 @@ class Scene implements SystemInterface, RenderInterface {
                 this.stickyGameObjects.splice(i)
             }
         }
+        //console.log(this.gameObjects.length)
     }
     public draw(context: CanvasRenderingContext2D): void {
         // draw background here

@@ -89,6 +89,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         return this.canDestroy
     }
     public destroy(): void {
+        this.canDestroy = true
         // use event here
         this.children.forEach((child) => {
             child.destroy()

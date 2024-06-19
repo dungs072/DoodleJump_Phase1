@@ -25,6 +25,16 @@ class ResourcesManager {
     public static UnstablePlatform2Image: HTMLImageElement
     public static UnstablePlatform3Image: HTMLImageElement
 
+    // items
+
+    // shoes
+
+    public static ShoeImage: HTMLImageElement
+    public static Shoe1Image: HTMLImageElement
+    public static Shoe2Image: HTMLImageElement
+    public static Shoe3Image: HTMLImageElement
+    public static Shoe4Image: HTMLImageElement
+
     public static LoadResources(): void {
         this.PageImage = this.loadImage(PathResources.BACKGROUND)
         this.DoodleJumpTextImage = this.loadImage(PathResources.DOODLE_JUMP_TEXT)
@@ -47,6 +57,12 @@ class ResourcesManager {
         this.UnstablePlatform1Image = this.loadImage(PathResources.UNSTABLE_PLATFORM1)
         this.UnstablePlatform2Image = this.loadImage(PathResources.UNSTABLE_PLATFORM2)
         this.UnstablePlatform3Image = this.loadImage(PathResources.UNSTABLE_PLATFORM3)
+
+        this.ShoeImage = this.loadImage(PathResources.SHOE)
+        this.Shoe1Image = this.loadImage(PathResources.SHOE1)
+        this.Shoe2Image = this.loadImage(PathResources.SHOE2)
+        this.Shoe3Image = this.loadImage(PathResources.SHOE3)
+        this.Shoe4Image = this.loadImage(PathResources.SHOE4)
     }
 
     private static loadImage(path: string): HTMLImageElement {

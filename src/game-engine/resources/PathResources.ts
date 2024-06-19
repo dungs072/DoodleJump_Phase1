@@ -24,5 +24,14 @@ class PathResources {
     public static readonly PLAY_GAME: string = '../assets/images/uis/playGameButton.png'
 
     public static readonly DOODLE_JUMP_TEXT: string = '../assets/images/uis/doodleJumpText.png'
+
+    // items
+
+    // shoe
+    public static readonly SHOE: string = '../assets/images/items/shoes/shoe.png'
+    public static readonly SHOE1: string = '../assets/images/items/shoes/shoe1.png'
+    public static readonly SHOE2: string = '../assets/images/items/shoes/shoe2.png'
+    public static readonly SHOE3: string = '../assets/images/items/shoes/shoe3.png'
+    public static readonly SHOE4: string = '../assets/images/items/shoes/shoe4.png'
 }
 export default PathResources

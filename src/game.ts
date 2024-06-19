@@ -13,4 +13,4 @@ class Game {
     }
 }
 // Start the game
-const game = new Game()
+new Game()

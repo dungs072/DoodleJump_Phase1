@@ -10,10 +10,7 @@ import SystemInterface from '../../game-engine/types/system'
 import PlatformModel from './PlatformModel'
 import Sprite from '../../game-engine/base-types/components/render/Sprite'
 
-abstract class Platform
-    extends GameObject
-    implements SystemInterface, RenderInterface, SubcriberInterface<number>, ProductInterface
-{
+abstract class Platform extends GameObject implements SubcriberInterface<number>, ProductInterface {
     protected platformModel: PlatformModel
 
     private collider: Collider
@@ -22,14 +19,15 @@ abstract class Platform
     private maxDistanceToDestroy: number
     protected canJump: boolean
 
-    private collisionPlayerPositionY: number
+    private borderHeight: number
     constructor(position: Vector2, scale: Vector2, canJump: boolean) {
         super()
         this.transform = this.getComponent(Transform)!
         this.transform.setPosition(position)
         this.transform.setScale(scale)
-        this.maxDistanceToDestroy = 150
-        this.collisionPlayerPositionY = Infinity
+        this.maxDistanceToDestroy = 50
+        this.borderHeight = 0
+        this.borderHeight = Infinity
         this.canDestroy = false
         this.canJump = canJump
         this.start()
@@ -45,10 +43,8 @@ abstract class Platform
         this.addComponent(this.movement)
     }
     public update(deltaTime: number): void {
-        if (
-            this.transform.getPosition().y - this.collisionPlayerPositionY >=
-            this.maxDistanceToDestroy
-        ) {
+        //console.log(this.transform.getPosition().y)
+        if (this.transform.getPosition().y - this.borderHeight >= this.maxDistanceToDestroy) {
             this.destroy()
         }
     }
@@ -57,7 +53,7 @@ abstract class Platform
         this.addChild(this.platformModel)
     }
     public receive(data: number): void {
-        this.collisionPlayerPositionY = data
+        this.borderHeight = data
     }
     public operation(): void {
         console.log('nothing')

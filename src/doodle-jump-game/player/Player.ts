@@ -16,12 +16,13 @@ import Action from '../states/Action'
 import RigidBody from '../../game-engine/base-types/components/physic/Rigidbody'
 import Publisher from '../patterns/observer/Publisher'
 import UIManager from '../ui/UIManager'
+import Item from '../items/Item'
+import Shoes from '../items/shoes/Shoes'
 
 class Player extends GameObject implements SystemInterface {
     private jumpForce: number
     private movementSpeed: number
-    private maxChangeJumpToNormalTime: number
-    private maxTriggerTime: number
+    private canvasHeight: number
 
     private spawnProjectilePos: Vector2
 
@@ -37,22 +38,13 @@ class Player extends GameObject implements SystemInterface {
 
     private projectileManager: ProjectileManager
 
-    private currentTime: number
-    private currentTriggerTime: number
     private previousHeight: number
     private maxHeight: number
 
-    private canFalseTrigger: boolean
+    private colliderPositionY: number
 
     constructor(position: Vector2, scale: Vector2) {
         super()
-        this.movementSpeed = 450
-        this.jumpForce = 550
-
-        this.maxChangeJumpToNormalTime = 0.25
-        this.maxTriggerTime = 0.1
-        this.currentTriggerTime = 0
-        this.canFalseTrigger = false
 
         this.transform = this.getComponent(Transform)!
         this.transform?.setPosition(position)
@@ -60,6 +52,9 @@ class Player extends GameObject implements SystemInterface {
     }
 
     public start(): void {
+        this.movementSpeed = 450
+        this.jumpForce = 700
+
         this.movement = new Movement()
         this.addComponent(this.movement)
 
@@ -94,13 +89,12 @@ class Player extends GameObject implements SystemInterface {
         this.fighter = new PlayerFighter(this.projectileManager)
         this.addComponent(this.fighter)
         this.previousHeight = this.transform.getPosition().y
-        this.maxHeight = this.previousHeight
+        this.maxHeight = 300
     }
     public update(deltaTime: number): void {
         this.handleInput(deltaTime)
-        this.handleNormalSprite(deltaTime)
         this.updateChildTransform()
-        this.handleTrigger(deltaTime)
+        this.handleTrigger()
         this.calculateHeight()
     }
 
@@ -134,17 +128,17 @@ class Player extends GameObject implements SystemInterface {
             new Vector2(this.transform.getScale().x / 2, -10)
         )
     }
-    private handleTrigger(deltaTime: number): void {
+    private handleTrigger(): void {
         this.collider.setIsTrigger(this.transform.getPosition().y < this.previousHeight)
         this.previousHeight = this.transform.getPosition().y
 
-        if (this.canFalseTrigger) {
-            this.currentTriggerTime += deltaTime
-            if (this.currentTriggerTime >= this.maxTriggerTime) {
-                this.collider.setIsTrigger(false)
-                this.currentTriggerTime = 0
-                this.canFalseTrigger = false
-            }
+        if (!this.collider.getIsTrigger()) {
+            //console.log(this.transform.getPosition().y)
+            this.publisher.setData(-this.scoreCalculator.getCurrentScore() + this.canvasHeight)
+            this.publisher.notify()
+            this.playerModel.handleNormalSprite()
+        } else {
+            this.playerModel.handleJumpSprite()
         }
     }
     private calculateHeight(): void {
@@ -156,31 +150,22 @@ class Player extends GameObject implements SystemInterface {
     }
     public onCollisionEnter(other: GameObject): void {
         // check if collide with Platform
-        if (other instanceof Platform) {
-            let platform = other as Platform
-            platform.operation()
-            if (platform.getCanJump()) {
+        if (other instanceof Item) {
+            other.operation()
+            if (other instanceof Shoes) {
+                this.rb.addForce(Vector2.up(), other.getForceAmount())
+                //this.colliderPositionY = this.transform.getPosition().y
+            }
+        } else if (other instanceof Platform) {
+            other.operation()
+            if (other.getCanJump()) {
                 this.rb.setVelocity(Vector2.zero())
                 this.rb.addForce(Vector2.up(), this.jumpForce)
-                this.playerModel.handleJumpSprite()
-
-                this.publisher.setData(this.transform.getPosition().y)
-                this.publisher.notify()
+                this.colliderPositionY = other.getTransform().getPosition().y
             }
         }
     }
 
-    private handleNormalSprite(deltaTime: number): void {
-        if (this.collider.getIsTrigger()) {
-            this.currentTime += deltaTime
-            if (this.currentTime > this.maxChangeJumpToNormalTime) {
-                this.currentTime = 0
-                this.playerModel.handleNormalSprite()
-            }
-        } else {
-            this.playerModel.handleNormalSprite()
-        }
-    }
     public setPublisher(publisher: Publisher<number>): void {
         this.publisher = publisher
     }
@@ -208,6 +193,9 @@ class Player extends GameObject implements SystemInterface {
         this.setPosition(new Vector2(this.getPosition().x, 0))
         this.scoreCalculator.setCurrentScore(0)
         UIManager.getInstance().setScoreText('0')
+    }
+    public setCanvasHeight(canvasHeight: number): void {
+        this.canvasHeight = canvasHeight
     }
 }
 export default Player

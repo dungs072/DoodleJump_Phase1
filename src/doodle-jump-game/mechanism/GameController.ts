@@ -20,9 +20,12 @@ class GameController extends GameObject {
 
     private canvas: HTMLCanvasElement
 
+    private preDistance: number
+
     constructor(canvas: HTMLCanvasElement) {
         super()
         this.canvas = canvas
+
         this.gameStateHandler = new GameStateHandler()
         this.gamePlay = new GamePlay(this.gameStateHandler, this)
         this.gameMenu = new GameMenu(this.gameStateHandler)
@@ -43,9 +46,11 @@ class GameController extends GameObject {
             PhysicManager.getInstance().removeNotStaticPhysicObjs(this.player)
             this.player.destroy()
         }
+        this.preDistance = 0
         let playerPosition = new Vector2(320, 300)
         let playerScale = new Vector2(60, 120)
         this.player = new Player(playerPosition, playerScale)
+        this.player.setCanvasHeight(this.canvas.height)
 
         this.platformManager = new PlatformManager()
         this.player.setPublisher(this.platformManager.getPublisher())
@@ -58,8 +63,9 @@ class GameController extends GameObject {
     public update(deltaTime: number) {
         this.sceneConfig(this.getGameState() == GameState.GAME_PLAY)
         if (this.getGameState() == GameState.GAME_PLAY) {
-            this.platformManager.createPlatforms(this.canvas.width / 2)
+            this.platformManager.createPlatforms(this.canvas.width)
             this.platformManager.destroyPlatforms()
+            this.platformManager.destroyItems()
             this.handlePlayer()
             UIManager.getInstance().toggleMainGameUI(true)
         } else if (this.getGameState() == GameState.GAME_OVER) {
@@ -80,39 +86,21 @@ class GameController extends GameObject {
         if (state) {
             let transform = this.player?.getComponent(Transform)
             if (transform) {
-                if (this.player.getPosition().y < this.canvas.height / 2) {
-                    scene.setCanvasMoveY(this.canvas.height / 2 - this.player.getPosition().y)
+                let maxBorder = this.canvas.height / 2 - 125
+                let distance = maxBorder - this.player.getPosition().y
+
+                if (this.player.getPosition().y < maxBorder && distance > this.preDistance) {
+                    scene.setCanvasMoveY(distance)
+                    this.preDistance = distance
                 }
             }
         }
     }
-    // public draw(context: CanvasRenderingContext2D) {
-    //     //this.backgroundSprite.draw(context)
-    //     context.save()
-    //     //UIManager.getInstance().getScore().draw(context)
-    //     if (this.getGameState() == GameState.GAME_PLAY) {
-    //         if (this.player.getPosition().y < this.canvas.height / 2) {
-    //             context.translate(0, this.canvas.height / 2 - this.player.getPosition().y)
-    //         }
-    //     }
-
-    //     //UIManager.getInstance().draw(context)
-
-    //     // if (this.platformManager) {
-    //     //     this.platformManager.draw(context)
-    //     // }
-    //     // if (this.player) {
-    //     //     this.player.draw(context)
-    //     // }
-
-    //     context.restore()
-    // }
 
     private handlePlayer() {
         this.handleBorder()
         let platform = this.platformManager.getTheFirstPlatform()
         if (platform != null) {
-            //console.log(this.canvas.getBoundingClientRect())
             if (this.player.getPosition().y - platform.getTransform().getPosition().y > 50) {
                 this.player.saveHighScore()
                 this.setGameState(GameState.GAME_OVER)
