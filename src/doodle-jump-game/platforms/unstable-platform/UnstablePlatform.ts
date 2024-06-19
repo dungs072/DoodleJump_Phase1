@@ -41,7 +41,6 @@ class UnstablePlatform extends Platform {
         if (this.isStomped && !this.canDestroy) {
             if (this.transform.getPosition().y >= this.previousY + this.maxDropDownDistance) {
                 this.canDestroy = true
-                console.log('hehe')
             }
             this.movement.move(deltaTime, Vector2.down(), this.dropDownSpeed, this.transform)
         }

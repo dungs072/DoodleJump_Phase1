@@ -39,6 +39,8 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     public update(deltaTime: number): void {
         // update object
     }
+
+    // please dont use it
     public draw(context: CanvasRenderingContext2D): void {
         if (!this.isActive) {
             return
@@ -60,7 +62,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         this.components.set(component.constructor, component)
     }
     public removeComponent<T extends Component>(component: T): void {
-        console.log(this.components.delete(component.constructor))
+        this.components.delete(component.constructor)
     }
 
     public onCollisionEnter(other: GameObject): void {
@@ -81,7 +83,19 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     public getCanDestroy(): boolean {
         return this.canDestroy
     }
+    public destroy(): void {
+        // use event here
+        this.children.forEach((child) => {
+            child.destroy()
+        })
+        this.components.clear()
+        SceneManager.getInstance().getCurrentActiveScene().removeGameObject(this)
+    }
     public setCanDestroy(state: boolean): void {
+        this.children.forEach((child) => {
+            child.setCanDestroy(state)
+        })
+        this.children = []
         this.canDestroy = state
     }
     public getLayer(): number {

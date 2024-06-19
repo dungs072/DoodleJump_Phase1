@@ -48,13 +48,13 @@ abstract class Platform
         // this.sprite.setPosition(
         //     new Vector2(this.transform.getPosition().x - 10, this.transform.getPosition().y)
         // )
-        let downRight = this.collider.getDownRightBound()
-        this.collider.setBounds(this.transform.getPosition(), downRight)
+        // let downRight = this.collider.getDownRightBound()
+        // this.collider.setBounds(this.transform.getPosition(), downRight)
         if (
             this.transform.getPosition().y - this.collisionPlayerPositionY >=
             this.maxDistanceToDestroy
         ) {
-            this.canDestroy = true
+            this.destroy()
         }
     }
 

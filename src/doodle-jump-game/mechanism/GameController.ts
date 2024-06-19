@@ -10,6 +10,8 @@ import GameMenu from './GameMenu'
 import GamePlay from './GamePlay'
 import GameStateHandler from './GameStateHandler'
 import GameObject from '../../game-engine/base-types/GameObject'
+import SceneManager from '../../game-engine/scene/SceneManager'
+import Transform from '../../game-engine/base-types/components/Transform'
 class GameController extends GameObject {
     private gamePlay: GamePlay
     private gameMenu: GameMenu
@@ -43,7 +45,7 @@ class GameController extends GameObject {
     public setUpGame(): void {
         if (this.player) {
             PhysicManager.getInstance().removeNotStaticPhysicObjs(this.player)
-            this.player.setCanDestroy(true)
+            this.player.destroy()
         }
         let playerPosition = new Vector2(320, 300)
         let playerScale = new Vector2(60, 120)
@@ -58,21 +60,33 @@ class GameController extends GameObject {
         this.platformManager.createStablePlatform(platformPosition, scale)
     }
     public update(deltaTime: number) {
+        this.sceneConfig(this.getGameState() == GameState.GAME_PLAY)
         if (this.getGameState() == GameState.GAME_PLAY) {
-            this.platformManager.createPlatforms(deltaTime, 420)
-            this.platformManager.update(deltaTime)
-            this.handlePlayer(deltaTime)
+            this.platformManager.createPlatforms(this.canvas.width / 2)
+            this.platformManager.destroyPlatforms()
+            this.handlePlayer()
             UIManager.getInstance().toggleMainGameUI(true)
         } else if (this.getGameState() == GameState.GAME_OVER) {
             UIManager.getInstance().toggleMainMenu(false)
             UIManager.getInstance().toggleMainGameUI(false)
             UIManager.getInstance().toggleGameOver(true)
-            this.player.update(deltaTime)
+            this.handleBorder()
+            //this.player.update(deltaTime)
         } else if (this.getGameState() == GameState.MAIN_MENU) {
             UIManager.getInstance().toggleGameOver(false)
             UIManager.getInstance().toggleMainGameUI(false)
             UIManager.getInstance().toggleMainMenu(true)
         }
+    }
+    private sceneConfig(state: boolean): void {
+        let scene = SceneManager.getInstance().getCurrentActiveScene()
+        if (state) {
+            let transform = this.player.getComponent(Transform)
+            if (transform) {
+                scene.setHeightObject(transform.getPosition().y)
+            }
+        }
+        scene.setCanMoveUp(state)
     }
     // public draw(context: CanvasRenderingContext2D) {
     //     //this.backgroundSprite.draw(context)
@@ -96,8 +110,21 @@ class GameController extends GameObject {
     //     context.restore()
     // }
 
-    private handlePlayer(deltaTime: number) {
-        this.player.update(deltaTime)
+    private handlePlayer() {
+        this.handleBorder()
+        let platform = this.platformManager.getTheFirstPlatform()
+        if (platform != null) {
+            if (this.player.getPosition().y - platform.getTransform().getPosition().y > 50) {
+                this.player.saveHighScore()
+                this.setGameState(GameState.GAME_OVER)
+                this.platformManager.clearData()
+                PhysicManager.getInstance().clearData()
+                this.player.clearData()
+            }
+        }
+    }
+
+    private handleBorder() {
         if (this.player.getPosition().x > 640) {
             let newPos = new Vector2(0, this.player.getPosition().y)
             this.player.setPosition(newPos)
@@ -105,19 +132,6 @@ class GameController extends GameObject {
         if (this.player.getPosition().x < 0) {
             let newPos = new Vector2(640, this.player.getPosition().y)
             this.player.setPosition(newPos)
-        }
-        let platform = this.platformManager.getTheFirstPlatform()
-        if (platform != null) {
-            if (this.player.getPosition().y - platform.getTransform().getPosition().y > 50) {
-                // if(this.gameOver){
-                //     this.toggleModal(true);
-                // }
-                this.player.saveHighScore()
-                this.setGameState(GameState.GAME_OVER)
-                this.platformManager.clearData()
-                PhysicManager.getInstance().clearData()
-                this.player.clearData()
-            }
         }
     }
 }

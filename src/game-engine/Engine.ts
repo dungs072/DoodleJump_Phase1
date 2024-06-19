@@ -32,6 +32,7 @@ class Engine {
     public createScene(sceneName: string) {
         this.sceneManager = SceneManager.getInstance()
         let defaultScene = new Scene(sceneName)
+        defaultScene.setCanvasHeight(this.canvas.height)
         this.sceneManager.addScene(defaultScene.getSceneName(), defaultScene)
         this.sceneManager.toggleSceneOn(sceneName)
         defaultScene.start()

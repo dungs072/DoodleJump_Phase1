@@ -110,7 +110,7 @@ class PhysicManager {
 
     public clearData(): void {
         this.physicObjs = []
-        //this.notStaticPhysicObjs = [];
+        this.notStaticPhysicObjs = []
     }
 }
 export default PhysicManager
