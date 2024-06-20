@@ -115,10 +115,10 @@ class Player extends GameObject implements SystemInterface {
             this.movement.move(deltaTime, direction, this.movementSpeed, this.transform)
             this.playerModel.takeAction(Action.RIGHT_NORMAL)
         }
-        if (KeyCode.isDownButNotHold(KeyCode.UP_ARROW)) {
-            this.playerModel.takeAction(Action.FORWARD_NORMAL)
-            this.fighter.fight(this.spawnProjectilePos, Vector2.up())
-        }
+        // if (KeyCode.isDownButNotHold(KeyCode.UP_ARROW)) {
+        //     this.playerModel.takeAction(Action.FORWARD_NORMAL)
+        //     this.fighter.fight(this.spawnProjectilePos, Vector2.up())
+        // }
     }
     private updateSpawnProjectilePos() {
         this.spawnProjectilePos = Vector2.add(

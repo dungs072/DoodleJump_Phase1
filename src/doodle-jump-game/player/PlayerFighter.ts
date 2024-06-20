@@ -7,8 +7,6 @@ class PlayerFighter extends Component {
     public fight(spawnPosition: Vector2, direction: Vector2) {
         let scale = new Vector2(10, 10)
         let projectile = new Projectile(1000, spawnPosition, scale, direction)
-        // fix here
-        PhysicManager.getInstance().addNotStaticPhysicObj(projectile)
     }
 }
 export default PlayerFighter

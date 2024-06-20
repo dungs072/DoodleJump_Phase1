@@ -36,8 +36,9 @@ class Projectile extends GameObject {
         this.collider = new Collider()
         this.collider.setBounds(this.transform.getPosition(), this.transform.getScale())
         this.collider.setOffset(27)
-        this.collider.setIsStatic(false)
+
         this.addComponent(this.collider)
+        this.collider.setIsStatic(false)
 
         this.rb = new RigidBody()
         this.rb.setUseGravity(false)
