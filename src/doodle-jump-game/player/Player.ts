@@ -41,7 +41,7 @@ class Player extends GameObject implements SystemInterface {
     private previousHeight: number
     private maxHeight: number
 
-    private colliderPositionY: number
+    private maxBorder: number
 
     constructor(position: Vector2, scale: Vector2) {
         super()
@@ -133,8 +133,7 @@ class Player extends GameObject implements SystemInterface {
         this.previousHeight = this.transform.getPosition().y
 
         if (!this.collider.getIsTrigger()) {
-            //console.log(this.transform.getPosition().y)
-            this.publisher.setData(-this.scoreCalculator.getCurrentScore() + this.canvasHeight)
+            this.publisher.setData(this.maxBorder)
             this.publisher.notify()
             this.playerModel.handleNormalSprite()
         } else {
@@ -154,14 +153,12 @@ class Player extends GameObject implements SystemInterface {
             other.operation()
             if (other instanceof Shoes) {
                 this.rb.addForce(Vector2.up(), other.getForceAmount())
-                //this.colliderPositionY = this.transform.getPosition().y
             }
         } else if (other instanceof Platform) {
             other.operation()
             if (other.getCanJump()) {
                 this.rb.setVelocity(Vector2.zero())
                 this.rb.addForce(Vector2.up(), this.jumpForce)
-                this.colliderPositionY = other.getTransform().getPosition().y
             }
         }
     }
@@ -179,6 +176,9 @@ class Player extends GameObject implements SystemInterface {
     public setScore(num: number): void {
         this.scoreCalculator.addCurrentScore(num)
         UIManager.getInstance().setScoreText(this.scoreCalculator.getCurrentScore().toString())
+    }
+    public setMaxBorder(num: number): void {
+        this.maxBorder = num
     }
     public saveHighScore(): void {
         this.scoreCalculator.saveHighScore()

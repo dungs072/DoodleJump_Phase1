@@ -90,6 +90,7 @@ class GameController extends GameObject {
                 let distance = maxBorder - this.player.getPosition().y
 
                 if (this.player.getPosition().y < maxBorder && distance > this.preDistance) {
+                    this.player.setMaxBorder(distance)
                     scene.setCanvasMoveY(distance)
                     this.preDistance = distance
                 }

@@ -16,7 +16,7 @@ abstract class Platform extends GameObject implements SubcriberInterface<number>
     private collider: Collider
     protected transform: Transform
     protected movement: Movement
-    private maxDistanceToDestroy: number
+    private initHeight: number
     protected canJump: boolean
 
     private borderHeight: number
@@ -25,9 +25,9 @@ abstract class Platform extends GameObject implements SubcriberInterface<number>
         this.transform = this.getComponent(Transform)!
         this.transform.setPosition(position)
         this.transform.setScale(scale)
-        this.maxDistanceToDestroy = 50
+        this.initHeight = 600
         this.borderHeight = 0
-        this.borderHeight = Infinity
+        this.borderHeight = 0
         this.canDestroy = false
         this.canJump = canJump
         this.start()
@@ -43,8 +43,7 @@ abstract class Platform extends GameObject implements SubcriberInterface<number>
         this.addComponent(this.movement)
     }
     public update(deltaTime: number): void {
-        //console.log(this.transform.getPosition().y)
-        if (this.transform.getPosition().y - this.borderHeight >= this.maxDistanceToDestroy) {
+        if (this.initHeight - this.transform.getPosition().y < this.borderHeight) {
             this.destroy()
         }
     }
