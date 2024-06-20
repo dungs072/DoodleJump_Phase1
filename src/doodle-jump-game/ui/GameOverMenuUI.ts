@@ -16,7 +16,7 @@ class GameOverMenuUI extends GameObject {
     private highScoreText: TextGameObject
     private panel: UIElement
     constructor(position: Vector2, scale: Vector2, background: Sprite) {
-        super()
+        super(true)
         this.transform.setPosition(position)
         this.transform.setScale(scale)
         this.panel = new UIElement(background)
@@ -27,9 +27,9 @@ class GameOverMenuUI extends GameObject {
         this.menuButton = new ButtonGameObject()
         this.menuButton.getComponent(Transform)?.setLocalPosition(new Vector2(350, 500))
         this.menuButton.getComponent(Transform)?.setScale(new Vector2(224, 82))
-        this.currentScoreText = new TextGameObject()
+        this.currentScoreText = new TextGameObject(true)
         this.currentScoreText.getComponent(Transform)?.setLocalPosition(new Vector2(200, 150))
-        this.highScoreText = new TextGameObject()
+        this.highScoreText = new TextGameObject(true)
         this.highScoreText.getComponent(Transform)?.setLocalPosition(new Vector2(200, 200))
         this.addChild(this.playAgainButton)
         this.addChild(this.menuButton)

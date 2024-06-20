@@ -41,7 +41,6 @@ class Scene implements SystemInterface, RenderInterface {
                 this.stickyGameObjects.splice(i)
             }
         }
-        //console.log(this.gameObjects.length)
     }
     public draw(context: CanvasRenderingContext2D): void {
         // draw background here
@@ -77,6 +76,9 @@ class Scene implements SystemInterface, RenderInterface {
     public addGameObject(gameObj: GameObject): void {
         this.gameObjects.push(gameObj)
         // change here to decrease time complexity
+        this.sortLayers()
+    }
+    public sortLayers(): void {
         this.gameObjects.sort((a, b) => b.getLayer() - a.getLayer())
     }
     public addStickyGameObject(gameObj: GameObject): void {

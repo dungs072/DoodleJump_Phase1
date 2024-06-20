@@ -12,18 +12,19 @@ abstract class Item extends GameObject implements ProductInterface {
     private collider: Collider
     protected transform: Transform
     protected canImplement: boolean
-    private timeToDestroy: number
+    protected timeToDestroy: number
     private currentTime: number
 
     constructor(position: Vector2, scale: Vector2) {
         super()
+
         this.transform = this.getComponent(Transform)!
         this.transform.setPosition(position)
         this.transform.setScale(scale)
         this.canImplement = false
         this.timeToDestroy = 4
         this.currentTime = 0
-        this.setLayer(1)
+        this.setLayer(0)
         this.start()
     }
 
@@ -36,6 +37,7 @@ abstract class Item extends GameObject implements ProductInterface {
     }
     public update(deltaTime: number): void {
         if (this.canImplement) {
+            this.itemModel.setActive(false)
             this.currentTime += deltaTime
             if (this.currentTime > this.timeToDestroy) {
                 this.destroy()

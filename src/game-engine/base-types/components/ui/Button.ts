@@ -37,7 +37,7 @@ class Button extends UIElement {
         }
     }
     public subcribe(subcriber: SubcriberInterface<string>): void {
-        this.publisher.subcribe(subcriber)
+        this.publisher.subscribe(subcriber)
     }
     public unSubcribe(subcriber: SubcriberInterface<string>): void {
         this.publisher.unsubcribe(subcriber)

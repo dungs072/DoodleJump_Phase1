@@ -3,7 +3,6 @@ import Vector2 from '../../game-engine/base-types/Vector2'
 import Transform from '../../game-engine/base-types/components/Transform'
 import SystemInterface from '../../game-engine/types/system'
 import KeyCode from '../../game-engine/input/KeyCode'
-import RenderInterface from '../../game-engine/types/render'
 import Collider from '../../game-engine/base-types/components/physic/Collider'
 import Movement from '../general/Movement'
 import Platform from '../platforms/Platform'
@@ -13,11 +12,12 @@ import PlayerModel from './PlayerModel'
 
 import ScoreCalculate from '../score/ScoreCalculator'
 import Action from '../states/Action'
-import RigidBody from '../../game-engine/base-types/components/physic/Rigidbody'
 import Publisher from '../patterns/observer/Publisher'
 import UIManager from '../ui/UIManager'
 import Item from '../items/Item'
 import Shoes from '../items/shoes/Shoes'
+import Propeller from '../items/propeller/Propeller'
+import RigidBody from '../../game-engine/base-types/components/physic/Rigidbody'
 
 class Player extends GameObject implements SystemInterface {
     private jumpForce: number
@@ -43,6 +43,10 @@ class Player extends GameObject implements SystemInterface {
 
     private maxBorder: number
 
+    private maxHeightFlight: number
+    private flySpeed: number
+    private canFly: boolean
+
     constructor(position: Vector2, scale: Vector2) {
         super()
 
@@ -54,6 +58,7 @@ class Player extends GameObject implements SystemInterface {
     public start(): void {
         this.movementSpeed = 450
         this.jumpForce = 700
+        this.canFly = false
 
         this.movement = new Movement()
         this.addComponent(this.movement)
@@ -95,6 +100,7 @@ class Player extends GameObject implements SystemInterface {
         this.handleInput(deltaTime)
         this.updateChildTransform()
         this.handleTrigger()
+        this.handleFly(deltaTime)
         this.calculateHeight()
     }
 
@@ -140,6 +146,16 @@ class Player extends GameObject implements SystemInterface {
             this.playerModel.handleJumpSprite()
         }
     }
+    private handleFly(deltaTime: number): void {
+        if (this.canFly) {
+            if (this.getPosition().y > this.maxHeightFlight) {
+                this.movement.move(deltaTime, Vector2.up(), this.flySpeed, this.transform)
+            } else {
+                this.canFly = false
+                this.rb.setUseGravity(!this.canFly)
+            }
+        }
+    }
     private calculateHeight(): void {
         if (this.maxHeight > this.transform.getPosition().y) {
             let num = Math.floor(this.maxHeight - this.transform.getPosition().y)
@@ -153,6 +169,14 @@ class Player extends GameObject implements SystemInterface {
             other.operation()
             if (other instanceof Shoes) {
                 this.rb.addForce(Vector2.up(), other.getForceAmount())
+            }
+            if (other instanceof Propeller) {
+                this.addChild(other)
+                this.maxHeightFlight =
+                    -other.getMaxDistanceFlight() + this.transform.getPosition().y
+                this.canFly = true
+                this.rb.setUseGravity(!this.canFly)
+                this.flySpeed = other.getFlySpeed()
             }
         } else if (other instanceof Platform) {
             other.operation()

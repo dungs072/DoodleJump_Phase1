@@ -11,6 +11,7 @@ import UnstablePlatformCreator from './unstable-platform/UnstablePlatformCreator
 import ShoesCreator from '../items/shoes/ShoesCreator'
 import Item from '../items/Item'
 import StablePlatform from './stable-platform/StablePlatform'
+import PropellerCreator from '../items/propeller/PropellerCreator'
 
 class PlatformManager {
     private publisher: Publisher<number>
@@ -35,6 +36,7 @@ class PlatformManager {
 
         this.itemCreators = []
         this.itemCreators.push(new ShoesCreator())
+        this.itemCreators.push(new PropellerCreator())
     }
     public getPublisher(): Publisher<number> {
         return this.publisher
@@ -55,14 +57,14 @@ class PlatformManager {
             let gameObj = product.getGameObject()
             if (gameObj instanceof StablePlatform) {
                 this.createRandomItem(
-                    new Vector2(position.x + 30, position.y - 15),
+                    new Vector2(position.x + 30, position.y - 20),
                     new Vector2(50, 16)
                 )
             }
 
             if (gameObj instanceof Platform) {
                 this.platforms.push(gameObj)
-                this.publisher.subcribe(gameObj)
+                this.publisher.subscribe(gameObj)
                 PhysicManager.getInstance().addphysicObjs(gameObj)
             }
             if (gameObj instanceof UnstablePlatform) {
@@ -98,7 +100,7 @@ class PlatformManager {
         let gameObj = product.getGameObject()
         if (gameObj instanceof Platform) {
             this.platforms.push(gameObj)
-            this.publisher.subcribe(gameObj)
+            this.publisher.subscribe(gameObj)
             PhysicManager.getInstance().addphysicObjs(gameObj)
         }
         return gameObj

@@ -7,6 +7,7 @@ import Component from './components/Component'
 import Vector2 from './Vector2'
 class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     private components: Map<Function, Component>
+    private parent: GameObject
     private children: GameObject[]
     private isActive: boolean
     protected canDestroy: boolean
@@ -89,6 +90,9 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         return this.canDestroy
     }
     public destroy(): void {
+        if (this.parent) {
+            this.parent.removeChild(this)
+        }
         this.canDestroy = true
         // use event here
         this.children.forEach((child) => {
@@ -109,10 +113,22 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     }
     public setLayer(layer: number) {
         this.layer = layer
+        // SceneManager.getInstance().getCurrentActiveScene().sortLayers()
+    }
+    public setParent(parent: GameObject): void {
+        this.parent = parent
+    }
+    public getParent(): GameObject {
+        return this.parent
     }
     public addChild(child: GameObject): void {
         this.children.push(child)
         this.transform.setPosition(this.transform.getPosition())
+        child.setParent(this)
+    }
+    public removeChild(child: GameObject): void {
+        let index = this.children.indexOf(child)
+        this.children.splice(index, 1)
     }
     public setChildsPosition(position: Vector2): void {
         this.children.forEach((child) => {

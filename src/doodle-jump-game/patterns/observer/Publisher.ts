@@ -4,7 +4,7 @@ import SubcriberInterface from '../../types/observer/subcriber'
 class Publisher<T> implements PublisherInterface<T> {
     private subcribers: SubcriberInterface<T>[] = []
     private data: T
-    public subcribe(subcriber: SubcriberInterface<T>): void {
+    public subscribe(subcriber: SubcriberInterface<T>): void {
         this.subcribers.push(subcriber)
     }
     public unsubcribe(subcriber: SubcriberInterface<T>): void {

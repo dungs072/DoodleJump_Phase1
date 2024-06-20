@@ -9,6 +9,7 @@ class Animation extends Component {
     private currentTime: number
     private currentIndex: number
     private isDone: boolean = false
+    private isPlaying: boolean
     constructor(images: HTMLImageElement[], maxTimePerSprite: number) {
         super()
         this.sprites = []
@@ -20,11 +21,13 @@ class Animation extends Component {
         this.maxTimePerSprite = maxTimePerSprite
         this.currentTime = maxTimePerSprite
         this.currentIndex = 0
+        this.isPlaying = false
     }
     public play(deltaTime: number): void {
         if (this.isDone) {
             return
         }
+        this.isPlaying = true
         this.currentTime += deltaTime
         if (this.currentTime >= this.maxTimePerSprite) {
             this.currentIndex = (this.currentIndex + 1) % this.sprites.length
@@ -33,7 +36,12 @@ class Animation extends Component {
         this.isDone = !this.canLoop && this.currentIndex == this.sprites.length - 1
     }
     public draw(context: CanvasRenderingContext2D, position: Vector2): void {
-        this.sprites[this.currentIndex].draw(context, position)
+        if (this.isPlaying) {
+            this.sprites[this.currentIndex].draw(context, position)
+        }
+    }
+    public setCanLoop(state: boolean): void {
+        this.canLoop = state
     }
 }
 export default Animation

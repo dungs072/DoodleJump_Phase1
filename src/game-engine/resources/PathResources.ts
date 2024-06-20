@@ -33,5 +33,11 @@ class PathResources {
     public static readonly SHOE2: string = '../assets/images/items/shoes/shoe2.png'
     public static readonly SHOE3: string = '../assets/images/items/shoes/shoe3.png'
     public static readonly SHOE4: string = '../assets/images/items/shoes/shoe4.png'
+
+    // propeller
+    public static readonly PROPELLER: string = '../assets/images/items/propellers/propeller.png'
+    public static readonly PROPELLER1: string = '../assets/images/items/propellers/propeller1.png'
+    public static readonly PROPELLER2: string = '../assets/images/items/propellers/propeller2.png'
+    public static readonly PROPELLER3: string = '../assets/images/items/propellers/propeller3.png'
 }
 export default PathResources

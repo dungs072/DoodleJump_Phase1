@@ -35,6 +35,13 @@ class ResourcesManager {
     public static Shoe3Image: HTMLImageElement
     public static Shoe4Image: HTMLImageElement
 
+    // propellers
+
+    public static PropellerImage: HTMLImageElement
+    public static Propeller1Image: HTMLImageElement
+    public static Propeller2Image: HTMLImageElement
+    public static Propeller3Image: HTMLImageElement
+
     public static LoadResources(): void {
         this.PageImage = this.loadImage(PathResources.BACKGROUND)
         this.DoodleJumpTextImage = this.loadImage(PathResources.DOODLE_JUMP_TEXT)
@@ -63,6 +70,11 @@ class ResourcesManager {
         this.Shoe2Image = this.loadImage(PathResources.SHOE2)
         this.Shoe3Image = this.loadImage(PathResources.SHOE3)
         this.Shoe4Image = this.loadImage(PathResources.SHOE4)
+
+        this.PropellerImage = this.loadImage(PathResources.PROPELLER)
+        this.Propeller1Image = this.loadImage(PathResources.PROPELLER1)
+        this.Propeller2Image = this.loadImage(PathResources.PROPELLER2)
+        this.Propeller3Image = this.loadImage(PathResources.PROPELLER3)
     }
 
     private static loadImage(path: string): HTMLImageElement {
