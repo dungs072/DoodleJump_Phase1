@@ -7,7 +7,6 @@ import Collider from '../../game-engine/base-types/components/physic/Collider'
 import Movement from '../general/Movement'
 import Platform from '../platforms/Platform'
 import PlayerFighter from './PlayerFighter'
-import ProjectileManager from '../projectile/ProjectileManager'
 import PlayerModel from './PlayerModel'
 
 import ScoreCalculate from '../score/ScoreCalculator'
@@ -22,7 +21,6 @@ import RigidBody from '../../game-engine/base-types/components/physic/Rigidbody'
 class Player extends GameObject implements SystemInterface {
     private jumpForce: number
     private movementSpeed: number
-    private canvasHeight: number
 
     private spawnProjectilePos: Vector2
 
@@ -31,12 +29,9 @@ class Player extends GameObject implements SystemInterface {
     private movement: Movement
     private fighter: PlayerFighter
     private scoreCalculator: ScoreCalculate
-    private projectileManger: ProjectileManager
 
     private publisher: Publisher<number>
     private playerModel: PlayerModel
-
-    private projectileManager: ProjectileManager
 
     private previousHeight: number
     private maxHeight: number
@@ -47,18 +42,20 @@ class Player extends GameObject implements SystemInterface {
     private flySpeed: number
     private canFly: boolean
 
+    private isOver: boolean
+
     constructor(position: Vector2, scale: Vector2) {
         super()
 
-        this.transform = this.getComponent(Transform)!
-        this.transform?.setPosition(position)
-        this.transform?.setScale(scale)
+        this.transform.setPosition(position)
+        this.transform.setScale(scale)
     }
 
     public start(): void {
         this.movementSpeed = 450
         this.jumpForce = 700
         this.canFly = false
+        this.isOver = false
 
         this.movement = new Movement()
         this.addComponent(this.movement)
@@ -74,8 +71,8 @@ class Player extends GameObject implements SystemInterface {
             this.transform.getScale().y - this.collider.getOffset()
         )
         this.collider.setBounds(topLeft, downRight)
-        this.collider.setIsStatic(false)
         this.addComponent(this.collider)
+        this.collider.setIsStatic(false)
 
         this.rb = new RigidBody()
         this.rb.setMass(400)
@@ -90,15 +87,18 @@ class Player extends GameObject implements SystemInterface {
         this.playerModel = new PlayerModel()
         this.addChild(this.playerModel)
         this.scoreCalculator = new ScoreCalculate()
-        this.projectileManger = new ProjectileManager()
-        this.fighter = new PlayerFighter(this.projectileManager)
+        this.fighter = new PlayerFighter()
+
         this.addComponent(this.fighter)
         this.previousHeight = this.transform.getPosition().y
         this.maxHeight = 300
     }
     public update(deltaTime: number): void {
+        if (this.isOver) {
+            return
+        }
         this.handleInput(deltaTime)
-        this.updateChildTransform()
+        this.updateSpawnProjectilePos()
         this.handleTrigger()
         this.handleFly(deltaTime)
         this.calculateHeight()
@@ -115,23 +115,15 @@ class Player extends GameObject implements SystemInterface {
             this.movement.move(deltaTime, direction, this.movementSpeed, this.transform)
             this.playerModel.takeAction(Action.RIGHT_NORMAL)
         }
-        // if (KeyCode.isDownButNotHold(KeyCode.UP_ARROW)) {
-        //     this.playerModel.takeAction(Action.FORWARD_NORMAL)
-        //     this.fighter.fight(this.spawnProjectilePos, Vector2.up())
-        // }
-        if (KeyCode.isDownButNotHold(KeyCode.SPACE)) {
-            // let rigidbody = this.getComponent(RigidBody)
-            // if (rigidbody == null) {
-            //     return
-            // }
-            // // let velocity = Vector2.multiply(Vector2.up(), this.jumpForce)
-            // // rigidbody.setVelocity(velocity)
+        if (KeyCode.isDownButNotHold(KeyCode.UP_ARROW)) {
+            this.playerModel.takeAction(Action.FORWARD_NORMAL)
+            this.fighter.fight(this.spawnProjectilePos, Vector2.up())
         }
     }
-    private updateChildTransform() {
+    private updateSpawnProjectilePos() {
         this.spawnProjectilePos = Vector2.add(
             this.transform.getPosition(),
-            new Vector2(this.transform.getScale().x / 2, -10)
+            new Vector2(this.transform.getScale().x / 2 - 5, -10)
         )
     }
     private handleTrigger(): void {
@@ -218,8 +210,8 @@ class Player extends GameObject implements SystemInterface {
         this.scoreCalculator.setCurrentScore(0)
         UIManager.getInstance().setScoreText('0')
     }
-    public setCanvasHeight(canvasHeight: number): void {
-        this.canvasHeight = canvasHeight
+    public setIsOver(state: boolean) {
+        this.isOver = state
     }
 }
 export default Player

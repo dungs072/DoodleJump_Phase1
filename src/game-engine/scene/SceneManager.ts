@@ -31,6 +31,7 @@ class SceneManager {
             value.setActive(key == sceneName)
             if (key == sceneName) {
                 this.currentActiveScene = value
+                return
             }
         })
     }

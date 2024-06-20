@@ -3,16 +3,16 @@ import RigidBody from '../../game-engine/base-types/components/physic/Rigidbody'
 import Transform from '../../game-engine/base-types/components/Transform'
 import GameObject from '../../game-engine/base-types/GameObject'
 import Vector2 from '../../game-engine/base-types/Vector2'
-import RenderInterface from '../../game-engine/types/render'
-import SystemInterface from '../../game-engine/types/system'
+import Sprite from '../../game-engine/base-types/components/render/Sprite'
+import ResourcesManager from '../../game-engine/resources/ResourcesManager'
 
-class Projectile extends GameObject implements SystemInterface, RenderInterface {
+class Projectile extends GameObject {
     private timeToDestroy: number
     private forceAmount: number
     private direction: Vector2
     private collider: Collider
     private rb: RigidBody
-    private style = 'black'
+    private sprite: Sprite
 
     private currentTime: number
     constructor(forceAmount: number, position: Vector2, scale: Vector2, direction: Vector2) {
@@ -27,6 +27,8 @@ class Projectile extends GameObject implements SystemInterface, RenderInterface 
         this.forceAmount = forceAmount
         this.timeToDestroy = 5
         this.currentTime = 0
+        this.sprite = new Sprite(ResourcesManager.BulletImage)
+        this.addComponent(this.sprite)
         this.start()
     }
 
@@ -34,6 +36,7 @@ class Projectile extends GameObject implements SystemInterface, RenderInterface 
         this.collider = new Collider()
         this.collider.setBounds(this.transform.getPosition(), this.transform.getScale())
         this.collider.setOffset(27)
+        this.collider.setIsStatic(false)
         this.addComponent(this.collider)
 
         this.rb = new RigidBody()
@@ -43,24 +46,10 @@ class Projectile extends GameObject implements SystemInterface, RenderInterface 
     public update(deltaTime: number): void {
         this.currentTime += deltaTime
         if (this.currentTime >= this.timeToDestroy) {
-            this.canDestroy = true
+            this.destroy()
         } else {
             this.rb.setVelocity(Vector2.multiply(this.direction, this.forceAmount))
         }
-        //this.movement.move(deltaTime, this.direction, this.speed, this.transform);
     }
-    // public draw(context: CanvasRenderingContext2D): void {
-    //     context.fillStyle = this.style
-    //     if (this.transform == null) {
-    //         return
-    //     }
-    //     context.fillRect(
-    //         this.transform.getPosition().x,
-    //         this.transform.getPosition().y,
-    //         this.transform.getScale().x,
-    //         this.transform.getScale().y
-    //     )
-    //     this.collider.draw(context)
-    // }
 }
 export default Projectile

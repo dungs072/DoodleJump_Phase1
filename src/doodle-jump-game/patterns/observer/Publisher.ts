@@ -7,7 +7,7 @@ class Publisher<T> implements PublisherInterface<T> {
     public subscribe(subcriber: SubcriberInterface<T>): void {
         this.subcribers.push(subcriber)
     }
-    public unsubcribe(subcriber: SubcriberInterface<T>): void {
+    public unsubscribe(subcriber: SubcriberInterface<T>): void {
         let index = this.subcribers.indexOf(subcriber)
         if (index > -1) {
             this.subcribers.splice(index, 1)

@@ -4,13 +4,18 @@ import GameObject from '../../game-engine/base-types/GameObject'
 import Vector2 from '../../game-engine/base-types/Vector2'
 import Movement from '../general/Movement'
 import ProductInterface from '../types/factory/product'
-import SubcriberInterface from '../types/observer/subcriber'
+import SubscriberInterface from '../types/observer/subcriber'
 import RenderInterface from '../../game-engine/types/render'
 import SystemInterface from '../../game-engine/types/system'
 import PlatformModel from './PlatformModel'
 import Sprite from '../../game-engine/base-types/components/render/Sprite'
+import Item from '../items/Item'
 
-abstract class Platform extends GameObject implements SubcriberInterface<number>, ProductInterface {
+abstract class Platform
+    extends GameObject
+    implements SubscriberInterface<number>, ProductInterface
+{
+    protected item: GameObject | null
     protected platformModel: PlatformModel
 
     private collider: Collider
@@ -37,14 +42,18 @@ abstract class Platform extends GameObject implements SubcriberInterface<number>
         this.collider = new Collider()
         let downRight = new Vector2(this.transform.getScale().x, this.transform.getScale().y - 25)
         this.collider.setBounds(this.transform?.getPosition(), downRight)
-        this.collider.setIsStatic(true)
         this.addComponent(this.collider)
+        this.collider.setIsStatic(true)
         this.movement = new Movement()
         this.addComponent(this.movement)
     }
     public update(deltaTime: number): void {
         if (this.initHeight - this.transform.getPosition().y < this.borderHeight) {
             this.destroy()
+            if (this.item && !this.item.getParent()) {
+                this.item.destroy()
+                this.item = null
+            }
         }
     }
     protected setUpModel(sprite: Sprite) {
@@ -68,6 +77,9 @@ abstract class Platform extends GameObject implements SubcriberInterface<number>
 
     public getTransform() {
         return this.transform
+    }
+    public setItem(item: GameObject): void {
+        this.item = item
     }
 }
 

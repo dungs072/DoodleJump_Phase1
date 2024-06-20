@@ -20,13 +20,13 @@ class Engine {
         this.canvas.width = width
         this.canvas.height = height
         this.lastRenderTime = 0
+        this.sceneManager = SceneManager.getInstance()
         document.body.appendChild(this.canvas)
         this.start()
     }
 
     private start(): void {
         this.loadResources()
-        this.createScene('Default')
         this.setEvents()
 
         this.gameLoop()
@@ -34,12 +34,12 @@ class Engine {
     private loadResources(): void {
         ResourcesManager.LoadResources()
     }
-    private createScene(sceneName: string) {
-        this.sceneManager = SceneManager.getInstance()
-        let defaultScene = new Scene(sceneName)
-        this.sceneManager.addScene(defaultScene.getSceneName(), defaultScene)
+    public createScene(sceneName: string): Scene {
+        let scene = new Scene(sceneName)
+        this.sceneManager.addScene(scene.getSceneName(), scene)
         this.sceneManager.toggleSceneOn(sceneName)
-        defaultScene.start()
+        scene.start()
+        return scene
     }
 
     private gameLoop(): void {
@@ -54,13 +54,17 @@ class Engine {
         requestAnimationFrame(() => this.gameLoop())
     }
     private update(deltaTime: number): void {
-        PhysicManager.getInstance().handleCorePhysic(deltaTime)
         let scene = this.sceneManager.getCurrentActiveScene()
-        scene.update(deltaTime)
+        if (scene) {
+            PhysicManager.getInstance().handleCorePhysic(deltaTime)
+            scene.update(deltaTime)
+        }
     }
     private render() {
         let scene = this.sceneManager.getCurrentActiveScene()
-        scene.draw(this.context)
+        if (scene) {
+            scene.draw(this.context)
+        }
     }
     private setEvents(): void {
         this.canvas.addEventListener('click', (event: MouseEvent) => {

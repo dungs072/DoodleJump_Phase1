@@ -32,8 +32,8 @@ abstract class Item extends GameObject implements ProductInterface {
         this.collider = new Collider()
         let downRight = new Vector2(this.transform.getScale().x, this.transform.getScale().y)
         this.collider.setBounds(this.transform?.getPosition(), downRight)
-        this.collider.setIsStatic(true)
         this.addComponent(this.collider)
+        this.collider.setIsStatic(true)
     }
     public update(deltaTime: number): void {
         if (this.canImplement) {
@@ -46,6 +46,7 @@ abstract class Item extends GameObject implements ProductInterface {
     }
     public operation(): void {
         this.canImplement = true
+        this.collider.setActive(false)
     }
     protected setUpModel(sprite: Sprite) {
         this.itemModel = new ItemModel(sprite)

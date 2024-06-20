@@ -4,19 +4,14 @@ import PhysicManager from '../../game-engine/physic/PhysicManager'
 import PlatformManager from '../platforms/PlatformManager'
 import Player from '../player/Player'
 import UIManager from '../ui/UIManager'
-import GameMenu from './GameMenu'
-import GamePlay from './GamePlay'
-import GameStateHandler from './GameStateHandler'
 import GameObject from '../../game-engine/base-types/GameObject'
 import SceneManager from '../../game-engine/scene/SceneManager'
 import Transform from '../../game-engine/base-types/components/Transform'
 class GameController extends GameObject {
-    private gamePlay: GamePlay
-    private gameMenu: GameMenu
-    private gameStateHandler: GameStateHandler
-
+    private gameState: GameState
     private player: Player
     private platformManager: PlatformManager
+    private uiManager: UIManager
 
     private canvas: HTMLCanvasElement
 
@@ -25,20 +20,42 @@ class GameController extends GameObject {
     constructor(canvas: HTMLCanvasElement) {
         super()
         this.canvas = canvas
-
-        this.gameStateHandler = new GameStateHandler()
-        this.gamePlay = new GamePlay(this.gameStateHandler, this)
-        this.gameMenu = new GameMenu(this.gameStateHandler)
-        UIManager.getInstance().getStartGameButton().subcribe(this.gamePlay)
-        UIManager.getInstance().getPlayAgainButton().subcribe(this.gamePlay)
-        UIManager.getInstance().getMenuButton().subcribe(this.gameMenu)
+        this.uiManager = UIManager.getInstance()
+        this.gotoMenu()
+        this.uiManager.getStartGameButton().subscribe(() => {
+            this.gotoGamePlay()
+        })
+        this.uiManager.getPlayAgainButton().subscribe(() => {
+            this.gotoGamePlay()
+        })
+        this.uiManager.getMenuButton().subscribe(() => {
+            this.gotoMenu()
+        })
+    }
+    private gotoMenu() {
+        this.uiManager.toggleMainMenu(true)
+        this.uiManager.toggleGameOver(false)
+        this.uiManager.toggleMainGameUI(false)
+        this.gameState = GameState.MAIN_MENU
     }
 
+    private gotoGamePlay(): void {
+        this.uiManager.toggleGameOver(false)
+        this.uiManager.toggleMainMenu(false)
+        this.uiManager.toggleMainGameUI(true)
+        this.setUpGame()
+        this.gameState = GameState.GAME_PLAY
+    }
+    private gotoGameOver(): void {
+        this.uiManager.toggleGameOver(true)
+        this.uiManager.toggleMainMenu(false)
+        this.uiManager.toggleMainGameUI(false)
+    }
     public getGameState(): GameState {
-        return this.gameStateHandler.getGameState()
+        return this.gameState
     }
     public setGameState(gameState: GameState) {
-        this.gameStateHandler.setGameState(gameState)
+        this.gameState = gameState
     }
 
     public setUpGame(): void {
@@ -50,38 +67,28 @@ class GameController extends GameObject {
         let playerPosition = new Vector2(320, 300)
         let playerScale = new Vector2(60, 120)
         this.player = new Player(playerPosition, playerScale)
-        this.player.setCanvasHeight(this.canvas.height)
 
         this.platformManager = new PlatformManager()
         this.player.setPublisher(this.platformManager.getPublisher())
-        PhysicManager.getInstance().addNotStaticPhysicObj(this.player)
 
         let platformPosition = new Vector2(playerPosition.x - 50, 550)
         let scale = new Vector2(100, 30)
         this.platformManager.createStablePlatform(platformPosition, scale)
     }
     public update(deltaTime: number) {
-        this.sceneConfig(this.getGameState() == GameState.GAME_PLAY)
+        this.moveScreen(this.getGameState() == GameState.GAME_PLAY)
         if (this.getGameState() == GameState.GAME_PLAY) {
             this.platformManager.createPlatforms(this.canvas.width)
             this.platformManager.destroyPlatforms()
             this.platformManager.destroyItems()
             this.handlePlayer()
-            UIManager.getInstance().toggleMainGameUI(true)
+            this.uiManager.toggleMainGameUI(true)
         } else if (this.getGameState() == GameState.GAME_OVER) {
-            UIManager.getInstance().toggleMainMenu(false)
-            UIManager.getInstance().toggleMainGameUI(false)
-            UIManager.getInstance().toggleGameOver(true)
-            this.handleBorder()
             SceneManager.getInstance().getCurrentActiveScene().setCanvasMoveY(0)
-            //this.player.update(deltaTime)
-        } else if (this.getGameState() == GameState.MAIN_MENU) {
-            UIManager.getInstance().toggleGameOver(false)
-            UIManager.getInstance().toggleMainGameUI(false)
-            UIManager.getInstance().toggleMainMenu(true)
+            this.handleBorder()
         }
     }
-    private sceneConfig(state: boolean): void {
+    private moveScreen(state: boolean): void {
         let scene = SceneManager.getInstance().getCurrentActiveScene()
         if (state) {
             let transform = this.player?.getComponent(Transform)
@@ -103,12 +110,13 @@ class GameController extends GameObject {
         let platform = this.platformManager.getTheFirstPlatform()
         if (platform != null) {
             if (this.player.getPosition().y - platform.getTransform().getPosition().y > 50) {
-                this.player.saveHighScore()
                 this.setGameState(GameState.GAME_OVER)
+                this.player.saveHighScore()
+                this.player.setIsOver(true)
                 this.platformManager.clearData()
+                this.gotoGameOver()
                 PhysicManager.getInstance().clearData()
                 this.player.clearData()
-                PhysicManager.getInstance().addNotStaticPhysicObj(this.player)
             }
         }
     }

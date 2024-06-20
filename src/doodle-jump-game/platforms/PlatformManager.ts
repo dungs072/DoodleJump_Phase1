@@ -28,7 +28,7 @@ class PlatformManager {
         this.platforms = []
         this.items = []
         this.previousYPosition = 500
-        this.maxPlatform = 40
+        this.maxPlatform = 30
         this.platformCreators = []
         this.platformCreators.push(new StablePlatformCreator())
         this.platformCreators.push(new UnstablePlatformCreator())
@@ -56,16 +56,18 @@ class PlatformManager {
             let product = platformCreator.createProduct(position, scale)
             let gameObj = product.getGameObject()
             if (gameObj instanceof StablePlatform) {
-                this.createRandomItem(
-                    new Vector2(position.x + 30, position.y - 20),
-                    new Vector2(50, 16)
-                )
+                if (Math.random() > 0.3) {
+                    let item = this.createRandomItem(
+                        new Vector2(position.x + 30, position.y - 20),
+                        new Vector2(50, 16)
+                    )
+                    gameObj.setItem(item)
+                }
             }
 
             if (gameObj instanceof Platform) {
                 this.platforms.push(gameObj)
                 this.publisher.subscribe(gameObj)
-                PhysicManager.getInstance().addphysicObjs(gameObj)
             }
             if (gameObj instanceof UnstablePlatform) {
                 let randomX = 0
@@ -84,15 +86,15 @@ class PlatformManager {
             }
         }
     }
-    private createRandomItem(position: Vector2, scale: Vector2): void {
+    private createRandomItem(position: Vector2, scale: Vector2): GameObject {
         let itemCreatorIndex = Math.floor(Math.random() * this.itemCreators.length)
         let itemCreator = this.itemCreators[itemCreatorIndex]
         let product = itemCreator.createProduct(position, scale)
         let gameObj = product.getGameObject()
-        PhysicManager.getInstance().addphysicObjs(gameObj)
         if (gameObj instanceof Item) {
             this.items.push(gameObj)
         }
+        return gameObj
     }
     public createStablePlatform(position: Vector2, scale: Vector2): GameObject {
         let platformCreator = this.platformCreators[0]
@@ -101,7 +103,6 @@ class PlatformManager {
         if (gameObj instanceof Platform) {
             this.platforms.push(gameObj)
             this.publisher.subscribe(gameObj)
-            PhysicManager.getInstance().addphysicObjs(gameObj)
         }
         return gameObj
     }
@@ -126,7 +127,7 @@ class PlatformManager {
             }
             if (this.platforms[i].getCanDestroy()) {
                 PhysicManager.getInstance().removePhysicObjs(this.platforms[i])
-                this.publisher.unsubcribe(this.platforms[i])
+                this.publisher.unsubscribe(this.platforms[i])
                 this.platforms.splice(i, 1)
             }
         }

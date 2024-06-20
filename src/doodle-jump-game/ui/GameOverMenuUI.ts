@@ -16,7 +16,8 @@ class GameOverMenuUI extends GameObject {
     private highScoreText: TextGameObject
     private panel: UIElement
     constructor(position: Vector2, scale: Vector2, background: Sprite) {
-        super(true)
+        super()
+        this.setLayer(1)
         this.transform.setPosition(position)
         this.transform.setScale(scale)
         this.panel = new UIElement(background)
@@ -25,11 +26,14 @@ class GameOverMenuUI extends GameObject {
         this.playAgainButton.getComponent(Transform)?.setLocalPosition(new Vector2(280, 350))
         this.playAgainButton.getComponent(Transform)?.setScale(new Vector2(224, 82))
         this.menuButton = new ButtonGameObject()
+        this.menuButton.setLayer(-2)
         this.menuButton.getComponent(Transform)?.setLocalPosition(new Vector2(350, 500))
         this.menuButton.getComponent(Transform)?.setScale(new Vector2(224, 82))
-        this.currentScoreText = new TextGameObject(true)
+        this.currentScoreText = new TextGameObject()
+        this.currentScoreText.setLayer(-2)
         this.currentScoreText.getComponent(Transform)?.setLocalPosition(new Vector2(200, 150))
-        this.highScoreText = new TextGameObject(true)
+        this.highScoreText = new TextGameObject()
+        this.highScoreText.setLayer(-2)
         this.highScoreText.getComponent(Transform)?.setLocalPosition(new Vector2(200, 200))
         this.addChild(this.playAgainButton)
         this.addChild(this.menuButton)
@@ -50,18 +54,6 @@ class GameOverMenuUI extends GameObject {
     public setHighScoreText(text: Text): void {
         this.highScoreText.setText(text)
     }
-    // public draw(context: CanvasRenderingContext2D): void {
-    //     super.draw(context)
-    //     this.playAgainButton.draw(context)
-    //     this.menuButton.draw(context)
-    //     this.currentScoreText.draw(context)
-    //     this.highScoreText.draw(context)
-    // }
-    // public setIsActive(state: boolean): void {
-    //     super.setIsActive(state)
-    //     this.playAgainButton.setIsActive(state)
-    //     this.menuButton.setIsActive(state)
-    // }
     public setHighScore(num: number): void {
         this.highScoreText.getText().setTextDisplay('High score: ' + num.toString())
     }

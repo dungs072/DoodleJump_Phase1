@@ -39,5 +39,7 @@ class PathResources {
     public static readonly PROPELLER1: string = '../assets/images/items/propellers/propeller1.png'
     public static readonly PROPELLER2: string = '../assets/images/items/propellers/propeller2.png'
     public static readonly PROPELLER3: string = '../assets/images/items/propellers/propeller3.png'
+
+    public static readonly BULLET: string = '../assets/images/bullets/bullet.png'
 }
 export default PathResources

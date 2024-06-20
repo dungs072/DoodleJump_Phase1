@@ -1,3 +1,4 @@
+import PhysicManager from '../../../physic/PhysicManager'
 import Vector2 from '../../Vector2'
 import Component from '../Component'
 
@@ -36,23 +37,37 @@ class Collider extends Component {
     }
     public setIsStatic(state: boolean): void {
         this.isStatic = state
+        let gameObj = this.getGameObject()
+        if (gameObj) {
+            if (state) {
+                PhysicManager.getInstance().addPhysicObjs(gameObj)
+            } else {
+                PhysicManager.getInstance().addNotStaticPhysicObj(gameObj)
+            }
+        }
     }
     public getIsStatic(): boolean {
         return this.isStatic
     }
 
     public hasCollision(other: Collider): boolean {
-        let overlapX =
-            this.topLeftBound.x < other.topLeftBound.x + other.downRightBound.x &&
-            this.topLeftBound.x + this.downRightBound.x > other.topLeftBound.x
+        if (this.isActive && !this.isTrigger) {
+            let overlapX =
+                this.topLeftBound.x < other.topLeftBound.x + other.downRightBound.x &&
+                this.topLeftBound.x + this.downRightBound.x > other.topLeftBound.x
 
-        let overlapY =
-            this.topLeftBound.y < other.topLeftBound.y + other.downRightBound.y &&
-            this.topLeftBound.y + this.downRightBound.y > other.topLeftBound.y
-        return overlapX && overlapY
+            let overlapY =
+                this.topLeftBound.y < other.topLeftBound.y + other.downRightBound.y &&
+                this.topLeftBound.y + this.downRightBound.y > other.topLeftBound.y
+            return overlapX && overlapY
+        }
+        return false
     }
 
     public draw(context: CanvasRenderingContext2D): void {
+        if (!this.isActive) {
+            return
+        }
         context.strokeStyle = '#008000'
         context.strokeRect(
             this.topLeftBound.x,

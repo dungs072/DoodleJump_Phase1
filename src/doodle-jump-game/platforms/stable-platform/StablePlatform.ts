@@ -1,9 +1,7 @@
 import Sprite from '../../../game-engine/base-types/components/render/Sprite'
 import Vector2 from '../../../game-engine/base-types/Vector2'
-import PathResources from '../../../game-engine/resources/PathResources'
 import ResourcesManager from '../../../game-engine/resources/ResourcesManager'
 import Platform from '../Platform'
-import PlatformModel from '../PlatformModel'
 
 class StablePlatform extends Platform {
     constructor(position: Vector2, scale: Vector2) {

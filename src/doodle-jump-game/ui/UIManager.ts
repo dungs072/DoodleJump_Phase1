@@ -6,8 +6,8 @@ import GameOverMenuUI from './GameOverMenuUI'
 import MainMenuUI from './MainMenuUI'
 import Text from '../../game-engine/base-types/components/ui/Text'
 import ResourcesManager from '../../game-engine/resources/ResourcesManager'
-import TextGameObject from '../../game-engine/base-types/ui/my-ui/TextGameObject'
 import GamePlayUI from './GamePlayUI'
+import SceneManager from '../../game-engine/scene/SceneManager'
 
 class UIManager {
     private gameOverMenuUI: GameOverMenuUI

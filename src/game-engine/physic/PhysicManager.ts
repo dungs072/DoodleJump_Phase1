@@ -50,7 +50,7 @@ class PhysicManager {
                     if (otherCollider == null) {
                         continue
                     }
-                    if (!collider.getIsTrigger() && collider.hasCollision(otherCollider)) {
+                    if (collider.hasCollision(otherCollider)) {
                         this.notStaticPhysicObjs[i].onCollisionEnter(this.physicObjs[j])
                     }
                 }
@@ -65,7 +65,7 @@ class PhysicManager {
                     transform.setPosition(newPosition)
                     rigidbody.clampToZeroVelocity(1000 * deltaTime)
                 } else if (rigidbody?.canUseGravity()) {
-                    let distance = rigidbody.getMass() * deltaTime
+                    let distance = rigidbody.getMass() * deltaTime * deltaTime * 75
                     let dropPosition = Vector2.multiply(Vector2.down(), distance)
 
                     let newPosition = Vector2.add(transform.getPosition(), dropPosition)
@@ -90,7 +90,7 @@ class PhysicManager {
     public addNotStaticPhysicObj(obj: GameObject): void {
         this.notStaticPhysicObjs.push(obj)
     }
-    public addphysicObjs(obj: GameObject): void {
+    public addPhysicObjs(obj: GameObject): void {
         this.physicObjs.push(obj)
     }
     public removePhysicObjs(obj: GameObject): void {
@@ -111,7 +111,7 @@ class PhysicManager {
 
     public clearData(): void {
         this.physicObjs = []
-        this.notStaticPhysicObjs = []
+        //this.notStaticPhysicObjs = []
     }
 }
 export default PhysicManager

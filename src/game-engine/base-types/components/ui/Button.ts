@@ -3,18 +3,16 @@ import Vector2 from '../../Vector2'
 import Publisher from '../../../../doodle-jump-game/patterns/observer/Publisher'
 import FontManager from '../../ui/base/FontManager'
 import UIElement from './UIElement'
-import SubcriberInterface from '../../../../doodle-jump-game/types/observer/subcriber'
+import SubscriberInterface from '../../../../doodle-jump-game/types/observer/subcriber'
 import Transform from '../Transform'
 
 class Button extends UIElement {
     private text: string
     private textColor: string
-    private publisher: Publisher<string>
     constructor(text: string, textColor: string, background: Sprite) {
         super(background)
         this.text = text
         this.textColor = textColor
-        this.publisher = new Publisher()
     }
 
     public draw(context: CanvasRenderingContext2D, position: Vector2): void {
@@ -36,15 +34,13 @@ class Button extends UIElement {
             )
         }
     }
-    public subcribe(subcriber: SubcriberInterface<string>): void {
-        this.publisher.subscribe(subcriber)
-    }
-    public unSubcribe(subcriber: SubcriberInterface<string>): void {
-        this.publisher.unsubcribe(subcriber)
+
+    private callback: () => void
+    public subscribe(subscriber: () => void): void {
+        this.callback = subscriber
     }
     public onClick(): void {
-        this.publisher.setData(this.text)
-        this.publisher.notify()
+        this.callback()
     }
 }
 export default Button
