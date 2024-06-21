@@ -13,14 +13,13 @@ class GameController extends GameObject {
     private platformManager: PlatformManager
     private uiManager: UIManager
 
-    private canvas: HTMLCanvasElement
-
     private preDistance: number
+    private screenSize: Vector2
 
-    constructor(canvas: HTMLCanvasElement) {
+    constructor(screenSize: Vector2) {
         super()
-        this.canvas = canvas
         this.uiManager = UIManager.getInstance()
+        this.screenSize = screenSize
         this.gotoMenu()
         this.uiManager.getStartGameButton().subscribe(() => {
             this.gotoGamePlay()
@@ -78,7 +77,7 @@ class GameController extends GameObject {
     public update(deltaTime: number) {
         this.moveScreen(this.getGameState() == GameState.GAME_PLAY)
         if (this.getGameState() == GameState.GAME_PLAY) {
-            this.platformManager.createPlatforms(this.canvas.width)
+            this.platformManager.createPlatforms(this.screenSize.x)
             this.platformManager.destroyPlatforms()
             this.platformManager.destroyItems()
             this.handlePlayer()
@@ -93,7 +92,7 @@ class GameController extends GameObject {
         if (state) {
             let transform = this.player?.getComponent(Transform)
             if (transform) {
-                let maxBorder = this.canvas.height / 2 - 125
+                let maxBorder = this.screenSize.y / 2 - 125
                 let distance = maxBorder - this.player.getPosition().y
 
                 if (this.player.getPosition().y < maxBorder && distance > this.preDistance) {
@@ -121,7 +120,7 @@ class GameController extends GameObject {
     }
 
     private handleBorder() {
-        if (this.player.getPosition().x > this.canvas.width) {
+        if (this.player.getPosition().x > this.screenSize.x) {
             let newPos = new Vector2(0, this.player.getPosition().y)
             this.player.setPosition(newPos)
         }

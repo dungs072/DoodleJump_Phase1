@@ -1,13 +1,15 @@
 import Engine from './game-engine/Engine'
 import GameController from './doodle-jump-game/mechanism/GameController'
+import Vector2 from './game-engine/base-types/Vector2'
 
 class Game {
     private engineGame: Engine
     // you can create multiple scenes
     constructor() {
-        this.engineGame = new Engine(640, 600)
+        let screenSize = new Vector2(640, 600)
+        this.engineGame = new Engine(screenSize.x, screenSize.y)
         this.engineGame.createScene('GamePlay')
-        new GameController(this.engineGame.getCanvas())
+        new GameController(screenSize)
     }
 }
 // Start the game
