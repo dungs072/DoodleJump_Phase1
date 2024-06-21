@@ -1,7 +1,7 @@
 import Sprite from '../../../game-engine/base-types/components/render/Sprite'
 import Transform from '../../../game-engine/base-types/components/Transform'
 import Vector2 from '../../../game-engine/base-types/Vector2'
-import PathResources from '../../resource/ResourcesLoader'
+import ResourcesLoader from '../../resource/ResourcesLoader'
 import ResourcesManager from '../../../game-engine/resources/ResourcesManager'
 import Platform from '../Platform'
 import PlatformModel from '../PlatformModel'
@@ -18,7 +18,7 @@ class MovablePlatform extends Platform {
 
         this.maxLeft = this.transform.getPosition().x - 100
         this.maxRight = this.transform.getPosition().x + 100
-        let sprite = new Sprite(PathResources.MOVABLE_PLATFORM)
+        let sprite = new Sprite(ResourcesLoader.MOVABLE_PLATFORM)
         this.setUpModel(sprite)
     }
     public update(deltaTime: number): void {

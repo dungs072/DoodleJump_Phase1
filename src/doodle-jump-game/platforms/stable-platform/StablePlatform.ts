@@ -1,7 +1,7 @@
 import Sprite from '../../../game-engine/base-types/components/render/Sprite'
 import Vector2 from '../../../game-engine/base-types/Vector2'
 import ResourcesManager from '../../../game-engine/resources/ResourcesManager'
-import PathResources from '../../resource/ResourcesLoader'
+import ResourcesLoader from '../../resource/ResourcesLoader'
 import Platform from '../Platform'
 
 class StablePlatform extends Platform {
@@ -9,7 +9,7 @@ class StablePlatform extends Platform {
         super(position, scale, true)
 
         this.canJump = true
-        let sprite = new Sprite(PathResources.STABLE_PLATFORM)
+        let sprite = new Sprite(ResourcesLoader.STABLE_PLATFORM)
         this.setUpModel(sprite)
     }
     public operation(): void {

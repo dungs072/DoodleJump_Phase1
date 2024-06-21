@@ -4,7 +4,7 @@ import Item from '../Item'
 import Animation from '../../../game-engine/base-types/components/render/Animation'
 import Sprite from '../../../game-engine/base-types/components/render/Sprite'
 import Transform from '../../../game-engine/base-types/components/Transform'
-import PathResources from '../../resource/ResourcesLoader'
+import ResourcesLoader from '../../resource/ResourcesLoader'
 
 class Propeller extends Item {
     private animation: Animation
@@ -17,14 +17,14 @@ class Propeller extends Item {
         this.flySpeed = 700
         this.timeToDestroy = this.maxDistanceFlight / this.flySpeed
         this.setUpAnimation()
-        let sprite = new Sprite(PathResources.PROPELLER)
+        let sprite = new Sprite(ResourcesLoader.PROPELLER)
         this.setUpModel(sprite)
     }
     private setUpAnimation(): void {
         let images: string[] = []
-        images.push(PathResources.PROPELLER1)
-        images.push(PathResources.PROPELLER1)
-        images.push(PathResources.PROPELLER1)
+        images.push(ResourcesLoader.PROPELLER1)
+        images.push(ResourcesLoader.PROPELLER2)
+        images.push(ResourcesLoader.PROPELLER3)
         this.animation = new Animation(images, 0.02)
         this.animation.setCanLoop(true)
         this.addComponent(this.animation)

@@ -1,6 +1,6 @@
 import ResourcesManager from '../../game-engine/resources/ResourcesManager'
 
-class PathResources {
+class ResourcesLoader {
     public static readonly BACKGROUND: string = 'bck.png'
 
     public static readonly STABLE_PLATFORM: string = 'stable.png'
@@ -50,64 +50,82 @@ class PathResources {
         this.loadImages()
     }
     private loadImages(): void {
-        this.resource.loadImage(this.path + PathResources.BACKGROUND, PathResources.BACKGROUND)
+        this.resource.loadImage(this.path + ResourcesLoader.BACKGROUND, ResourcesLoader.BACKGROUND)
         this.resource.loadImage(
-            this.path + PathResources.STABLE_PLATFORM,
-            PathResources.STABLE_PLATFORM
+            this.path + ResourcesLoader.STABLE_PLATFORM,
+            ResourcesLoader.STABLE_PLATFORM
         )
         this.resource.loadImage(
-            this.path + PathResources.MOVABLE_PLATFORM,
-            PathResources.MOVABLE_PLATFORM
+            this.path + ResourcesLoader.MOVABLE_PLATFORM,
+            ResourcesLoader.MOVABLE_PLATFORM
         )
         this.resource.loadImage(
-            this.path + PathResources.UNSTABLE_PLATFORM,
-            PathResources.UNSTABLE_PLATFORM
+            this.path + ResourcesLoader.UNSTABLE_PLATFORM,
+            ResourcesLoader.UNSTABLE_PLATFORM
         )
         this.resource.loadImage(
-            this.path + PathResources.UNSTABLE_PLATFORM1,
-            PathResources.UNSTABLE_PLATFORM1
+            this.path + ResourcesLoader.UNSTABLE_PLATFORM1,
+            ResourcesLoader.UNSTABLE_PLATFORM1
         )
         this.resource.loadImage(
-            this.path + PathResources.UNSTABLE_PLATFORM2,
-            PathResources.UNSTABLE_PLATFORM2
+            this.path + ResourcesLoader.UNSTABLE_PLATFORM2,
+            ResourcesLoader.UNSTABLE_PLATFORM2
         )
         this.resource.loadImage(
-            this.path + PathResources.UNSTABLE_PLATFORM3,
-            PathResources.UNSTABLE_PLATFORM3
+            this.path + ResourcesLoader.UNSTABLE_PLATFORM3,
+            ResourcesLoader.UNSTABLE_PLATFORM3
         )
-        this.resource.loadImage(this.path + PathResources.FORWARD_JUMP, PathResources.FORWARD_JUMP)
-
-        this.resource.loadImage(this.path + PathResources.FORWARD_JUMP, PathResources.FORWARD_JUMP)
         this.resource.loadImage(
-            this.path + PathResources.FORWARD_NORMAL,
-            PathResources.FORWARD_NORMAL
-        )
-        this.resource.loadImage(this.path + PathResources.LEFT_JUMP, PathResources.LEFT_JUMP)
-        this.resource.loadImage(this.path + PathResources.LEFT_NORMAL, PathResources.LEFT_NORMAL)
-        this.resource.loadImage(this.path + PathResources.RIGHT_JUMP, PathResources.RIGHT_JUMP)
-        this.resource.loadImage(this.path + PathResources.RIGHT_NORMAL, PathResources.RIGHT_NORMAL)
-        this.resource.loadImage(this.path + PathResources.MENU_BUTTON, PathResources.MENU_BUTTON)
-        this.resource.loadImage(
-            this.path + PathResources.PLAY_AGAIN_BUTTON,
-            PathResources.PLAY_AGAIN_BUTTON
+            this.path + ResourcesLoader.FORWARD_JUMP,
+            ResourcesLoader.FORWARD_JUMP
         )
 
-        this.resource.loadImage(this.path + PathResources.PLAY_GAME, PathResources.PLAY_GAME)
         this.resource.loadImage(
-            this.path + PathResources.DOODLE_JUMP_TEXT,
-            PathResources.DOODLE_JUMP_TEXT
+            this.path + ResourcesLoader.FORWARD_JUMP,
+            ResourcesLoader.FORWARD_JUMP
         )
-        this.resource.loadImage(this.path + PathResources.SHOE, PathResources.SHOE)
-        this.resource.loadImage(this.path + PathResources.SHOE1, PathResources.SHOE1)
-        this.resource.loadImage(this.path + PathResources.SHOE2, PathResources.SHOE2)
-        this.resource.loadImage(this.path + PathResources.SHOE3, PathResources.SHOE3)
-        this.resource.loadImage(this.path + PathResources.SHOE4, PathResources.SHOE4)
-        this.resource.loadImage(this.path + PathResources.PROPELLER, PathResources.PROPELLER)
-        this.resource.loadImage(this.path + PathResources.PROPELLER1, PathResources.PROPELLER1)
-        this.resource.loadImage(this.path + PathResources.PROPELLER2, PathResources.PROPELLER2)
-        this.resource.loadImage(this.path + PathResources.PROPELLER3, PathResources.PROPELLER3)
+        this.resource.loadImage(
+            this.path + ResourcesLoader.FORWARD_NORMAL,
+            ResourcesLoader.FORWARD_NORMAL
+        )
+        this.resource.loadImage(this.path + ResourcesLoader.LEFT_JUMP, ResourcesLoader.LEFT_JUMP)
+        this.resource.loadImage(
+            this.path + ResourcesLoader.LEFT_NORMAL,
+            ResourcesLoader.LEFT_NORMAL
+        )
+        this.resource.loadImage(this.path + ResourcesLoader.RIGHT_JUMP, ResourcesLoader.RIGHT_JUMP)
+        this.resource.loadImage(
+            this.path + ResourcesLoader.RIGHT_NORMAL,
+            ResourcesLoader.RIGHT_NORMAL
+        )
+        this.resource.loadImage(
+            this.path + ResourcesLoader.MENU_BUTTON,
+            ResourcesLoader.MENU_BUTTON
+        )
+        this.resource.loadImage(
+            this.path + ResourcesLoader.PLAY_AGAIN_BUTTON,
+            ResourcesLoader.PLAY_AGAIN_BUTTON
+        )
 
-        this.resource.loadImage(this.path + PathResources.BULLET, PathResources.BULLET)
+        this.resource.loadImage(this.path + ResourcesLoader.PLAY_GAME, ResourcesLoader.PLAY_GAME)
+        this.resource.loadImage(
+            this.path + ResourcesLoader.DOODLE_JUMP_TEXT,
+            ResourcesLoader.DOODLE_JUMP_TEXT
+        )
+        this.resource.loadImage(this.path + ResourcesLoader.SHOE, ResourcesLoader.SHOE)
+        this.resource.loadImage(this.path + ResourcesLoader.SHOE1, ResourcesLoader.SHOE1)
+        this.resource.loadImage(this.path + ResourcesLoader.SHOE2, ResourcesLoader.SHOE2)
+        this.resource.loadImage(this.path + ResourcesLoader.SHOE3, ResourcesLoader.SHOE3)
+        this.resource.loadImage(this.path + ResourcesLoader.SHOE4, ResourcesLoader.SHOE4)
+        this.resource.loadImage(this.path + ResourcesLoader.PROPELLER, ResourcesLoader.PROPELLER)
+        this.resource.loadImage(this.path + ResourcesLoader.PROPELLER1, ResourcesLoader.PROPELLER1)
+        this.resource.loadImage(this.path + ResourcesLoader.PROPELLER2, ResourcesLoader.PROPELLER2)
+        this.resource.loadImage(this.path + ResourcesLoader.PROPELLER3, ResourcesLoader.PROPELLER3)
+
+        this.resource.loadImage(this.path + ResourcesLoader.BULLET, ResourcesLoader.BULLET)
+    }
+    public getImage(imageName: string): HTMLImageElement {
+        return this.resource.getImage(imageName)
     }
 }
-export default PathResources
+export default ResourcesLoader
