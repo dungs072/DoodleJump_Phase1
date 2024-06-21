@@ -11,7 +11,7 @@ class Shoes extends Item {
 
     constructor(position: Vector2, scale: Vector2) {
         super(position, scale)
-        this.forceAmount = 1500
+        this.forceAmount = 1200
 
         this.setUpAnimation()
         let sprite = new Sprite(ResourcesLoader.SHOE1)

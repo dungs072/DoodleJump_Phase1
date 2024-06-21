@@ -27,7 +27,7 @@ class PlatformManager {
         this.platforms = []
         this.items = []
         this.previousYPosition = 500
-        this.maxPlatform = 30
+        this.maxPlatform = 25
         this.platformCreators = []
         this.platformCreators.push(new StablePlatformCreator())
         this.platformCreators.push(new UnstablePlatformCreator())
