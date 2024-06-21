@@ -3,6 +3,7 @@ import Vector2 from '../../game-engine/base-types/Vector2'
 import Action from '../states/Action'
 import GameObject from '../../game-engine/base-types/GameObject'
 import ResourcesManager from '../../game-engine/resources/ResourcesManager'
+import PathResources from '../resource/ResourcesLoader'
 
 class PlayerModel extends GameObject {
     private sprite: Sprite
@@ -16,17 +17,17 @@ class PlayerModel extends GameObject {
     }
     public takeAction(action: Action): Sprite {
         if (action == Action.LEFT_NORMAL) {
-            this.sprite.setImage(ResourcesManager.LeftNormalImage)
+            this.sprite.setImage(PathResources.LEFT_NORMAL)
         } else if (action == Action.LEFT_JUMP) {
-            this.sprite.setImage(ResourcesManager.LeftJumpImage)
+            this.sprite.setImage(PathResources.LEFT_JUMP)
         } else if (action == Action.FORWARD_JUMP) {
-            this.sprite.setImage(ResourcesManager.ForwardJumpImage)
+            this.sprite.setImage(PathResources.FORWARD_JUMP)
         } else if (action == Action.FORWARD_NORMAL) {
-            this.sprite.setImage(ResourcesManager.ForwarNormalImage)
+            this.sprite.setImage(PathResources.FORWARD_NORMAL)
         } else if (action == Action.RIGHT_JUMP) {
-            this.sprite.setImage(ResourcesManager.RightJumpImage)
+            this.sprite.setImage(PathResources.RIGHT_JUMP)
         } else if (action == Action.RIGHT_NORMAL) {
-            this.sprite.setImage(ResourcesManager.RightNormalImage)
+            this.sprite.setImage(PathResources.RIGHT_NORMAL)
         }
         this.currentAction = action
         return this.sprite

@@ -2,7 +2,7 @@ import GameObject from '../../game-engine/base-types/GameObject'
 import Vector2 from '../../game-engine/base-types/Vector2'
 import Transform from '../../game-engine/base-types/components/Transform'
 import SystemInterface from '../../game-engine/types/system'
-import KeyCode from '../../game-engine/input/KeyCode'
+import InputHandler from '../../game-engine/input/InputHandler'
 import Collider from '../../game-engine/base-types/components/physic/Collider'
 import Movement from '../general/Movement'
 import Platform from '../platforms/Platform'
@@ -44,9 +44,11 @@ class Player extends GameObject implements SystemInterface {
 
     private isOver: boolean
 
+    private inputHandler: InputHandler
+
     constructor(position: Vector2, scale: Vector2) {
         super()
-
+        this.inputHandler = InputHandler.getInstance()
         this.transform.setPosition(position)
         this.transform.setScale(scale)
         this.start()
@@ -106,17 +108,17 @@ class Player extends GameObject implements SystemInterface {
     }
 
     private handleInput(deltaTime: number) {
-        if (KeyCode.isDown(KeyCode.LEFT_ARROW)) {
+        if (InputHandler.isDown('ArrowLeft')) {
             let direction = Vector2.left()
             this.movement.move(deltaTime, direction, this.movementSpeed, this.transform)
             this.playerModel.takeAction(Action.LEFT_NORMAL)
         }
-        if (KeyCode.isDown(KeyCode.RIGHT_ARROW)) {
+        if (InputHandler.isDown('ArrowRight')) {
             let direction = Vector2.right()
             this.movement.move(deltaTime, direction, this.movementSpeed, this.transform)
             this.playerModel.takeAction(Action.RIGHT_NORMAL)
         }
-        // if (KeyCode.isDownButNotHold(KeyCode.UP_ARROW)) {
+        // if (InputHandler.isDownButNotHold('ArrowUp')) {
         //     this.playerModel.takeAction(Action.FORWARD_NORMAL)
         //     this.fighter.fight(this.spawnProjectilePos, Vector2.up())
         // }

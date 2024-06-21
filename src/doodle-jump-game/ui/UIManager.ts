@@ -1,6 +1,6 @@
 import Sprite from '../../game-engine/base-types/components/render/Sprite'
 import Vector2 from '../../game-engine/base-types/Vector2'
-import PathResources from '../../game-engine/resources/PathResources'
+import PathResources from '../resource/ResourcesLoader'
 import Button from '../../game-engine/base-types/components/ui/Button'
 import GameOverMenuUI from './GameOverMenuUI'
 import MainMenuUI from './MainMenuUI'
@@ -32,22 +32,22 @@ class UIManager {
 
     private setUI(): void {
         // main menu panel
-        let backgroundMainMenu = new Sprite(ResourcesManager.PageImage)
-
+        let backgroundMainMenu = new Sprite()
+        backgroundMainMenu.setImage(PathResources.BACKGROUND)
         this.mainMenuUI = new MainMenuUI(
             new Vector2(0, 0),
             new Vector2(640, 600),
             backgroundMainMenu
         )
-        let playGameButtonBg = new Sprite(ResourcesManager.StartButtonImage)
+        let playGameButtonBg = new Sprite(PathResources.PLAY_GAME)
         this.startGameButton = new Button('', '', playGameButtonBg)
-        let doodleJumpBg = new Sprite(ResourcesManager.DoodleJumpTextImage)
+        let doodleJumpBg = new Sprite(PathResources.DOODLE_JUMP_TEXT)
         let doodleJumpText = new Text('', '', 0, doodleJumpBg)
         this.mainMenuUI.setStartGameButton(this.startGameButton)
         this.mainMenuUI.setDoodleJumpText(doodleJumpText)
 
         // gameover panel
-        let backgroundGameOverMenu = new Sprite(ResourcesManager.PageImage)
+        let backgroundGameOverMenu = new Sprite(PathResources.BACKGROUND)
 
         this.gameOverMenuUI = new GameOverMenuUI(
             new Vector2(0, 0),
@@ -60,31 +60,20 @@ class UIManager {
         let highScoreText = new Text('High score: ', 'red', 300, null)
         this.gameOverMenuUI.setHighScoreText(highScoreText)
 
-        let playAgainButtonBg = new Sprite(ResourcesManager.PlayAgainButtonImage)
+        let playAgainButtonBg = new Sprite(PathResources.PLAY_AGAIN_BUTTON)
         this.playAgainButton = new Button('', '', playAgainButtonBg)
         this.gameOverMenuUI.setPlayAgainButton(this.playAgainButton)
 
-        let menuButtonBg = new Sprite(ResourcesManager.MenuButtonImage)
+        let menuButtonBg = new Sprite(PathResources.MENU_BUTTON)
         this.menuButton = new Button('', '', menuButtonBg)
         this.gameOverMenuUI.setMenuButton(this.menuButton)
 
         // main game
-        let sprite = new Sprite(ResourcesManager.PageImage)
+        let sprite = new Sprite(PathResources.BACKGROUND)
         this.gamePlayUI = new GamePlayUI(Vector2.zero(), new Vector2(640, 600), sprite)
         let scoreText = new Text('Score: 0', 'red', 100, null)
         this.gamePlayUI.setScoreText(scoreText)
     }
-    // public draw(context: CanvasRenderingContext2D): void {
-    //     if (this.isGameOver) {
-    //         this.gameOverMenuUI.draw(context)
-    //     }
-    //     if (this.isMainMenu) {
-    //         this.mainMenuUI.draw(context)
-    //     }
-    //     // if (this.scoreText.getIsActive()) {
-    //     //     this.scoreText.draw(context)
-    //     // }
-    // }
 
     public toggleMainMenu(state: boolean): void {
         this.mainMenuUI.setActive(state)

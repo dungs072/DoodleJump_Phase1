@@ -5,6 +5,7 @@ import GameObject from '../../game-engine/base-types/GameObject'
 import Vector2 from '../../game-engine/base-types/Vector2'
 import Sprite from '../../game-engine/base-types/components/render/Sprite'
 import ResourcesManager from '../../game-engine/resources/ResourcesManager'
+import PathResources from '../resource/ResourcesLoader'
 
 class Projectile extends GameObject {
     private timeToDestroy: number
@@ -27,7 +28,7 @@ class Projectile extends GameObject {
         this.forceAmount = forceAmount
         this.timeToDestroy = 5
         this.currentTime = 0
-        this.sprite = new Sprite(ResourcesManager.BulletImage)
+        this.sprite = new Sprite(PathResources.BULLET)
         this.addComponent(this.sprite)
         this.start()
     }

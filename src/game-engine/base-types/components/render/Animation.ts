@@ -10,7 +10,7 @@ class Animation extends Component {
     private currentIndex: number
     private isDone: boolean = false
     private isPlaying: boolean
-    constructor(images: HTMLImageElement[], maxTimePerSprite: number) {
+    constructor(images: string[], maxTimePerSprite: number) {
         super()
         this.sprites = []
         for (let i = 0; i < images.length; i++) {

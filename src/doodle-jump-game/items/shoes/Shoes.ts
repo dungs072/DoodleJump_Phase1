@@ -3,6 +3,7 @@ import ResourcesManager from '../../../game-engine/resources/ResourcesManager'
 import Item from '../Item'
 import Animation from '../../../game-engine/base-types/components/render/Animation'
 import Sprite from '../../../game-engine/base-types/components/render/Sprite'
+import PathResources from '../../resource/ResourcesLoader'
 
 class Shoes extends Item {
     private animation: Animation
@@ -13,15 +14,15 @@ class Shoes extends Item {
         this.forceAmount = 1500
 
         this.setUpAnimation()
-        let sprite = new Sprite(ResourcesManager.Shoe1Image)
+        let sprite = new Sprite(PathResources.SHOE1)
         this.setUpModel(sprite)
     }
     private setUpAnimation(): void {
-        let images: HTMLImageElement[] = []
-        images.push(ResourcesManager.Shoe1Image)
-        images.push(ResourcesManager.Shoe2Image)
-        images.push(ResourcesManager.Shoe3Image)
-        images.push(ResourcesManager.Shoe4Image)
+        let images: string[] = []
+        images.push(PathResources.SHOE1)
+        images.push(PathResources.SHOE1)
+        images.push(PathResources.SHOE1)
+        images.push(PathResources.SHOE1)
         this.animation = new Animation(images, 0.02)
         this.addComponent(this.animation)
     }

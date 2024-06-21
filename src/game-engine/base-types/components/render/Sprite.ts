@@ -1,11 +1,14 @@
+import ResourcesManager from '../../../resources/ResourcesManager'
 import Vector2 from '../../Vector2'
 import Component from '../Component'
 
 class Sprite extends Component {
     private image: HTMLImageElement | undefined
-    constructor(image?: HTMLImageElement) {
+    constructor(imageName?: string) {
         super()
-        this.image = image
+        if (imageName) {
+            this.image = ResourcesManager.getInstance().getImage(imageName)
+        }
     }
 
     public draw(context: CanvasRenderingContext2D, position: Vector2) {
@@ -17,8 +20,8 @@ class Sprite extends Component {
         }
     }
 
-    public setImage(image: HTMLImageElement): void {
-        this.image = image
+    public setImage(imageName: string): void {
+        this.image = ResourcesManager.getInstance().getImage(imageName)
     }
 }
 export default Sprite

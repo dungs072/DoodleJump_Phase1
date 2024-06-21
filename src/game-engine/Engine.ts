@@ -26,13 +26,9 @@ class Engine {
     }
 
     private start(): void {
-        this.loadResources()
         this.setEvents()
 
         this.gameLoop()
-    }
-    private loadResources(): void {
-        ResourcesManager.LoadResources()
     }
     public createScene(sceneName: string): Scene {
         let scene = new Scene(sceneName)
