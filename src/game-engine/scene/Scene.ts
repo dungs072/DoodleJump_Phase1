@@ -30,10 +30,6 @@ class Scene implements SystemInterface, RenderInterface {
                 }
             } else {
                 this.gameObjects.splice(i)
-
-                if (this.gameObjects.length === 10) {
-                    debugger
-                }
             }
         }
         for (let i = this.stickyGameObjects.length - 1; i >= 0; i--) {
@@ -94,9 +90,6 @@ class Scene implements SystemInterface, RenderInterface {
         gameObj.setCanDestroy(true)
         let index = this.gameObjects.indexOf(gameObj)
         this.gameObjects.splice(index, 1)
-        if (this.gameObjects.length === 10) {
-            debugger
-        }
     }
     public removeStickyGameObject(gameObj: GameObject): void {
         gameObj.setCanDestroy(true)

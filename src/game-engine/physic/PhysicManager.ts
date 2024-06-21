@@ -21,7 +21,7 @@ class PhysicManager {
         return PhysicManager.instance
     }
     public handleCorePhysic(deltaTime: number): void {
-        for (let i = 0; i < this.notStaticPhysicObjs.length; i++) {
+        for (let i = this.notStaticPhysicObjs.length - 1; i >= 0; i--) {
             if (!this.notStaticPhysicObjs[i].getCanDestroy()) {
                 let transform = this.notStaticPhysicObjs[i].getComponent(Transform)
                 if (transform == null) {
@@ -41,7 +41,7 @@ class PhysicManager {
                 )
 
                 collider.setBounds(topLeft, downRight)
-                for (let j = 0; j < this.physicObjs.length; j++) {
+                for (let j = this.physicObjs.length - 1; j >= 0; j--) {
                     if (this.notStaticPhysicObjs[i] == this.physicObjs[j]) {
                         continue
                     }
@@ -73,7 +73,7 @@ class PhysicManager {
                 }
             }
         }
-        for (let i = 0; i < this.physicObjs.length; i++) {
+        for (let i = this.physicObjs.length - 1; i >= 0; i--) {
             let collider = this.physicObjs[i].getComponent(Collider)
             if (collider == null) {
                 continue

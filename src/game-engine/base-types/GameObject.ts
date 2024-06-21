@@ -5,6 +5,8 @@ import RenderInterface from '../types/render'
 import SceneManager from '../scene/SceneManager'
 import Component from './components/Component'
 import Vector2 from './Vector2'
+import Collider from './components/physic/Collider'
+import PhysicManager from '../physic/PhysicManager'
 class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     private components: Map<Function, Component>
     private parent: GameObject
@@ -26,7 +28,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         this.isActive = true
         this.canDestroy = false
         this.registerToScene(isSticky)
-        this.start()
+        //this.start()
     }
     private registerToScene(isSticky: boolean) {
         // I have to decouple here: fix fix
@@ -93,6 +95,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         if (this.parent) {
             this.parent.removeChild(this)
         }
+        this.handlePhysic()
         // use event here
         this.children.forEach((child) => {
             child.destroy()
@@ -101,11 +104,24 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         SceneManager.getInstance().getCurrentActiveScene().removeGameObject(this)
     }
     public setCanDestroy(state: boolean): void {
+        if (state) {
+            this.handlePhysic()
+        }
         this.children.forEach((child) => {
             child.setCanDestroy(state)
         })
         this.children = []
         this.canDestroy = state
+    }
+    private handlePhysic(): void {
+        let collider = this.getComponent(Collider)
+        if (collider) {
+            if (collider.getIsStatic()) {
+                PhysicManager.getInstance().removePhysicObjs(this)
+            } else {
+                PhysicManager.getInstance().removeNotStaticPhysicObjs(this)
+            }
+        }
     }
     public getLayer(): number {
         return this.layer

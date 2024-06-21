@@ -1,7 +1,6 @@
 import Vector2 from '../../game-engine/base-types/Vector2'
 import Projectile from '../projectile/Projectile'
 import Component from '../../game-engine/base-types/components/Component'
-import PhysicManager from '../../game-engine/physic/PhysicManager'
 
 class PlayerFighter extends Component {
     public fight(spawnPosition: Vector2, direction: Vector2) {

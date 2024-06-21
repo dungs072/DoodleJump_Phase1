@@ -49,6 +49,7 @@ class Player extends GameObject implements SystemInterface {
 
         this.transform.setPosition(position)
         this.transform.setScale(scale)
+        this.start()
     }
 
     public start(): void {

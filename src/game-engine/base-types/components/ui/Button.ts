@@ -1,9 +1,7 @@
 import Sprite from '../render/Sprite'
 import Vector2 from '../../Vector2'
-import Publisher from '../../../../doodle-jump-game/patterns/observer/Publisher'
 import FontManager from '../../ui/base/FontManager'
 import UIElement from './UIElement'
-import SubscriberInterface from '../../../../doodle-jump-game/types/observer/subcriber'
 import Transform from '../Transform'
 
 class Button extends UIElement {
@@ -24,15 +22,15 @@ class Button extends UIElement {
         context.textBaseline = 'middle'
         context.fillText(this.text, position.x, position.y)
         context.strokeStyle = '#008000'
-        let transform = this.getGameObject()?.getComponent(Transform)
-        if (transform) {
-            context.strokeRect(
-                position.x,
-                position.y,
-                transform.getScale().x,
-                transform.getScale().y
-            )
-        }
+        // let transform = this.getGameObject()?.getComponent(Transform)
+        // if (transform) {
+        //     context.strokeRect(
+        //         position.x,
+        //         position.y,
+        //         transform.getScale().x,
+        //         transform.getScale().y
+        //     )
+        // }
     }
 
     private callback: () => void

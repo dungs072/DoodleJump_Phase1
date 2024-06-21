@@ -2,7 +2,6 @@ import GameObject from '../../game-engine/base-types/GameObject'
 import Vector2 from '../../game-engine/base-types/Vector2'
 import Creator from '../patterns/factory/Creator'
 import Publisher from '../patterns/observer/Publisher'
-import PhysicManager from '../../game-engine/physic/PhysicManager'
 import MovablePlatformCreator from './movable-platform/MovablePlatformCreator'
 import Platform from './Platform'
 import StablePlatformCreator from './stable-platform/StablePlatformCreator'
@@ -126,7 +125,6 @@ class PlatformManager {
                 continue
             }
             if (this.platforms[i].getCanDestroy()) {
-                PhysicManager.getInstance().removePhysicObjs(this.platforms[i])
                 this.publisher.unsubscribe(this.platforms[i])
                 this.platforms.splice(i, 1)
             }
@@ -139,16 +137,10 @@ class PlatformManager {
                 continue
             }
             if (this.items[i].getCanDestroy()) {
-                PhysicManager.getInstance().removePhysicObjs(this.items[i])
                 this.items.splice(i, 1)
             }
         }
     }
-    // public draw(context: CanvasRenderingContext2D) {
-    //     for (let i = this.platforms.length - 1; i >= 0; i--) {
-    //         this.platforms[i].draw(context)
-    //     }
-    // }
     public getPlatforms(): Platform[] {
         return this.platforms
     }

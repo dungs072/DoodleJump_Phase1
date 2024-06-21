@@ -65,16 +65,16 @@ class Collider extends Component {
     }
 
     public draw(context: CanvasRenderingContext2D): void {
-        if (!this.isActive) {
-            return
-        }
-        context.strokeStyle = '#008000'
-        context.strokeRect(
-            this.topLeftBound.x,
-            this.topLeftBound.y,
-            this.downRightBound.x,
-            this.downRightBound.y
-        )
+        // if (!this.isActive) {
+        //     return
+        // }
+        // context.strokeStyle = '#008000'
+        // context.strokeRect(
+        //     this.topLeftBound.x,
+        //     this.topLeftBound.y,
+        //     this.downRightBound.x,
+        //     this.downRightBound.y
+        // )
     }
     public setOffset(offset: number): void {
         this.offset = offset

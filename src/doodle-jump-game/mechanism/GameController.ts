@@ -72,7 +72,7 @@ class GameController extends GameObject {
         this.player.setPublisher(this.platformManager.getPublisher())
 
         let platformPosition = new Vector2(playerPosition.x - 50, 550)
-        let scale = new Vector2(100, 30)
+        let scale = new Vector2(120, 35)
         this.platformManager.createStablePlatform(platformPosition, scale)
     }
     public update(deltaTime: number) {
@@ -115,7 +115,6 @@ class GameController extends GameObject {
                 this.player.setIsOver(true)
                 this.platformManager.clearData()
                 this.gotoGameOver()
-                PhysicManager.getInstance().clearData()
                 this.player.clearData()
             }
         }
