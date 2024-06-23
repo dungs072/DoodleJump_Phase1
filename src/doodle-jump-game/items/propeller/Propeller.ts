@@ -15,11 +15,11 @@ class Propeller extends Item {
         this.flySpeed = 600
         this.timeToDestroy = this.maxDistanceFlight / this.flySpeed
         this.setUpAnimation()
-        let sprite = new Sprite(ResourcesLoader.PROPELLER)
+        const sprite = new Sprite(ResourcesLoader.PROPELLER)
         this.setUpModel(sprite)
     }
     private setUpAnimation(): void {
-        let images: string[] = []
+        const images: string[] = []
         images.push(ResourcesLoader.PROPELLER1)
         images.push(ResourcesLoader.PROPELLER2)
         images.push(ResourcesLoader.PROPELLER3)

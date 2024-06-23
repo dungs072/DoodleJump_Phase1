@@ -37,7 +37,7 @@ class Collider extends Component {
     }
     public setIsStatic(state: boolean): void {
         this.isStatic = state
-        let gameObj = this.getGameObject()
+        const gameObj = this.getGameObject()
         if (gameObj) {
             if (state) {
                 PhysicManager.getInstance().addPhysicObjs(gameObj)
@@ -52,11 +52,11 @@ class Collider extends Component {
 
     public hasCollision(other: Collider): boolean {
         if (this.isActive && !this.isTrigger) {
-            let overlapX =
+            const overlapX =
                 this.topLeftBound.x < other.topLeftBound.x + other.downRightBound.x &&
                 this.topLeftBound.x + this.downRightBound.x > other.topLeftBound.x
 
-            let overlapY =
+            const overlapY =
                 this.topLeftBound.y < other.topLeftBound.y + other.downRightBound.y &&
                 this.topLeftBound.y + this.downRightBound.y > other.topLeftBound.y
             return overlapX && overlapY

@@ -7,8 +7,8 @@ class Movement extends Component {
         if (transform == null) {
             return
         }
-        let distance = Vector2.multiply(direction, deltaTime * speed)
-        let newPosition = Vector2.add(transform?.getPosition(), distance)
+        const distance = Vector2.multiply(direction, deltaTime * speed)
+        const newPosition = Vector2.add(transform?.getPosition(), distance)
         transform.setPosition(newPosition)
     }
 }

@@ -1,21 +1,21 @@
 import PublisherInterface from '../../types/observer/publisher'
-import SubcriberInterface from '../../types/observer/subcriber'
+import SubscriberInterface from '../../types/observer/subcriber'
 
 class Publisher<T> implements PublisherInterface<T> {
-    private subcribers: SubcriberInterface<T>[] = []
+    private subscribers: SubscriberInterface<T>[] = []
     private data: T
-    public subscribe(subcriber: SubcriberInterface<T>): void {
-        this.subcribers.push(subcriber)
+    public subscribe(subscriber: SubscriberInterface<T>): void {
+        this.subscribers.push(subscriber)
     }
-    public unsubscribe(subcriber: SubcriberInterface<T>): void {
-        let index = this.subcribers.indexOf(subcriber)
+    public unsubscribe(subscriber: SubscriberInterface<T>): void {
+        const index = this.subscribers.indexOf(subscriber)
         if (index > -1) {
-            this.subcribers.splice(index, 1)
+            this.subscribers.splice(index, 1)
         }
     }
     public notify(): void {
-        for (let subcriber of this.subcribers) {
-            subcriber.receive(this.data)
+        for (let subscriber of this.subscribers) {
+            subscriber.receive(this.data)
         }
     }
     public setData(data: T): void {
@@ -24,8 +24,8 @@ class Publisher<T> implements PublisherInterface<T> {
     public getData(): T {
         return this.data
     }
-    public getSubcribers(): SubcriberInterface<T>[] {
-        return this.subcribers
+    public getSubscribers(): SubscriberInterface<T>[] {
+        return this.subscribers
     }
 }
 export default Publisher

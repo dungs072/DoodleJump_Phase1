@@ -17,7 +17,7 @@ class ButtonManager {
     public onClick(position: Vector2) {
         this.buttons.forEach((button) => {
             if (button.getIsActive()) {
-                let transform = button.getGameObject()?.getComponent(Transform)
+                const transform = button.getGameObject()?.getComponent(Transform)
                 if (transform) {
                     if (
                         position.x > transform.getPosition().x &&
@@ -35,7 +35,7 @@ class ButtonManager {
         this.buttons.push(button)
     }
     public removeButton(button: Button) {
-        let index = this.buttons.indexOf(button)
+        const index = this.buttons.indexOf(button)
         this.buttons.splice(index, 1)
     }
 }

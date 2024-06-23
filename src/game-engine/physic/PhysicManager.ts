@@ -23,19 +23,19 @@ class PhysicManager {
     public handleCorePhysic(deltaTime: number): void {
         for (let i = this.notStaticPhysicObjs.length - 1; i >= 0; i--) {
             if (!this.notStaticPhysicObjs[i].getCanDestroy()) {
-                let transform = this.notStaticPhysicObjs[i].getComponent(Transform)
+                const transform = this.notStaticPhysicObjs[i].getComponent(Transform)
                 if (transform == null) {
                     return
                 }
-                let collider = this.notStaticPhysicObjs[i].getComponent(Collider)
+                const collider = this.notStaticPhysicObjs[i].getComponent(Collider)
                 if (collider == null) {
                     return
                 }
-                let topLeft = new Vector2(
+                const topLeft = new Vector2(
                     transform.getPosition().x,
                     transform.getPosition().y + collider.getOffset()
                 )
-                let downRight = new Vector2(
+                const downRight = new Vector2(
                     transform.getScale().x,
                     transform.getScale().y - collider.getOffset()
                 )
@@ -45,7 +45,7 @@ class PhysicManager {
                     if (this.notStaticPhysicObjs[i] == this.physicObjs[j]) {
                         continue
                     }
-                    let otherCollider = this.physicObjs[j].getComponent(Collider)
+                    const otherCollider = this.physicObjs[j].getComponent(Collider)
 
                     if (otherCollider == null) {
                         continue
@@ -54,35 +54,35 @@ class PhysicManager {
                         this.notStaticPhysicObjs[i].onCollisionEnter(this.physicObjs[j])
                     }
                 }
-                let rigidbody = this.notStaticPhysicObjs[i].getComponent(RigidBody)
+                const rigidbody = this.notStaticPhysicObjs[i].getComponent(RigidBody)
                 if (!rigidbody) {
                     return
                 }
 
                 if (!rigidbody.getVelocity().isZero()) {
-                    let jumpPosition = Vector2.multiply(rigidbody.getVelocity(), deltaTime)
-                    let newPosition = Vector2.add(transform.getPosition(), jumpPosition)
+                    const jumpPosition = Vector2.multiply(rigidbody.getVelocity(), deltaTime)
+                    const newPosition = Vector2.add(transform.getPosition(), jumpPosition)
                     transform.setPosition(newPosition)
                     rigidbody.clampToZeroVelocity(1000 * deltaTime)
                 } else if (rigidbody?.canUseGravity()) {
-                    let distance = rigidbody.getMass() * deltaTime * deltaTime * 75
-                    let dropPosition = Vector2.multiply(Vector2.down(), distance)
+                    const distance = rigidbody.getMass() * deltaTime * deltaTime * 75
+                    const dropPosition = Vector2.multiply(Vector2.down(), distance)
 
-                    let newPosition = Vector2.add(transform.getPosition(), dropPosition)
+                    const newPosition = Vector2.add(transform.getPosition(), dropPosition)
                     transform.setPosition(newPosition)
                 }
             }
         }
         for (let i = this.physicObjs.length - 1; i >= 0; i--) {
-            let collider = this.physicObjs[i].getComponent(Collider)
+            const collider = this.physicObjs[i].getComponent(Collider)
             if (collider == null) {
                 continue
             }
-            let transform = this.physicObjs[i].getComponent(Transform)
+            const transform = this.physicObjs[i].getComponent(Transform)
             if (transform == null) {
                 continue
             }
-            let downRight = collider.getDownRightBound()
+            const downRight = collider.getDownRightBound()
             collider.setBounds(transform.getPosition(), downRight)
         }
     }
@@ -94,11 +94,11 @@ class PhysicManager {
         this.physicObjs.push(obj)
     }
     public removePhysicObjs(obj: GameObject): void {
-        let indexPhysic = this.physicObjs.indexOf(obj)
+        const indexPhysic = this.physicObjs.indexOf(obj)
         this.physicObjs.splice(indexPhysic, 1)
     }
     public removeNotStaticPhysicObjs(obj: GameObject): void {
-        let indexPhysic = this.notStaticPhysicObjs.indexOf(obj)
+        const indexPhysic = this.notStaticPhysicObjs.indexOf(obj)
         this.notStaticPhysicObjs.splice(indexPhysic, 1)
     }
 

@@ -4,8 +4,8 @@ import Component from '../../game-engine/base-types/components/Component'
 
 class PlayerFighter extends Component {
     public fight(spawnPosition: Vector2, direction: Vector2) {
-        let scale = new Vector2(10, 10)
-        let projectile = new Projectile(1000, spawnPosition, scale, direction)
+        const scale = new Vector2(10, 10)
+        const projectile = new Projectile(1000, spawnPosition, scale, direction)
     }
 }
 export default PlayerFighter

@@ -30,7 +30,7 @@ abstract class Item extends GameObject implements ProductInterface {
 
     public start(): void {
         this.collider = new Collider()
-        let downRight = new Vector2(this.transform.getScale().x, this.transform.getScale().y)
+        const downRight = new Vector2(this.transform.getScale().x, this.transform.getScale().y)
         this.collider.setBounds(this.transform?.getPosition(), downRight)
         this.addComponent(this.collider)
         this.collider.setIsStatic(true)

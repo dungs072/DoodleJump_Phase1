@@ -16,7 +16,7 @@ class ResourcesManager {
     }
 
     public loadImage(path: string, imageName: string): HTMLImageElement {
-        let image = new Image()
+        const image = new Image()
         image.src = path
         this.images.set(imageName, image)
         return image

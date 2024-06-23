@@ -15,7 +15,7 @@ class UIElement extends Component {
             return
         }
         if (this.background != null) {
-            let newPosition = new Vector2(position.x, position.y)
+            const newPosition = new Vector2(position.x, position.y)
             this.background.draw(context, newPosition)
         }
     }

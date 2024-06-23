@@ -63,15 +63,15 @@ class GameController extends GameObject {
             this.player.destroy()
         }
         this.preDistance = 0
-        let playerPosition = new Vector2(320, 300)
-        let playerScale = new Vector2(60, 120)
+        const playerPosition = new Vector2(320, 300)
+        const playerScale = new Vector2(60, 120)
         this.player = new Player(playerPosition, playerScale)
 
         this.platformManager = new PlatformManager()
         this.player.setPublisher(this.platformManager.getPublisher())
 
-        let platformPosition = new Vector2(playerPosition.x - 50, 550)
-        let scale = new Vector2(120, 35)
+        const platformPosition = new Vector2(playerPosition.x - 50, 550)
+        const scale = new Vector2(120, 35)
         this.platformManager.createStablePlatform(platformPosition, scale)
     }
     public update(deltaTime: number) {
@@ -88,12 +88,12 @@ class GameController extends GameObject {
         }
     }
     private moveScreen(state: boolean): void {
-        let scene = SceneManager.getInstance().getCurrentActiveScene()
+        const scene = SceneManager.getInstance().getCurrentActiveScene()
         if (state) {
-            let transform = this.player?.getComponent(Transform)
+            const transform = this.player?.getComponent(Transform)
             if (transform) {
-                let maxBorder = this.screenSize.y / 2 - 125
-                let distance = maxBorder - this.player.getPosition().y
+                const maxBorder = this.screenSize.y / 2 - 125
+                const distance = maxBorder - this.player.getPosition().y
 
                 if (this.player.getPosition().y < maxBorder && distance > this.preDistance) {
                     this.player.setMaxBorder(distance)
@@ -106,7 +106,7 @@ class GameController extends GameObject {
 
     private handlePlayer() {
         this.handleBorder()
-        let platform = this.platformManager.getTheFirstPlatform()
+        const platform = this.platformManager.getTheFirstPlatform()
         if (platform != null) {
             if (this.player.getPosition().y - platform.getTransform().getPosition().y > 50) {
                 this.setGameState(GameState.GAME_OVER)
@@ -121,11 +121,11 @@ class GameController extends GameObject {
 
     private handleBorder() {
         if (this.player.getPosition().x > this.screenSize.x) {
-            let newPos = new Vector2(0, this.player.getPosition().y)
+            const newPos = new Vector2(0, this.player.getPosition().y)
             this.player.setPosition(newPos)
         }
         if (this.player.getPosition().x < -60) {
-            let newPos = new Vector2(640, this.player.getPosition().y)
+            const newPos = new Vector2(640, this.player.getPosition().y)
             this.player.setPosition(newPos)
         }
     }

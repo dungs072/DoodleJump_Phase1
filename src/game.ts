@@ -8,7 +8,7 @@ class Game {
     // you can create multiple scenes
     constructor() {
         new ResourcesLoader()
-        let screenSize = new Vector2(640, 600)
+        const screenSize = new Vector2(640, 600)
 
         this.engineGame = new Engine(screenSize.x, screenSize.y)
         this.engineGame.createScene('GamePlay')

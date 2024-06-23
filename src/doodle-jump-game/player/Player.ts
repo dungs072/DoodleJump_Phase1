@@ -65,11 +65,11 @@ class Player extends GameObject implements SystemInterface {
 
         this.collider = new Collider()
         this.collider.setOffset(110)
-        let topLeft = new Vector2(
+        const topLeft = new Vector2(
             this.transform.getPosition().x,
             this.transform.getPosition().y + this.collider.getOffset()
         )
-        let downRight = new Vector2(
+        const downRight = new Vector2(
             this.transform.getScale().x,
             this.transform.getScale().y - this.collider.getOffset()
         )
@@ -109,12 +109,12 @@ class Player extends GameObject implements SystemInterface {
 
     private handleInput(deltaTime: number) {
         if (InputHandler.isDown('ArrowLeft')) {
-            let direction = Vector2.left()
+            const direction = Vector2.left()
             this.movement.move(deltaTime, direction, this.movementSpeed, this.transform)
             this.playerModel.takeAction(Action.LEFT_NORMAL)
         }
         if (InputHandler.isDown('ArrowRight')) {
-            let direction = Vector2.right()
+            const direction = Vector2.right()
             this.movement.move(deltaTime, direction, this.movementSpeed, this.transform)
             this.playerModel.takeAction(Action.RIGHT_NORMAL)
         }
@@ -153,7 +153,7 @@ class Player extends GameObject implements SystemInterface {
     }
     private calculateHeight(): void {
         if (this.maxHeight > this.transform.getPosition().y) {
-            let num = Math.floor(this.maxHeight - this.transform.getPosition().y)
+            const num = Math.floor(this.maxHeight - this.transform.getPosition().y)
             this.setScore(num)
             this.maxHeight = this.transform.getPosition().y
         }

@@ -32,7 +32,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     }
     private registerToScene(isSticky: boolean) {
         // I have to decouple here: fix fix
-        let scene = SceneManager.getInstance().getCurrentActiveScene()
+        const scene = SceneManager.getInstance().getCurrentActiveScene()
         if (isSticky) {
             scene.addStickyGameObject(this)
         } else {
@@ -114,7 +114,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         this.canDestroy = state
     }
     private handlePhysic(): void {
-        let collider = this.getComponent(Collider)
+        const collider = this.getComponent(Collider)
         if (collider) {
             if (collider.getIsStatic()) {
                 PhysicManager.getInstance().removePhysicObjs(this)
@@ -142,7 +142,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         child.setParent(this)
     }
     public removeChild(child: GameObject): void {
-        let index = this.children.indexOf(child)
+        const index = this.children.indexOf(child)
         this.children.splice(index, 1)
     }
     public setChildsPosition(position: Vector2): void {

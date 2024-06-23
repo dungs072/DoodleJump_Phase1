@@ -31,7 +31,7 @@ class Engine {
         this.gameLoop()
     }
     public createScene(sceneName: string): Scene {
-        let scene = new Scene(sceneName)
+        const scene = new Scene(sceneName)
         this.sceneManager.addScene(scene.getSceneName(), scene)
         this.sceneManager.toggleSceneOn(sceneName)
         scene.start()
@@ -50,23 +50,23 @@ class Engine {
         requestAnimationFrame(() => this.gameLoop())
     }
     private update(deltaTime: number): void {
-        let scene = this.sceneManager.getCurrentActiveScene()
+        const scene = this.sceneManager.getCurrentActiveScene()
         if (scene) {
             PhysicManager.getInstance().handleCorePhysic(deltaTime)
             scene.update(deltaTime)
         }
     }
     private render() {
-        let scene = this.sceneManager.getCurrentActiveScene()
+        const scene = this.sceneManager.getCurrentActiveScene()
         if (scene) {
             scene.draw(this.context)
         }
     }
     private setEvents(): void {
         this.canvas.addEventListener('click', (event: MouseEvent) => {
-            let rect = this.canvas.getBoundingClientRect()
-            let x = event.clientX - rect.left
-            let y = event.clientY - rect.top
+            const rect = this.canvas.getBoundingClientRect()
+            const x = event.clientX - rect.left
+            const y = event.clientY - rect.top
             ButtonManager.getInstance().onClick(new Vector2(x, y))
         })
     }
