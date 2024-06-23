@@ -1,5 +1,4 @@
 import Vector2 from '../../../game-engine/base-types/Vector2'
-import ResourcesManager from '../../../game-engine/resources/ResourcesManager'
 import Item from '../Item'
 import Animation from '../../../game-engine/base-types/components/render/Animation'
 import Sprite from '../../../game-engine/base-types/components/render/Sprite'
@@ -14,16 +13,16 @@ class Shoes extends Item {
         this.forceAmount = 1200
 
         this.setUpAnimation()
-        let sprite = new Sprite(ResourcesLoader.SHOE1)
+        const sprite = new Sprite(this, ResourcesLoader.SHOE1)
         this.setUpModel(sprite)
     }
     private setUpAnimation(): void {
-        let images: string[] = []
+        const images: string[] = []
         images.push(ResourcesLoader.SHOE1)
         images.push(ResourcesLoader.SHOE2)
         images.push(ResourcesLoader.SHOE3)
         images.push(ResourcesLoader.SHOE4)
-        this.animation = new Animation(images, 0.02)
+        this.animation = new Animation(this, images, 0.02)
         this.addComponent(this.animation)
     }
 

@@ -11,7 +11,7 @@ class PlayerModel extends GameObject {
     constructor() {
         super()
         this.transform.setLocalPosition(new Vector2(-30, 0))
-        this.sprite = new Sprite()
+        this.sprite = new Sprite(this)
         this.addComponent(this.sprite)
         this.takeAction(Action.LEFT_NORMAL)
     }

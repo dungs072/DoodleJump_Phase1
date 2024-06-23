@@ -1,3 +1,4 @@
+import GameObject from '../../GameObject'
 import Vector2 from '../../Vector2'
 import Component from '../Component'
 
@@ -6,8 +7,8 @@ class RigidBody extends Component {
     private velocity: Vector2
     private mass: number
 
-    constructor() {
-        super()
+    constructor(gameObject: GameObject) {
+        super(gameObject)
         this.velocity = Vector2.zero()
         this.mass = 1
     }

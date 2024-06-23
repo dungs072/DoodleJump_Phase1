@@ -1,13 +1,5 @@
 class InputHandler {
-    private static instance: InputHandler
-
     public static keys: { [key: string]: boolean } = {}
-    public static getInstance(): InputHandler {
-        if (!InputHandler.instance) {
-            InputHandler.instance = new InputHandler()
-        }
-        return InputHandler.instance
-    }
     constructor() {
         window.addEventListener('keydown', (event) => {
             InputHandler.keys[event.key] = true

@@ -45,18 +45,18 @@ class PlatformManager {
     }
     public createPlatforms(canvasWidth: number) {
         for (let i = 0; i < this.maxPlatform - this.platforms.length; i++) {
-            let scale = new Vector2(120, 35)
-            let rangeHeight = this.getRandomInRange(100, 200)
-            let firstRandomX = Math.random() * (canvasWidth - scale.x)
-            let position = new Vector2(firstRandomX, this.previousYPosition - rangeHeight)
+            const scale = new Vector2(120, 35)
+            const rangeHeight = this.getRandomInRange(100, 200)
+            const firstRandomX = Math.random() * (canvasWidth - scale.x)
+            const position = new Vector2(firstRandomX, this.previousYPosition - rangeHeight)
 
-            let platformCreatorIndex = Math.floor(Math.random() * this.platformCreators.length)
-            let platformCreator = this.platformCreators[platformCreatorIndex]
-            let product = platformCreator.createProduct(position, scale)
-            let gameObj = product.getGameObject()
+            const platformCreatorIndex = Math.floor(Math.random() * this.platformCreators.length)
+            const platformCreator = this.platformCreators[platformCreatorIndex]
+            const product = platformCreator.createProduct(position, scale)
+            const gameObj = product.getGameObject()
             if (gameObj instanceof StablePlatform) {
                 if (Math.random() > 0.3) {
-                    let item = this.createRandomItem(
+                    const item = this.createRandomItem(
                         new Vector2(position.x + 30, position.y - 20),
                         new Vector2(50, 16)
                     )
@@ -75,30 +75,30 @@ class PlatformManager {
                 } else {
                     randomX = this.getRandomInRange(firstRandomX + scale.x, canvasWidth - scale.x)
                 }
-                let randomHeight = this.getRandomInRange(100, 150)
-                let position = new Vector2(randomX, this.previousYPosition - randomHeight)
+                const randomHeight = this.getRandomInRange(100, 150)
+                const position = new Vector2(randomX, this.previousYPosition - randomHeight)
                 this.createStablePlatform(position, scale)
             }
-            let platform = this.getTheLastPlatform()
+            const platform = this.getTheLastPlatform()
             if (platform != null) {
                 this.previousYPosition = platform.getTransform().getPosition().y
             }
         }
     }
     private createRandomItem(position: Vector2, scale: Vector2): GameObject {
-        let itemCreatorIndex = Math.floor(Math.random() * this.itemCreators.length)
-        let itemCreator = this.itemCreators[itemCreatorIndex]
-        let product = itemCreator.createProduct(position, scale)
-        let gameObj = product.getGameObject()
+        const itemCreatorIndex = Math.floor(Math.random() * this.itemCreators.length)
+        const itemCreator = this.itemCreators[itemCreatorIndex]
+        const product = itemCreator.createProduct(position, scale)
+        const gameObj = product.getGameObject()
         if (gameObj instanceof Item) {
             this.items.push(gameObj)
         }
         return gameObj
     }
     public createStablePlatform(position: Vector2, scale: Vector2): GameObject {
-        let platformCreator = this.platformCreators[0]
-        let product = platformCreator.createProduct(position, scale)
-        let gameObj = product.getGameObject()
+        const platformCreator = this.platformCreators[0]
+        const product = platformCreator.createProduct(position, scale)
+        const gameObj = product.getGameObject()
         if (gameObj instanceof Platform) {
             this.platforms.push(gameObj)
             this.publisher.subscribe(gameObj)

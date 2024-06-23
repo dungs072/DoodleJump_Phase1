@@ -1,8 +1,8 @@
-import Transform from '../../game-engine/base-types/components/Transform'
+import Transform from '../../game-engine/base-types/components/transform/Transform'
 import Vector2 from '../../game-engine/base-types/Vector2'
 import Component from '../../game-engine/base-types/components/Component'
 
-class Movement extends Component {
+class Movement {
     public move(deltaTime: number, direction: Vector2, speed: number, transform: Transform): void {
         if (transform == null) {
             return

@@ -1,4 +1,4 @@
-import Transform from './components/Transform'
+import Transform from './components/transform/Transform'
 import PhysicsInterface from '../types/physicSystem'
 import SystemInterface from '../types/system'
 import RenderInterface from '../types/render'
@@ -23,7 +23,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     }
     private initGameObject(isSticky: boolean): void {
         this.children = []
-        this.transform = new Transform()
+        this.transform = new Transform(this)
         this.addComponent(this.transform)
         this.isActive = true
         this.canDestroy = false
@@ -69,7 +69,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         this.components.set(component.constructor, component)
     }
     public removeComponent<T extends Component>(component: T): void {
-        component.setGameObject(undefined)
+        component.removeGameObject()
         this.components.delete(component.constructor)
     }
 

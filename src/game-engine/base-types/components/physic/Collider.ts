@@ -1,4 +1,5 @@
 import PhysicManager from '../../../physic/PhysicManager'
+import GameObject from '../../GameObject'
 import Vector2 from '../../Vector2'
 import Component from '../Component'
 
@@ -8,8 +9,8 @@ class Collider extends Component {
     private offset: number
     private isTrigger: boolean
     private isStatic: boolean
-    constructor() {
-        super()
+    constructor(gameObject: GameObject) {
+        super(gameObject)
         this.isTrigger = false
     }
 

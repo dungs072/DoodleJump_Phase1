@@ -9,7 +9,7 @@ class StablePlatform extends Platform {
         super(position, scale, true)
 
         this.canJump = true
-        let sprite = new Sprite(ResourcesLoader.STABLE_PLATFORM)
+        const sprite = new Sprite(this, ResourcesLoader.STABLE_PLATFORM)
         this.setUpModel(sprite)
     }
     public operation(): void {

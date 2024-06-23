@@ -1,14 +1,20 @@
 import Sprite from '../render/Sprite'
 import Vector2 from '../../Vector2'
 import FontManager from '../../ui/base/FontManager'
-import UIElement from './UIElement'
+import GameObject from '../../GameObject'
 
-class Text extends UIElement {
+class Text extends Sprite {
     private text: string
     private textColor: string
     private width: number
-    constructor(text: string, textColor: string, width: number, background: Sprite | null) {
-        super(background)
+    constructor(
+        gameObject: GameObject,
+        text: string,
+        textColor: string,
+        width: number,
+        background: string | undefined
+    ) {
+        super(gameObject, background)
         this.text = text
         this.textColor = textColor
         this.width = width

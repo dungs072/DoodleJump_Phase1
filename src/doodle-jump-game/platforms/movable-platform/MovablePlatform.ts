@@ -1,10 +1,8 @@
 import Sprite from '../../../game-engine/base-types/components/render/Sprite'
-import Transform from '../../../game-engine/base-types/components/Transform'
+import Transform from '../../../game-engine/base-types/components/transform/Transform'
 import Vector2 from '../../../game-engine/base-types/Vector2'
 import ResourcesLoader from '../../resource/ResourcesLoader'
-import ResourcesManager from '../../../game-engine/resources/ResourcesManager'
 import Platform from '../Platform'
-import PlatformModel from '../PlatformModel'
 
 class MovablePlatform extends Platform {
     private maxLeft: number
@@ -18,7 +16,7 @@ class MovablePlatform extends Platform {
 
         this.maxLeft = this.transform.getPosition().x - 100
         this.maxRight = this.transform.getPosition().x + 100
-        let sprite = new Sprite(ResourcesLoader.MOVABLE_PLATFORM)
+        const sprite = new Sprite(this, ResourcesLoader.MOVABLE_PLATFORM)
         this.setUpModel(sprite)
     }
     public update(deltaTime: number): void {
@@ -35,7 +33,7 @@ class MovablePlatform extends Platform {
         } else {
             this.movement.move(deltaTime, Vector2.right(), this.horizontalSpeed, this.transform)
         }
-        let modelTransfrom = this.platformModel.getComponent(Transform)
+        const modelTransfrom = this.platformModel.getComponent(Transform)
         if (modelTransfrom) {
             modelTransfrom.setPosition(this.transform.getPosition())
         }

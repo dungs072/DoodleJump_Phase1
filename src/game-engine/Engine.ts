@@ -67,7 +67,7 @@ class Engine {
             const rect = this.canvas.getBoundingClientRect()
             const x = event.clientX - rect.left
             const y = event.clientY - rect.top
-            ButtonManager.getInstance().onClick(new Vector2(x, y))
+            ButtonManager.getInstance().handleClick(new Vector2(x, y))
         })
     }
     public getCanvas(): HTMLCanvasElement {

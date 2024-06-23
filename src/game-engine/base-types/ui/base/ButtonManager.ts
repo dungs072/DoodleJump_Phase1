@@ -1,5 +1,5 @@
 import Vector2 from '../../Vector2'
-import Transform from '../../components/Transform'
+import Transform from '../../components/transform/Transform'
 import Button from '../../components/ui/Button'
 class ButtonManager {
     private buttons: Button[]
@@ -14,9 +14,9 @@ class ButtonManager {
         this.buttons = []
     }
 
-    public onClick(position: Vector2) {
+    public handleClick(position: Vector2) {
         this.buttons.forEach((button) => {
-            if (button.getIsActive()) {
+            if (button.getActive()) {
                 const transform = button.getGameObject()?.getComponent(Transform)
                 if (transform) {
                     if (

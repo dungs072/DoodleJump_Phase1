@@ -6,7 +6,7 @@ import Player from '../player/Player'
 import UIManager from '../ui/UIManager'
 import GameObject from '../../game-engine/base-types/GameObject'
 import SceneManager from '../../game-engine/scene/SceneManager'
-import Transform from '../../game-engine/base-types/components/Transform'
+import Transform from '../../game-engine/base-types/components/transform/Transform'
 class GameController extends GameObject {
     private gameState: GameState
     private player: Player

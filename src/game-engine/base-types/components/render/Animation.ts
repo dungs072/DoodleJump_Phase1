@@ -1,6 +1,7 @@
 import Sprite from './Sprite'
 import Vector2 from '../../Vector2'
 import Component from '../Component'
+import GameObject from '../../GameObject'
 
 class Animation extends Component {
     private sprites: Sprite[]
@@ -10,11 +11,11 @@ class Animation extends Component {
     private currentIndex: number
     private isDone: boolean = false
     private isPlaying: boolean
-    constructor(images: string[], maxTimePerSprite: number) {
-        super()
+    constructor(gameObject: GameObject, images: string[], maxTimePerSprite: number) {
+        super(gameObject)
         this.sprites = []
         for (let i = 0; i < images.length; i++) {
-            let sprite = new Sprite(images[i])
+            let sprite = new Sprite(gameObject, images[i])
             this.sprites.push(sprite)
         }
         this.canLoop = false

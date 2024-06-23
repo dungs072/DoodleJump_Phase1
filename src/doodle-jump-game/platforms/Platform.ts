@@ -1,5 +1,5 @@
 import Collider from '../../game-engine/base-types/components/physic/Collider'
-import Transform from '../../game-engine/base-types/components/Transform'
+import Transform from '../../game-engine/base-types/components/transform/Transform'
 import GameObject from '../../game-engine/base-types/GameObject'
 import Vector2 from '../../game-engine/base-types/Vector2'
 import Movement from '../general/Movement'
@@ -7,7 +7,6 @@ import ProductInterface from '../types/factory/product'
 import SubscriberInterface from '../types/observer/subcriber'
 import PlatformModel from './PlatformModel'
 import Sprite from '../../game-engine/base-types/components/render/Sprite'
-import Item from '../items/Item'
 
 abstract class Platform
     extends GameObject
@@ -37,13 +36,12 @@ abstract class Platform
     }
 
     public start(): void {
-        this.collider = new Collider()
-        let downRight = new Vector2(this.transform.getScale().x, this.transform.getScale().y - 25)
+        this.collider = new Collider(this)
+        const downRight = new Vector2(this.transform.getScale().x, this.transform.getScale().y - 25)
         this.collider.setBounds(this.transform?.getPosition(), downRight)
         this.addComponent(this.collider)
         this.collider.setIsStatic(true)
         this.movement = new Movement()
-        this.addComponent(this.movement)
     }
     public update(deltaTime: number): void {
         if (this.initHeight - this.transform.getPosition().y < this.borderHeight) {

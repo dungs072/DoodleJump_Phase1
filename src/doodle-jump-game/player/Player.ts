@@ -1,6 +1,5 @@
 import GameObject from '../../game-engine/base-types/GameObject'
 import Vector2 from '../../game-engine/base-types/Vector2'
-import Transform from '../../game-engine/base-types/components/Transform'
 import SystemInterface from '../../game-engine/types/system'
 import InputHandler from '../../game-engine/input/InputHandler'
 import Collider from '../../game-engine/base-types/components/physic/Collider'
@@ -48,7 +47,7 @@ class Player extends GameObject implements SystemInterface {
 
     constructor(position: Vector2, scale: Vector2) {
         super()
-        this.inputHandler = InputHandler.getInstance()
+        this.inputHandler = new InputHandler()
         this.transform.setPosition(position)
         this.transform.setScale(scale)
         this.start()
@@ -61,9 +60,8 @@ class Player extends GameObject implements SystemInterface {
         this.isOver = false
 
         this.movement = new Movement()
-        this.addComponent(this.movement)
 
-        this.collider = new Collider()
+        this.collider = new Collider(this)
         this.collider.setOffset(110)
         const topLeft = new Vector2(
             this.transform.getPosition().x,
@@ -77,7 +75,7 @@ class Player extends GameObject implements SystemInterface {
         this.addComponent(this.collider)
         this.collider.setIsStatic(false)
 
-        this.rb = new RigidBody()
+        this.rb = new RigidBody(this)
         this.rb.setMass(400)
         this.rb.setUseGravity(true)
         this.addComponent(this.rb)
@@ -92,7 +90,6 @@ class Player extends GameObject implements SystemInterface {
         this.scoreCalculator = new ScoreCalculate()
         this.fighter = new PlayerFighter()
 
-        this.addComponent(this.fighter)
         this.previousHeight = this.transform.getPosition().y
         this.maxHeight = 300
     }

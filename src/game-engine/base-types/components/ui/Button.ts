@@ -1,16 +1,17 @@
 import Sprite from '../render/Sprite'
 import Vector2 from '../../Vector2'
 import FontManager from '../../ui/base/FontManager'
-import UIElement from './UIElement'
-import Transform from '../Transform'
+import GameObject from '../../GameObject'
+import ButtonManager from '../../ui/base/ButtonManager'
 
-class Button extends UIElement {
+class Button extends Sprite {
     private text: string
     private textColor: string
-    constructor(text: string, textColor: string, background: Sprite) {
-        super(background)
+    constructor(gameObject: GameObject, text: string, textColor: string, background: string) {
+        super(gameObject, background)
         this.text = text
         this.textColor = textColor
+        ButtonManager.getInstance().addButton(this)
     }
 
     public draw(context: CanvasRenderingContext2D, position: Vector2): void {
@@ -21,7 +22,7 @@ class Button extends UIElement {
         context.textAlign = 'center'
         context.textBaseline = 'middle'
         context.fillText(this.text, position.x, position.y)
-        context.strokeStyle = '#008000'
+        // context.strokeStyle = '#008000'
         // let transform = this.getGameObject()?.getComponent(Transform)
         // if (transform) {
         //     context.strokeRect(

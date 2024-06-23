@@ -1,6 +1,6 @@
 import Collider from '../base-types/components/physic/Collider'
 import RigidBody from '../base-types/components/physic/Rigidbody'
-import Transform from '../base-types/components/Transform'
+import Transform from '../base-types/components/transform/Transform'
 import GameObject from '../base-types/GameObject'
 import Vector2 from '../base-types/Vector2'
 

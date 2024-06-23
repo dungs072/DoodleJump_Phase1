@@ -3,8 +3,6 @@ import Vector2 from '../../../game-engine/base-types/Vector2'
 import ResourcesLoader from '../../resource/ResourcesLoader'
 import Platform from '../Platform'
 import Animation from '../../../game-engine/base-types/components/render/Animation'
-import ResourcesManager from '../../../game-engine/resources/ResourcesManager'
-
 class UnstablePlatform extends Platform {
     private dropDownSpeed: number
     private isStomped: boolean
@@ -20,19 +18,19 @@ class UnstablePlatform extends Platform {
         this.maxDropDownDistance = 100
         this.canDestroy = false
         this.setLayer(1)
-        let sprite = new Sprite(ResourcesLoader.UNSTABLE_PLATFORM)
+        const sprite = new Sprite(this, ResourcesLoader.UNSTABLE_PLATFORM)
         this.setUpModel(sprite)
 
         this.setUpAnimation()
     }
 
     private setUpAnimation(): void {
-        let images: string[] = []
+        const images: string[] = []
         images.push(ResourcesLoader.UNSTABLE_PLATFORM)
         images.push(ResourcesLoader.UNSTABLE_PLATFORM1)
         images.push(ResourcesLoader.UNSTABLE_PLATFORM2)
         images.push(ResourcesLoader.UNSTABLE_PLATFORM3)
-        this.animation = new Animation(images, 0.02)
+        this.animation = new Animation(this, images, 0.02)
         this.addComponent(this.animation)
     }
 

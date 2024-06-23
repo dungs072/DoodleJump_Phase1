@@ -88,12 +88,12 @@ class Scene implements SystemInterface, RenderInterface {
     }
     public removeGameObject(gameObj: GameObject): void {
         gameObj.setCanDestroy(true)
-        let index = this.gameObjects.indexOf(gameObj)
+        const index = this.gameObjects.indexOf(gameObj)
         this.gameObjects.splice(index, 1)
     }
     public removeStickyGameObject(gameObj: GameObject): void {
         gameObj.setCanDestroy(true)
-        let index = this.gameObjects.indexOf(gameObj)
+        const index = this.gameObjects.indexOf(gameObj)
         this.stickyGameObjects.splice(index, 1)
     }
     public setCanvasMoveX(value: number): void {

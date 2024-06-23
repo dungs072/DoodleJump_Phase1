@@ -1,11 +1,12 @@
 import ResourcesManager from '../../../resources/ResourcesManager'
+import GameObject from '../../GameObject'
 import Vector2 from '../../Vector2'
 import Component from '../Component'
 
 class Sprite extends Component {
-    private image: HTMLImageElement | undefined
-    constructor(imageName?: string) {
-        super()
+    private image: HTMLImageElement | null
+    constructor(gameObject: GameObject, imageName?: string | undefined) {
+        super(gameObject)
         if (imageName) {
             this.image = ResourcesManager.getInstance().getImage(imageName)
         }

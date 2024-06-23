@@ -1,13 +1,14 @@
-import Vector2 from '../Vector2'
-import Component from './Component'
+import GameObject from '../../GameObject'
+import Component from '../Component'
+import Vector2 from '../../Vector2'
 
 class Transform extends Component {
     private position: Vector2
     private localPosition: Vector2
     private scale: Vector2
 
-    constructor() {
-        super()
+    constructor(gameObject: GameObject) {
+        super(gameObject)
         this.position = new Vector2(0, 0)
         this.localPosition = new Vector2(0, 0)
         this.scale = new Vector2(1, 1)

@@ -1,6 +1,6 @@
 import GameObject from '../../game-engine/base-types/GameObject'
 import Vector2 from '../../game-engine/base-types/Vector2'
-import Transform from '../../game-engine/base-types/components/Transform'
+import Transform from '../../game-engine/base-types/components/transform/Transform'
 import Collider from '../../game-engine/base-types/components/physic/Collider'
 import Sprite from '../../game-engine/base-types/components/render/Sprite'
 import ProductInterface from '../types/factory/product'
@@ -29,7 +29,7 @@ abstract class Item extends GameObject implements ProductInterface {
     }
 
     public start(): void {
-        this.collider = new Collider()
+        this.collider = new Collider(this)
         const downRight = new Vector2(this.transform.getScale().x, this.transform.getScale().y)
         this.collider.setBounds(this.transform?.getPosition(), downRight)
         this.addComponent(this.collider)

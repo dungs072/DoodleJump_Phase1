@@ -1,10 +1,9 @@
 import Collider from '../../game-engine/base-types/components/physic/Collider'
 import RigidBody from '../../game-engine/base-types/components/physic/Rigidbody'
-import Transform from '../../game-engine/base-types/components/Transform'
+import Transform from '../../game-engine/base-types/components/transform/Transform'
 import GameObject from '../../game-engine/base-types/GameObject'
 import Vector2 from '../../game-engine/base-types/Vector2'
 import Sprite from '../../game-engine/base-types/components/render/Sprite'
-import ResourcesManager from '../../game-engine/resources/ResourcesManager'
 import ResourcesLoader from '../resource/ResourcesLoader'
 
 class Projectile extends GameObject {
@@ -28,20 +27,20 @@ class Projectile extends GameObject {
         this.forceAmount = forceAmount
         this.timeToDestroy = 5
         this.currentTime = 0
-        this.sprite = new Sprite(ResourcesLoader.BULLET)
+        this.sprite = new Sprite(this, ResourcesLoader.BULLET)
         this.addComponent(this.sprite)
         this.start()
     }
 
     public start(): void {
-        this.collider = new Collider()
+        this.collider = new Collider(this)
         this.collider.setBounds(this.transform.getPosition(), this.transform.getScale())
         this.collider.setOffset(27)
 
         this.addComponent(this.collider)
         this.collider.setIsStatic(false)
 
-        this.rb = new RigidBody()
+        this.rb = new RigidBody(this)
         this.rb.setUseGravity(false)
         this.addComponent(this.rb)
     }
