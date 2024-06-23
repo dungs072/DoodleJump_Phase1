@@ -94,6 +94,7 @@ class Player extends GameObject implements SystemInterface {
         this.maxHeight = 300
     }
     public update(deltaTime: number): void {
+        super.update(deltaTime)
         if (this.isOver) {
             return
         }

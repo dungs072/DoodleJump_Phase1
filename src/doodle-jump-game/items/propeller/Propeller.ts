@@ -27,18 +27,15 @@ class Propeller extends Item {
         this.animation.setCanLoop(true)
         this.addComponent(this.animation)
     }
-
-    public update(deltaTime: number): void {
-        super.update(deltaTime)
-        if (this.canImplement) {
-            this.animation.play(deltaTime)
-        }
-    }
     public getMaxDistanceFlight(): number {
         return this.maxDistanceFlight
     }
     public getFlySpeed(): number {
         return this.flySpeed
+    }
+    public operation(): void {
+        super.operation()
+        this.animation.play()
     }
 }
 export default Propeller

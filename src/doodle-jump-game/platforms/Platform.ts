@@ -44,6 +44,7 @@ abstract class Platform
         this.movement = new Movement()
     }
     public update(deltaTime: number): void {
+        super.update(deltaTime)
         if (this.initHeight - this.transform.getPosition().y < this.borderHeight) {
             this.destroy()
             if (this.item && !this.item.getParent()) {

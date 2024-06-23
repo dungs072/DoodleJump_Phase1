@@ -25,15 +25,12 @@ class Shoes extends Item {
         this.animation = new Animation(this, images, 0.02)
         this.addComponent(this.animation)
     }
-
-    public update(deltaTime: number): void {
-        super.update(deltaTime)
-        if (this.canImplement) {
-            this.animation.play(deltaTime)
-        }
-    }
     public getForceAmount(): number {
         return this.forceAmount
+    }
+    public operation(): void {
+        super.operation()
+        this.animation.play()
     }
 }
 export default Shoes

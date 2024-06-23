@@ -44,7 +44,14 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
         // start object
     }
     public update(deltaTime: number): void {
-        // update object
+        if (!this.isActive) {
+            return
+        }
+        this.components.forEach((component) => {
+            if (component.getActive()) {
+                component.update(deltaTime)
+            }
+        })
     }
 
     // please dont override it

@@ -23,6 +23,7 @@ class Component {
     public removeGameObject(): void {
         this.gameObject = undefined
     }
+    public update(deltaTime: number): void {}
     public draw(context: CanvasRenderingContext2D, position: Vector2): void {}
 }
 export default Component

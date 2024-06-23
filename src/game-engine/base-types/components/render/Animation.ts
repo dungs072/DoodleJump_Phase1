@@ -9,7 +9,7 @@ class Animation extends Component {
     private maxTimePerSprite: number
     private currentTime: number
     private currentIndex: number
-    private isDone: boolean = false
+    private isDone: boolean = true
     private isPlaying: boolean
     constructor(gameObject: GameObject, images: string[], maxTimePerSprite: number) {
         super(gameObject)
@@ -24,7 +24,8 @@ class Animation extends Component {
         this.currentIndex = 0
         this.isPlaying = false
     }
-    public play(deltaTime: number): void {
+
+    public update(deltaTime: number): void {
         if (this.isDone) {
             return
         }
@@ -43,6 +44,12 @@ class Animation extends Component {
     }
     public setCanLoop(state: boolean): void {
         this.canLoop = state
+    }
+    public play() {
+        this.isDone = false
+    }
+    public stop() {
+        this.isDone = true
     }
 }
 export default Animation

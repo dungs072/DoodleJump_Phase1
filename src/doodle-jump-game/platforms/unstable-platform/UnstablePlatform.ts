@@ -38,7 +38,6 @@ class UnstablePlatform extends Platform {
         super.update(deltaTime)
         if (this.isStomped && !this.canDestroy) {
             this.platformModel.setActive(false)
-            this.animation.play(deltaTime)
 
             if (this.transform.getPosition().y >= this.previousY + this.maxDropDownDistance) {
                 this.destroy()
@@ -59,6 +58,7 @@ class UnstablePlatform extends Platform {
         this.isStomped = true
         //this.animation.setPosition(this.transform.getPosition())
         this.previousY = this.transform.getPosition().y
+        this.animation.play()
     }
 }
 export default UnstablePlatform

@@ -36,6 +36,7 @@ abstract class Item extends GameObject implements ProductInterface {
         this.collider.setIsStatic(true)
     }
     public update(deltaTime: number): void {
+        super.update(deltaTime)
         if (this.canImplement) {
             this.itemModel.setActive(false)
             this.currentTime += deltaTime
