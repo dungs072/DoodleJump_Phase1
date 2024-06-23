@@ -1,6 +1,5 @@
 import Vector2 from '../../game-engine/base-types/Vector2'
 import GameState from '../states/GameState'
-import PhysicManager from '../../game-engine/physic/PhysicManager'
 import PlatformManager from '../platforms/PlatformManager'
 import Player from '../player/Player'
 import UIManager from '../ui/UIManager'
@@ -59,7 +58,6 @@ class GameController extends GameObject {
 
     public setUpGame(): void {
         if (this.player) {
-            PhysicManager.getInstance().removeNotStaticPhysicObjs(this.player)
             this.player.destroy()
         }
         this.preDistance = 0

@@ -3,22 +3,36 @@ import RigidBody from '../base-types/components/physic/Rigidbody'
 import Transform from '../base-types/components/transform/Transform'
 import GameObject from '../base-types/GameObject'
 import Vector2 from '../base-types/Vector2'
+import EventHandler from '../types/eventHandler'
 
 class PhysicManager {
     private physicObjs: GameObject[]
     private notStaticPhysicObjs: GameObject[]
 
-    private static instance: PhysicManager
-
     constructor() {
         this.physicObjs = []
         this.notStaticPhysicObjs = []
+        this.start()
     }
-    public static getInstance(): PhysicManager {
-        if (!PhysicManager.instance) {
-            PhysicManager.instance = new PhysicManager()
+    private start() {
+        const onSetStatic: EventHandler = (gameObject: GameObject) => {
+            this.addPhysicObjs(gameObject)
         }
-        return PhysicManager.instance
+        const onSetNonStatic: EventHandler = (gameObject: GameObject) => {
+            this.addNotStaticPhysicObj(gameObject)
+        }
+
+        const onRemoveStatic: EventHandler = (gameObject: GameObject) => {
+            this.removePhysicObjs(gameObject)
+        }
+        const onRemoveNonStatic: EventHandler = (gameObject: GameObject) => {
+            this.removeNotStaticPhysicObjs(gameObject)
+        }
+        Collider.dispatcher.addEventListener('static', onSetStatic)
+        Collider.dispatcher.addEventListener('nonstatic', onSetNonStatic)
+
+        Collider.dispatcher.addEventListener('removeStatic', onRemoveStatic)
+        Collider.dispatcher.addEventListener('removeNonStatic', onRemoveNonStatic)
     }
     public handleCorePhysic(deltaTime: number): void {
         for (let i = this.notStaticPhysicObjs.length - 1; i >= 0; i--) {

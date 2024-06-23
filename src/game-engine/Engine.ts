@@ -3,7 +3,6 @@ import Scene from './scene/Scene'
 import SceneManager from './scene/SceneManager'
 import ButtonManager from './base-types/ui/base/ButtonManager'
 import Vector2 from './base-types/Vector2'
-import ResourcesManager from './resources/ResourcesManager'
 
 class Engine {
     private canvas: HTMLCanvasElement
@@ -12,6 +11,8 @@ class Engine {
     private lastRenderTime: number
 
     private sceneManager: SceneManager
+    private physicManager: PhysicManager
+    private buttonManager: ButtonManager
 
     constructor(width: number, height: number) {
         this.canvas = document.createElement('canvas') as HTMLCanvasElement
@@ -21,6 +22,8 @@ class Engine {
         this.canvas.height = height
         this.lastRenderTime = 0
         this.sceneManager = SceneManager.getInstance()
+        this.physicManager = new PhysicManager()
+        this.buttonManager = new ButtonManager()
         document.body.appendChild(this.canvas)
         this.start()
     }
@@ -52,7 +55,7 @@ class Engine {
     private update(deltaTime: number): void {
         const scene = this.sceneManager.getCurrentActiveScene()
         if (scene) {
-            PhysicManager.getInstance().handleCorePhysic(deltaTime)
+            this.physicManager.handleCorePhysic(deltaTime)
             scene.update(deltaTime)
         }
     }
@@ -67,7 +70,7 @@ class Engine {
             const rect = this.canvas.getBoundingClientRect()
             const x = event.clientX - rect.left
             const y = event.clientY - rect.top
-            ButtonManager.getInstance().handleClick(new Vector2(x, y))
+            this.buttonManager.handleClick(new Vector2(x, y))
         })
     }
     public getCanvas(): HTMLCanvasElement {

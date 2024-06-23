@@ -6,7 +6,6 @@ import SceneManager from '../scene/SceneManager'
 import Component from './components/Component'
 import Vector2 from './Vector2'
 import Collider from './components/physic/Collider'
-import PhysicManager from '../physic/PhysicManager'
 class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     private components: Map<Function, Component>
     private parent: GameObject
@@ -122,13 +121,7 @@ class GameObject implements PhysicsInterface, SystemInterface, RenderInterface {
     }
     private handlePhysic(): void {
         const collider = this.getComponent(Collider)
-        if (collider) {
-            if (collider.getIsStatic()) {
-                PhysicManager.getInstance().removePhysicObjs(this)
-            } else {
-                PhysicManager.getInstance().removeNotStaticPhysicObjs(this)
-            }
-        }
+        collider?.removePhysic()
     }
     public getLayer(): number {
         return this.layer

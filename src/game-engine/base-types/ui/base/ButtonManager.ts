@@ -1,17 +1,18 @@
+import EventHandler from '../../../types/eventHandler'
 import Vector2 from '../../Vector2'
 import Transform from '../../components/transform/Transform'
 import Button from '../../components/ui/Button'
 class ButtonManager {
     private buttons: Button[]
-    private static instance: ButtonManager
-    public static getInstance(): ButtonManager {
-        if (!ButtonManager.instance) {
-            ButtonManager.instance = new ButtonManager()
-        }
-        return ButtonManager.instance
-    }
     constructor() {
         this.buttons = []
+        this.start()
+    }
+    private start(): void {
+        const onAddButton: EventHandler = (button: Button) => {
+            this.addButton(button)
+        }
+        Button.eventDispatcher.addEventListener('onAddButton', onAddButton)
     }
 
     public handleClick(position: Vector2) {

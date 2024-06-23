@@ -3,15 +3,18 @@ import Vector2 from '../../Vector2'
 import FontManager from '../../ui/base/FontManager'
 import GameObject from '../../GameObject'
 import ButtonManager from '../../ui/base/ButtonManager'
+import EventDispatcher from '../../../event/EventDispatcher'
 
 class Button extends Sprite {
+    public static eventDispatcher: EventDispatcher = new EventDispatcher()
     private text: string
     private textColor: string
     constructor(gameObject: GameObject, text: string, textColor: string, background: string) {
         super(gameObject, background)
         this.text = text
         this.textColor = textColor
-        ButtonManager.getInstance().addButton(this)
+
+        Button.eventDispatcher.dispatchEvent('onAddButton', this)
     }
 
     public draw(context: CanvasRenderingContext2D, position: Vector2): void {

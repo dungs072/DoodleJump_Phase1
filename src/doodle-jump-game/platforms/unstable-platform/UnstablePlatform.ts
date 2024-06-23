@@ -44,19 +44,10 @@ class UnstablePlatform extends Platform {
             }
             this.movement.move(deltaTime, Vector2.down(), this.dropDownSpeed, this.transform)
         }
-        // this.animation.setPosition(this.transform.getPosition())
     }
-    // public draw(context: CanvasRenderingContext2D): void {
-    //     if (this.isStomped) {
-    //         this.animation.draw(context, this.deltaTime)
-    //         return
-    //     }
-    //     super.draw(context)
-    // }
 
     public operation(): void {
         this.isStomped = true
-        //this.animation.setPosition(this.transform.getPosition())
         this.previousY = this.transform.getPosition().y
         this.animation.play()
     }

@@ -1,9 +1,10 @@
-import PhysicManager from '../../../physic/PhysicManager'
+import EventDispatcher from '../../../event/EventDispatcher'
 import GameObject from '../../GameObject'
 import Vector2 from '../../Vector2'
 import Component from '../Component'
 
 class Collider extends Component {
+    public static dispatcher: EventDispatcher = new EventDispatcher()
     private topLeftBound: Vector2
     private downRightBound: Vector2
     private offset: number
@@ -41,10 +42,17 @@ class Collider extends Component {
         const gameObj = this.getGameObject()
         if (gameObj) {
             if (state) {
-                PhysicManager.getInstance().addPhysicObjs(gameObj)
+                Collider.dispatcher.dispatchEvent('static', gameObj)
             } else {
-                PhysicManager.getInstance().addNotStaticPhysicObj(gameObj)
+                Collider.dispatcher.dispatchEvent('nonstatic', gameObj)
             }
+        }
+    }
+    public removePhysic(): void {
+        if (this.isStatic) {
+            Collider.dispatcher.dispatchEvent('removeStatic', this.getGameObject())
+        } else {
+            Collider.dispatcher.dispatchEvent('removeNonStatic', this.getGameObject())
         }
     }
     public getIsStatic(): boolean {
