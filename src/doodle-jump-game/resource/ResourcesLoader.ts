@@ -42,7 +42,7 @@ class ResourcesLoader {
     public static readonly BULLET: string = 'bullet.png'
 
     private resource: ResourcesManager
-    private path = '../assets/images/'
+    private path = '../assets/'
 
     constructor() {
         this.resource = ResourcesManager.getInstance()
