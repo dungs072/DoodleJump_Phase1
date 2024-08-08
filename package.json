@@ -10,7 +10,8 @@
         "preview": "serve dist",
         "util:check": "prettier --check src/scripts/**",
         "util:format": "prettier --write src/scripts/**",
-        "deploy": "npm run build && gh-pages -d dist"
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d dist"
     },
     "alias": {
         "@/": "./src"
